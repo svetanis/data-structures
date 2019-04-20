@@ -20,8 +20,6 @@ public interface NTreeTraverser<T extends Comparable<? super T>> {
 
   ImmutableList<Node<T>> postOrder();
 
-  ImmutableMultimap<T, T> traverse();
-
   ImmutableMultimap<Node<T>, Node<T>> rootToLeafPaths();
   
   ImmutableMultimap<Node<T>, Node<T>> rootToNodePaths();

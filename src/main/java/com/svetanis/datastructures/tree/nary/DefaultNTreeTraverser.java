@@ -12,7 +12,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.google.common.base.Optional;
-import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.LinkedHashMultimap;
@@ -171,22 +170,6 @@ public class DefaultNTreeTraverser<T extends Comparable<? super T>> implements N
     }
     path.remove(path.size() - 1);
     return false;
-  }
-
-  @Override
-  public ImmutableMultimap<T, T> traverse() {
-    Multimap<T, T> multi = ArrayListMultimap.create();
-    traverse(root, multi);
-    return newMultimap(multi);
-  }
-
-  private void traverse(Node<T> root, Multimap<T, T> mm) {
-    if (root.getChildren().size() != 0) {
-      for (Node<T> child : root.getChildren()) {
-        traverse(child, mm);
-        mm.put(root.getData(), child.getData());
-      }
-    }
   }
 
   @Deprecated
