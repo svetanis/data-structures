@@ -22,10 +22,14 @@ public interface NTreeTraverser<T extends Comparable<? super T>> {
 
   ImmutableMultimap<T, T> traverse();
 
-  ImmutableList<Node<T>> longestRootToLeafPath();
-
-  ImmutableList<ImmutableList<Node<T>>> getRootToLeafPaths();
+  ImmutableMultimap<Node<T>, Node<T>> rootToLeafPaths();
   
-  ImmutableMultimap<T, ImmutableList<T>> rootToLeafPaths();
+  ImmutableMultimap<Node<T>, Node<T>> rootToNodePaths();
+
+  ImmutableMultimap<Node<T>, Node<T>> rootToNodePaths(Iterable<Node<T>> iterable);
+
+  ImmutableList<Node<T>> rootToNodePath(Node<T> node);
+
+  ImmutableList<Node<T>> longestRootToLeafPath();
 
 }

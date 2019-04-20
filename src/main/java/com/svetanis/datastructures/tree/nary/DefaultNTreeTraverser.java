@@ -6,7 +6,6 @@ import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.graph.Traverser.forGraph;
 import static com.svetanis.java.base.Preconditions.checkNotNull;
 import static com.svetanis.java.base.collect.Lists.newList;
-import static com.svetanis.java.base.collect.Lists.transform;
 import static com.svetanis.java.base.collect.Multimaps.newMultimap;
 
 import java.util.ArrayList;
@@ -102,36 +101,31 @@ public class DefaultNTreeTraverser<T extends Comparable<? super T>> implements N
   }
 
   @Override
-  public ImmutableMultimap<T, ImmutableList<T>> rootToLeafPaths() {
-    Multimap<T, ImmutableList<T>> multi = LinkedHashMultimap.create();
-    for(List<Node<T>> path : getRootToLeafPaths()) {
+  public ImmutableMultimap<Node<T>, Node<T>> rootToLeafPaths() {
+    Multimap<Node<T>, Node<T>> multi = LinkedHashMultimap.create();
+    List<ImmutableList<Node<T>>> paths = getRootToLeafPaths();
+    for (List<Node<T>> path : paths) {
       Node<T> leaf = path.get(path.size() - 1);
-      multi.put(leaf.getData(), transform(path, n -> n.getData()));
+      multi.putAll(leaf, path);
     }
     return newMultimap(multi);
   }
 
-  @Override
-  public ImmutableList<ImmutableList<Node<T>>> getRootToLeafPaths() {
+  private ImmutableList<ImmutableList<Node<T>>> getRootToLeafPaths() {
     List<ImmutableList<Node<T>>> paths = newArrayList();
     List<Node<T>> path = newArrayList();
-    getPath(root, path, paths);
+    rootToLeafPath(root, path, paths);
     return newList(paths);
   }
 
-  private void getPath(Node<T> node, List<Node<T>> path, List<ImmutableList<Node<T>>> paths) {
-
+  private void rootToLeafPath(Node<T> node, List<Node<T>> path, List<ImmutableList<Node<T>>> paths) {
     path.add(node);
-
-    // leaf node
     if (isLeaf(node)) {
       paths.add(newList(path));
     }
-
     for (Node<T> child : node.getChildren()) {
-      getPath(child, path, paths);
+      rootToLeafPath(child, path, paths);
     }
-
     // backtrack
     int index = path.indexOf(node);
     for (int i = index; i < path.size(); i++) {
@@ -141,6 +135,42 @@ public class DefaultNTreeTraverser<T extends Comparable<? super T>> implements N
 
   private boolean isLeaf(Node<T> node) {
     return node.getChildren().size() == 0;
+  }
+
+  @Override
+  public ImmutableMultimap<Node<T>, Node<T>> rootToNodePaths() {
+    List<Node<T>> preOrder = preOrder();
+    return rootToNodePaths(preOrder);
+  }
+
+  @Override
+  public ImmutableMultimap<Node<T>, Node<T>> rootToNodePaths(Iterable<Node<T>> iterable) {
+    Multimap<Node<T>, Node<T>> multi = LinkedHashMultimap.create();
+    for (Node<T> node : iterable) {
+      multi.putAll(node, rootToNodePath(node));
+    }
+    return newMultimap(multi);
+  }
+
+  @Override
+  public ImmutableList<Node<T>> rootToNodePath(Node<T> node) {
+    List<Node<T>> list = newArrayList();
+    isPath(root, node, list);
+    return newList(list);
+  }
+
+  private boolean isPath(Node<T> root, Node<T> node, List<Node<T>> path) {
+    path.add(root);
+    if (root.getData().equals(node.getData())) {
+      return true;
+    }
+    for (Node<T> child : root.getChildren()) {
+      if (isPath(child, node, path)) {
+        return true;
+      }
+    }
+    path.remove(path.size() - 1);
+    return false;
   }
 
   @Override
