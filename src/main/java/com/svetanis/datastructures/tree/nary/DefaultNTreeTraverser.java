@@ -160,7 +160,7 @@ public class DefaultNTreeTraverser<T extends Comparable<? super T>> implements N
 
   private boolean isPath(Node<T> root, Node<T> node, List<Node<T>> path) {
     path.add(root);
-    if (root.getData().equals(node.getData())) {
+    if (root.equals(node)) {
       return true;
     }
     for (Node<T> child : root.getChildren()) {
