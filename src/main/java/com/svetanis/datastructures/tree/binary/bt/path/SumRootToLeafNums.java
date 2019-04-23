@@ -8,6 +8,8 @@ import com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node;
 
 public final class SumRootToLeafNums {
 
+  private static final int MOD = 1003;
+  
   public static int sum(Node root) {
     return sum(root, 0);
   }
@@ -37,13 +39,13 @@ public final class SumRootToLeafNums {
     if (isNull(root)) {
       return 0;
     }
-    value = (value * 10 + root.data) % 1003;
+    value = (value * 10 + root.data) % MOD;
     if (isLeaf(root)) {
       return value;
     }
     int left = sumMod(root.left, value);
     int right = sumMod(root.right, value);
-    return (left + right) % 1003;
+    return (left + right) % MOD;
   }
 
   public static void main(String[] args) {
