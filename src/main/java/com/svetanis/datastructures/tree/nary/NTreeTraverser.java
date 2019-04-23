@@ -8,7 +8,7 @@ public interface NTreeTraverser<T extends Comparable<? super T>> {
 
   int size();
 
-  int getHeight();
+  int height();
 
   boolean contains(T key);
 

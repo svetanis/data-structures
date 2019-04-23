@@ -1,5 +1,7 @@
 package com.svetanis.datastructures.tree.binary.model.mutable.primitive;
 
+import static java.lang.Math.max;
+
 public final class Nodes {
 
   public static int size(Node root) {
@@ -7,6 +9,16 @@ public final class Nodes {
       return 0;
     }
     return 1 + size(root.left) + size(root.right);
+  }
+
+  public static int depth(Node node) {
+    if (node == null) {
+      return 0;
+    } else {
+      int left = depth(node.left);
+      int right = depth(node.right);
+      return 1 + max(left, right);
+    }
   }
 
   public static boolean isNull(Node node) {
@@ -36,7 +48,7 @@ public final class Nodes {
   public static boolean isFull(Node node) {
     return node.left != null && node.right != null;
   }
-  
+
   public static boolean isAbsent(Node root, int k) {
     return !isPresent(root, k);
   }

@@ -38,7 +38,7 @@ public class DefaultNTreeTraverser<T extends Comparable<? super T>> implements N
   }
 
   @Override
-  public int getHeight() {
+  public int height() {
     return longestRootToLeafPath().size();
   }
 
