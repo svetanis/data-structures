@@ -1,4 +1,4 @@
-package com.svetanis.datastructures.tree.binary.lca;
+package com.svetanis.datastructures.tree.binary.bt.lca;
 
 import static com.google.common.base.Optional.absent;
 import static com.google.common.base.Optional.of;
