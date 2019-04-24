@@ -2,7 +2,7 @@ package com.svetanis.datastructures.tree.binary.bt.traversal;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node.newNode;
-import static com.svetanis.datastructures.tree.binary.model.mutable.primitive.Nodes.depth;
+import static com.svetanis.datastructures.tree.binary.model.mutable.primitive.Nodes.height;
 import static com.svetanis.datastructures.tree.binary.model.mutable.primitive.Nodes.isNull;
 import static com.svetanis.java.base.collect.Lists.newList;
 import static com.svetanis.java.base.utils.Print.printLists;
@@ -18,7 +18,7 @@ public final class ZigZagRecursive {
   public static ImmutableList<ImmutableList<Integer>> traverse(Node root) {
     List<ImmutableList<Integer>> lists = newArrayList();
 
-    int height = depth(root);
+    int height = height(root);
     boolean leftToRight = true;
     for (int i = 1; i <= height; ++i) {
       List<Integer> list = new ArrayList<>();

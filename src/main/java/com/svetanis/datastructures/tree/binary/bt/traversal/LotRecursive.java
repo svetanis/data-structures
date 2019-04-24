@@ -1,7 +1,7 @@
 package com.svetanis.datastructures.tree.binary.bt.traversal;
 
 import static com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node.newNode;
-import static com.svetanis.datastructures.tree.binary.model.mutable.primitive.Nodes.depth;
+import static com.svetanis.datastructures.tree.binary.model.mutable.primitive.Nodes.height;
 import static com.svetanis.datastructures.tree.binary.model.mutable.primitive.Nodes.isNull;
 
 import com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node;
@@ -11,7 +11,7 @@ public final class LotRecursive {
   public static void traverse(Node root) {
     // time complexity: O(n^2)
 
-    int height = depth(root);
+    int height = height(root);
     for (int i = 1; i <= height; i++) {
       givenLevel(root, i);
       System.out.println();

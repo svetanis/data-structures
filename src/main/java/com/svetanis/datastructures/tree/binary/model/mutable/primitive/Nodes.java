@@ -11,12 +11,12 @@ public final class Nodes {
     return 1 + size(root.left) + size(root.right);
   }
 
-  public static int depth(Node node) {
+  public static int height(Node node) {
     if (node == null) {
       return 0;
     } else {
-      int left = depth(node.left);
-      int right = depth(node.right);
+      int left = height(node.left);
+      int right = height(node.right);
       return 1 + max(left, right);
     }
   }
