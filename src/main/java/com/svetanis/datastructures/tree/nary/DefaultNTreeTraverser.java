@@ -7,6 +7,8 @@ import static com.google.common.graph.Traverser.forGraph;
 import static com.svetanis.java.base.Preconditions.checkNotNull;
 import static com.svetanis.java.base.collect.Lists.newList;
 import static com.svetanis.java.base.collect.Multimaps.newMultimap;
+import static java.lang.Integer.MIN_VALUE;
+import static java.lang.Math.max;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,7 +41,19 @@ public class DefaultNTreeTraverser<T extends Comparable<? super T>> implements N
 
   @Override
   public int height() {
-    return longestRootToLeafPath().size();
+    return height(root);
+  }
+
+  private int height(Node<T> root) {
+    if (root.getChildren().size() == 0) {
+      return 0;
+    }
+
+    int max = MIN_VALUE;
+    for (Node<T> node : root.getChildren()) {
+      max = max(max, height(node));
+    }
+    return max;
   }
 
   @Override

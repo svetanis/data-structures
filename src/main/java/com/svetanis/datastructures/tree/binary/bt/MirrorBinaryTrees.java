@@ -13,18 +13,15 @@ import com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node;
 public final class MirrorBinaryTrees {
 
   public static boolean mirror(Node root1, Node root2) {
-
     if (isNull(root1) && isNull(root2)) {
       return true;
     }
-
     if (isNull(root1) || isNull(root2)) {
       return false;
     }
     if (root1.data != root2.data) {
       return false;
     }
-
     boolean left = mirror(root1.left, root2.right);
     boolean right = mirror(root1.right, root2.left);
     return left && right;

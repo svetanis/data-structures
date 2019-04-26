@@ -46,14 +46,12 @@ public final class SumBinaryTree {
   }
 
   public static void main(String[] args) {
-
     Node root = newNode(26);
     root.left = newNode(10);
     root.right = newNode(3);
     root.left.left = newNode(4);
     root.left.right = newNode(6);
     root.right.right = newNode(3);
-
     System.out.println(sumTree(root));
   }
 }

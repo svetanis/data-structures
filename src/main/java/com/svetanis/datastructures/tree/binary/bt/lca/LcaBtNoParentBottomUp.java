@@ -42,8 +42,7 @@ public final class LcaBtNoParentBottomUp {
       return root.data;
     }
 
-    // either one of p, q is on one side
-    // or p, q is not in left and right subtrees
+    // p and q are on one side
     if (left != -1) {
       return left;
     } else {

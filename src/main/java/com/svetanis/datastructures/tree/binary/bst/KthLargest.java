@@ -1,22 +1,24 @@
 package com.svetanis.datastructures.tree.binary.bst;
 
+import static com.google.common.base.Optional.absent;
+import static com.google.common.base.Optional.of;
 import static com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node.newNode;
+import static com.svetanis.datastructures.tree.binary.model.mutable.primitive.Nodes.isNull;
 import static com.svetanis.datastructures.tree.binary.model.mutable.primitive.Nodes.size;
 
+import com.google.common.base.Optional;
 import com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node;
 
 public final class KthLargest {
 
-  public static int kthLargest(Node root, int k) {
-    // recursive for BST only
+  public static Optional<Integer> kthLargest(Node root, int k) {
 
-    if (root == null) {
-      return -1;
+    if (isNull(root)) {
+      return absent();
     }
-
     int right = size(root.right);
     if (k == right + 1) {
-      return root.data;
+      return of(root.data);
     } else if (right < k) {
       return kthLargest(root.left, k - right - 1);
     } else {
