@@ -2,6 +2,8 @@ package com.svetanis.datastructures.tree.binary.model.mutable.primitive;
 
 import static java.lang.Math.max;
 
+import java.util.List;
+
 public final class Nodes {
 
   public static int size(Node root) {
@@ -126,6 +128,14 @@ public final class Nodes {
     int n = a.length;
     for (int i = n - 1; i >= 0; i--) {
       root = insertUtil(root, a[i]);
+    }
+    return root;
+  }
+  
+  public static Node insert(List<Integer> list) {
+    Node root = null;
+    for(int val : list) {
+      root = insertUtil(root, val);
     }
     return root;
   }

@@ -66,6 +66,13 @@ public class Trie {
     return of(node);
   }
 
+
+  public boolean startsWith(String prefix) {
+    Optional<Node> node = find(prefix);
+    return node.isPresent();
+  }
+
+
   public Node getRoot() {
     return root;
   }
