@@ -1,4 +1,4 @@
-package com.svetanis.datastructures.hashmap;
+package com.svetanis.datastructures.heap;
 
 import static com.google.common.collect.ImmutableList.copyOf;
 import static com.google.common.collect.Lists.newArrayList;
@@ -19,13 +19,17 @@ import java.util.Queue;
 import com.google.common.collect.ImmutableList;
 import com.svetanis.java.base.Pair;
 
-public final class TopKWordsPQ {
+public final class TopKFrequentWords {
 
   public static ImmutableList<Pair<String, Integer>> kMostFrequent(List<String> terms, int k) {
     // Time Complexity: O(n * log k)
-    
+
     Map<String, Integer> map = freqMap(terms);
+
+    // min heap : least frequent element first
     Queue<Entry<String, Integer>> queue = new PriorityQueue<>(comparing(e -> e.getValue()));
+
+    // keep k top frequent elements in the heap
     for (Entry<String, Integer> entry : map.entrySet()) {
       queue.offer(entry);
       if (queue.size() > k) {
@@ -33,7 +37,7 @@ public final class TopKWordsPQ {
       }
     }
     List<Pair<String, Integer>> list = transform(reverse(toList(queue)), e -> Pair.build(e.getKey(), e.getValue()));
-    return newList(list.subList(0, k));
+    return newList(list);
   }
 
   public static void main(String[] args) {
