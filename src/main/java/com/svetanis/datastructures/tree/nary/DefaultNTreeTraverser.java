@@ -53,7 +53,7 @@ public class DefaultNTreeTraverser<T extends Comparable<? super T>> implements N
     for (Node<T> node : root.getChildren()) {
       max = max(max, height(node));
     }
-    return max;
+    return max + 1;
   }
 
   @Override
