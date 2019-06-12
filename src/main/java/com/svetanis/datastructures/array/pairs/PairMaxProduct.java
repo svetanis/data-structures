@@ -5,6 +5,15 @@ import static java.util.Arrays.sort;
 
 import com.svetanis.java.base.Pair;
 
+// Given an array with both +ive and -ive integers, return a pair with highest product.
+// to traverse the input array and keep track of following four values:
+// a) Maximum positive value
+// b) Second maximum positive value
+// c) Maximum negative value i.e., a negative value with maximum absolute value
+// d) Second maximum negative value.
+
+// At the end of the loop, compare the products of first two and last two and print the maximum of two products.
+
 public final class PairMaxProduct {
 
   private static int INT_MIN = 0;
