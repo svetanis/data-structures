@@ -12,12 +12,13 @@ public final class PairGivenSumHashing {
 
   public static Pair<Integer, Integer> pair(List<Integer> list, int k) {
     int n = list.size();
-    Set<Integer> set = newHashSet(list);
+    Set<Integer> set = newHashSet();
     for (int i = 0; i < n; i++) {
       int diff = k - list.get(i);
       if (set.contains(diff)) {
         return Pair.build(list.get(i), diff);
       }
+      set.add(list.get(i));
     }
     return Pair.build(-1, -1);
   }
