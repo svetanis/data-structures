@@ -78,10 +78,7 @@ public final class Basins {
     for (int i = 0; i < n; i++) {
       for (int j = 0; j < m; j++) {
         int key = lists.get(i).get(j);
-        if (map.get(key) == null) {
-          map.put(key, newArrayList());
-        }
-        List<Node> list = map.get(key);
+        List<Node> list = map.getOrDefault(key, newArrayList());
         list.add(new Node(i, j));
         map.put(key, list);
       }
