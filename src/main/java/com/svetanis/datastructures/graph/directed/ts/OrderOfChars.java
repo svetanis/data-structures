@@ -10,7 +10,8 @@ import java.util.List;
 import com.google.common.collect.ImmutableList;
 import com.svetanis.datastructures.graph.directed.Graph;
 
-// Given a sorted dictionary (array of words) of an alien language, find order of characters in the language.
+// Given a sorted dictionary (array of words) of an alien language, 
+// find order of characters in the language.
 
 public final class OrderOfChars {
 
