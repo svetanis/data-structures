@@ -13,7 +13,7 @@ public final class PairGivenSumHashingIndices {
   public static Pair<Integer, Integer> pair(List<Integer> list, int k) {
     // Time Complexity: O(n)
     // Space Complexity: O(n)
-    
+
     int n = list.size();
     Map<Integer, Integer> map = newHashMap();
     for (int i = 0; i < n; i++) {
