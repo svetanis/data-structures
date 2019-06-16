@@ -1,6 +1,5 @@
 package com.svetanis.datastructures.graph.clone;
 
-import static com.google.common.collect.Lists.newArrayList;
 import static com.svetanis.datastructures.graph.clone.CloneGraphDfs.bfs;
 
 public final class CloneGraphRecursive {
@@ -14,16 +13,10 @@ public final class CloneGraphRecursive {
       dst.data = src.data;
     }
 
-    if (src.children != null) {
-      if (dst.children == null) {
-        dst.children = newArrayList();
-      }
-
-      for (Node child : src.children) {
-        Node clone = new Node();
-        dst.children.add(clone);
-        clone(child, clone);
-      }
+    for (Node child : src.children) {
+      Node clone = new Node();
+      dst.children.add(clone);
+      clone(child, clone);
     }
   }
 
