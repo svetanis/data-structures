@@ -1,4 +1,4 @@
-package com.svetanis.datastructures.array.subarray;
+package com.svetanis.datastructures.array.subarray.zerosum;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static com.svetanis.java.base.collect.Lists.newList;
@@ -11,7 +11,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Multimap;
 import com.svetanis.java.base.Pair;
 
-public final class AllSubArraysWithZeroSum {
+public final class ZeroSumSubArrays {
 
   public static ImmutableList<Pair<Integer, Integer>> sum(int[] a) {
     int n = a.length;

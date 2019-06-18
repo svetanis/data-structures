@@ -1,11 +1,11 @@
-package com.svetanis.datastructures.array.subarray;
+package com.svetanis.datastructures.array.subarray.zerosum;
 
 import static com.google.common.collect.Maps.newHashMap;
 import static java.lang.Math.max;
 
 import java.util.Map;
 
-public final class LongestSubArrayZeroSum {
+public final class ZeroSumLongestSubArray {
 
   public static int zeroSum(int[] a) {
     // Time Complexity: O(n)
