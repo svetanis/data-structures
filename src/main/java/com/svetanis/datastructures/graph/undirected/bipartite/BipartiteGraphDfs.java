@@ -19,7 +19,7 @@ public final class BipartiteGraphDfs {
       if (!visited[u]) {
         visited[u] = true;
         colors[u] = 1 - colors[src];
-        if (isBipartite(g, u, visited, colors)) {
+        if (!isBipartite(g, u, visited, colors)) {
           return false;
         }
       } else if (colors[u] == colors[src]) {
