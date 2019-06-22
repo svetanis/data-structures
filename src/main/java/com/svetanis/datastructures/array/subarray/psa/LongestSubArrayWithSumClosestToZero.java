@@ -12,6 +12,35 @@ import java.util.List;
 import com.svetanis.java.base.Pair;
 import com.svetanis.java.base.utils.Triplet;
 
+// Given an array of both positive and negative numbers, 
+// find the subarray whose sum is closest to 0.
+
+// prefix[i] = a[0] + a[1] + a[2] + … + a[i-1] + a[i]
+// prefix[i] = prefix[i-1] + a[i]
+// a[i] = prefix[i] - prefix[i-1]
+
+// sum of a[left ... k] =
+// a[left] + a[left + 1] + ... + a[k - 1] + a[k] 
+// prefix[left] - prefix[left - 1] +
+// prefix[left + 1] - prefix[left] + 
+// …
+// prefix[k - 1] - prefix[k - 2] + 
+// prefix[k] - prefix[k - 1]
+// =
+// prefix[k] - prefix[left - 1]
+
+// for the sum of a[left ... k] to be equal to zero :
+// prefix[k] = prefix[left - 1]
+// therefore, the sum closest to zero can be found  
+// by locating the two closest elements in prefix
+
+// ALGORITHM:
+//  1. Compute prefix array with index of original array as well, so it is a collection of pair (value, index). O(n)
+//  2. Sort the above prefix array by value. O(n log n)
+//  3. Compute pair-wise diff by value. Prepare absolute values to get a measure of how far/close these are to zero. O(n)
+//  4. The closest pair is that with min value found above. O(n)
+//  5. Report the indices found above in the original array. This is the sub-array with sum being closest to zero. 
+
 public final class LongestSubArrayWithSumClosestToZero {
 
   public static Triplet<Integer, Integer, Integer> subArraySum(List<Integer> list) {
@@ -59,7 +88,7 @@ public final class LongestSubArrayWithSumClosestToZero {
     System.out.println(subArraySum(a)); // [1, 3] = 0
 
     List<Integer> a1 = newArrayList(-3, 2, 4, -6, -8, 10, 11);
-    System.out.println(subArraySum(a1)); // [2, 5] = 0 
+    System.out.println(subArraySum(a1)); // [2, 5] = 0
 
     List<Integer> a2 = newArrayList(10, -2, -7);
     System.out.println(subArraySum(a2)); // [0, 2] = 1
