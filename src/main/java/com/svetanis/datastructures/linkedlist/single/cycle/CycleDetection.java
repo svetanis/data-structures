@@ -6,9 +6,9 @@ import static com.svetanis.datastructures.linkedlist.single.Nodes.print;
 
 import com.svetanis.datastructures.linkedlist.single.Node;
 
-public final class LoopDetect {
+public final class CycleDetection {
 
-  public static boolean hasLoop(Node head) {
+  public static boolean hasCycle(Node head) {
     if (head == null) {
       return false;
     }
@@ -27,9 +27,9 @@ public final class LoopDetect {
   public static void main(String[] args) {
     Node head = fromList(newArrayList(50, 20, 15, 4, 10));
     print(head);
-    System.out.println(hasLoop(head));
+    System.out.println(hasCycle(head));
     // create a loop for testing
     head.next.next.next.next.next = head.next.next;
-    System.out.println(hasLoop(head));
+    System.out.println(hasCycle(head));
   }
 }
