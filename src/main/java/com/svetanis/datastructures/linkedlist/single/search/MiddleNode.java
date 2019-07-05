@@ -21,6 +21,22 @@ public final class MiddleNode {
     return slow;
   }
 
+  public static Node middleNode(Node head) {
+    if (head == null) {
+      return head;
+    }
+    Node slow = head;
+    Node fast = head.next;
+    while (fast != null) {
+      fast = fast.next;
+      if (fast != null) {
+        slow = slow.next;
+        fast = fast.next;
+      }
+    }
+    return slow;
+  }
+
   public static void main(String[] args) {
     Node head = fromList(newArrayList(50, 20, 15, 4, 10, 60));
     print(head);

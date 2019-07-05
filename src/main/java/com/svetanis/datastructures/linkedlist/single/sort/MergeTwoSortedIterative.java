@@ -5,7 +5,7 @@ import static com.svetanis.datastructures.linkedlist.single.Nodes.print;
 
 import com.svetanis.datastructures.linkedlist.single.Node;
 
-public final class MergeSortedIterative {
+public final class MergeTwoSortedIterative {
 
   public static Node merge(Node head1, Node head2) {
     
