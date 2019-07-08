@@ -6,13 +6,11 @@ public final class Node {
   public Node next;
 
   public Node() {
-    this.data = -1;
-    this.next = null;
+    this(-1);
   }
 
   public Node(int data) {
-    this.data = data;
-    this.next = null;
+    this(data, null);
   }
 
   public Node(int data, Node next) {
@@ -21,8 +19,7 @@ public final class Node {
   }
 
   public Node(Node node) {
-    this.data = node.data;
-    this.next = node.next;
+    this(node.data, node.next);
   }
 
   public void appendToTail(int data) {
@@ -34,6 +31,7 @@ public final class Node {
     current.next = end;
   }
 
+  @Override
   public String toString() {
     return Integer.toString(this.data);
   }
