@@ -35,6 +35,7 @@ public final class KeysAndDoors {
     visited[src.x][src.y][src.key] = true;
     Queue<Node> queue = new LinkedList<>();
     queue.offer(src);
+    
     while (!queue.isEmpty()) {
       Node node = queue.poll();
       int key = node.key;

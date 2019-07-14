@@ -19,6 +19,7 @@ public final class WordLadderLength {
     Queue<Node> queue = newLinkedList();
     queue.add(new Node(src, 1));
     set.add(dst);
+    
     while (!queue.isEmpty()) {
       Node node = queue.poll();
       String word = node.word;

@@ -17,6 +17,7 @@ import com.google.common.collect.ImmutableList;
 public final class WordLadder {
 
   public static ImmutableList<String> ladder(String src, String dst, Set<String> set) {
+    
     if (src.equals(dst) && set.isEmpty()) {
       return newList();
     }
@@ -24,6 +25,7 @@ public final class WordLadder {
     Queue<Node> queue = newLinkedList();
     queue.add(new Node(src, 0, null));
     set.add(dst);
+    
     while (!queue.isEmpty()) {
       Node node = queue.poll();
       String w = node.word;
