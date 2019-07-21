@@ -6,6 +6,12 @@ import static com.svetanis.datastructures.linkedlist.single.Nodes.print;
 
 import com.svetanis.datastructures.linkedlist.single.Node;
 
+// print alternate nodes of the given Linked List, 
+// first from head to end, and then from end to head. 
+// If LL has even number of nodes, then skips last node. 
+// For Linked List 1->2->3->4->5, print 1 3 5 5 3 1. 
+// For Linked List 1->2->3->4->5->6, print 1 3 5 5 3 1.
+
 public final class ReverseOdd {
 
   public static void alternate(Node head) {
