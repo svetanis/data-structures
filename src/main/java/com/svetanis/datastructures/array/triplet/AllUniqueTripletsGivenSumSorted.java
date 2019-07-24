@@ -22,17 +22,23 @@ public final class AllUniqueTripletsGivenSumSorted {
     sort(a);
     Set<Triplet<Integer, Integer, Integer>> set = newHashSet();
     for (int i = 0; i < n - 2; ++i) {
-      int left = i + 1; 
-      int right = n - 1; 
+      int left = i + 1;
+      int right = n - 1;
       while (left < right) {
         int sum = a[i] + a[left] + a[right];
         if (sum == k) {
           set.add(Triplet.build(a[left], a[i], a[right]));
           left++;
           right--;
+          while (left < right && a[left] == a[left - 1]) {
+            left++;
+          }
+          while (left < right && a[right] == a[right + 1]) {
+            right--;
+          }
         } else if (sum < k) {
           left++;
-        } else { 
+        } else {
           right--;
         }
       }
@@ -41,10 +47,10 @@ public final class AllUniqueTripletsGivenSumSorted {
   }
 
   public static void main(String[] args) {
-    int[] a = {-2, 2, 0, -1, 1};
+    int[] a = { -2, 2, 0, -1, 1 };
     System.out.println(triplets(a, 0));
-    
-    int[] a1 = {10, 3, -4, 1, -6, 9};
+
+    int[] a1 = { 10, 3, -4, 1, -6, 9 };
     System.out.println(triplets(a1, 0));
   }
 }

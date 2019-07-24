@@ -6,9 +6,10 @@ public final class CountTripletsSumLessGivenValue {
 
   public static int count(int[] a, int k) {
     // Time complexity: O(n log n)
+    sort(a);
+    
     int n = a.length;
     int count = 0;
-    sort(a);
     for (int i = 0; i < n; i++) {
       int left = i + 1;
       int right = n - 1;

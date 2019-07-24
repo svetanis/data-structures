@@ -14,6 +14,7 @@ public final class AllTripletsSumLessK {
 
   public static ImmutableList<Triplet<Integer, Integer, Integer>> triplets(int[] a, int k) {
     // Time complexity: O(n log n)
+    
     int n = a.length;
     sort(a);
     List<Triplet<Integer, Integer, Integer>> list = newArrayList();
