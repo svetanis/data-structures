@@ -1,8 +1,9 @@
-package com.svetanis.datastructures.array;
+package com.svetanis.datastructures.array.twopointers;
 
 import static java.lang.Math.max;
 
-// Given n non-negative integers representing an elevation map where the width of each bar is 1, 
+// Given n non-negative integers representing an elevation map 
+// where the width of each bar is 1, 
 // compute how much water it is able to trap after raining.
 
 public final class TrappingWaterSpaceEfficient {
@@ -14,17 +15,17 @@ public final class TrappingWaterSpaceEfficient {
     int total = 0;
     int leftMax = 0;
     int rightMax = 0;
-    int low = 0;
-    int high = n - 1;
-    while (low < high) {
-      if (a[low] < a[high]) {
-        leftMax = max(leftMax, a[low]);
-        total += leftMax - a[low];
-        low++;
+    int left = 0;
+    int right = n - 1;
+    while (left < right) {
+      if (a[left] < a[right]) {
+        leftMax = max(leftMax, a[left]);
+        total += leftMax - a[left];
+        left++;
       } else {
-        rightMax = max(rightMax, a[high]);
-        total += rightMax - a[high];
-        high--;
+        rightMax = max(rightMax, a[right]);
+        total += rightMax - a[right];
+        right--;
       }
     }
     return total;
