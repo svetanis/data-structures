@@ -17,8 +17,7 @@ public final class ConflictingAppointments {
   public static Node conflicts(List<Interval> list) {
     // create an empty Interval Search Tree,
     // add first appointment
-    Node root = null;
-    root = insert(root, list.get(0));
+    Node root = insert(null, list.get(0));
     // process rest of the intervals
     for (int i = 1; i < list.size(); i++) {
       // if current appointment conflicts with
