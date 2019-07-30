@@ -1,12 +1,12 @@
-package com.svetanis.datastructures.tree.binary.bt.traversal;
+package com.svetanis.datastructures.tree.binary.bt.traversal.lot;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.collect.Lists.newLinkedList;
 import static com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node.newNode;
-import static com.svetanis.datastructures.tree.binary.model.mutable.primitive.Nodes.isNotNull;
 import static com.svetanis.datastructures.tree.binary.model.mutable.primitive.Nodes.isNull;
 import static com.svetanis.java.base.collect.Lists.newList;
 import static com.svetanis.java.base.utils.Print.print;
+import static java.lang.Math.max;
 
 import java.util.List;
 import java.util.Queue;
@@ -14,39 +14,44 @@ import java.util.Queue;
 import com.google.common.collect.ImmutableList;
 import com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node;
 
-public final class LotQueue {
+// Find the largest value on each level of a binary tree.
 
-  public static ImmutableList<Node> traverse(Node root) {
-    // time complexity: O(n)
+public final class MaxValueInEachLevel {
 
+  public static ImmutableList<Integer> lot(Node root) {
     if (isNull(root)) {
       return newList();
     }
 
-    List<Node> list = newArrayList();
     Queue<Node> queue = newLinkedList();
     queue.offer(root);
+    List<Integer> list = newArrayList();
+
     while (!queue.isEmpty()) {
-      Node node = queue.poll();
-      list.add(node);
-      if (isNotNull(node.left)) {
-        queue.offer(node.left);
+      int max = 0;
+      int size = queue.size();
+      for (int i = 0; i < size; i++) {
+        Node node = queue.poll();
+        max = max(max, node.data);
+        if (node.left != null) {
+          queue.offer(node.left);
+        }
+        if (node.right != null) {
+          queue.offer(node.right);
+        }
       }
-      if (isNotNull(node.right)) {
-        queue.offer(node.right);
-      }
+      list.add(max);
     }
     return newList(list);
   }
 
   public static void main(String[] args) {
-    Node root = newNode(1);
-    root.left = newNode(2);
-    root.right = newNode(3);
-    root.left.left = newNode(4);
+    Node root = newNode(4);
+    root.left = newNode(9);
+    root.right = newNode(2);
+    root.left.left = newNode(3);
     root.left.right = newNode(5);
-    root.right.right = newNode(6);
-
-    print(traverse(root));
+    root.right.right = newNode(7);
+    print(lot(root));
   }
 }

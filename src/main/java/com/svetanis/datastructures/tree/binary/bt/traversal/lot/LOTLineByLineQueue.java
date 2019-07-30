@@ -1,4 +1,4 @@
-package com.svetanis.datastructures.tree.binary.bt.traversal;
+package com.svetanis.datastructures.tree.binary.bt.traversal.lot;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.collect.Lists.newLinkedList;
@@ -12,37 +12,34 @@ import java.util.Queue;
 import com.google.common.collect.ImmutableList;
 import com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node;
 
+// Given a binary tree, populate an array to represent its level-by-level traversal. 
+// Populate the values of all nodes of each level from left to right in separate sub-arrays.
+
 public final class LOTLineByLineQueue {
 
   public static ImmutableList<ImmutableList<Integer>> lot(Node root) {
-    List<Integer> list = newArrayList();
-    List<ImmutableList<Integer>> lists = newArrayList();
-
     if (isNull(root)) {
-      return newList(lists);
+      return newList();
     }
+
     Queue<Node> queue = newLinkedList();
     queue.offer(root);
-    int size = queue.size();
+    List<ImmutableList<Integer>> lists = newArrayList();
 
     while (!queue.isEmpty()) {
-
-      Node node = queue.poll();
-      list.add(node.data);
-      size--;
-
-      if (node.left != null) {
-        queue.offer(node.left);
+      int size = queue.size();
+      List<Integer> list = newArrayList();
+      for (int i = 0; i < size; i++) {
+        Node node = queue.poll();
+        list.add(node.data);
+        if (node.left != null) {
+          queue.offer(node.left);
+        }
+        if (node.right != null) {
+          queue.offer(node.right);
+        }
       }
-      if (node.right != null) {
-        queue.offer(node.right);
-      }
-
-      if (size == 0) {
-        size = queue.size();
-        lists.add(newList(list));
-        list = newArrayList();
-      }
+      lists.add(newList(list));
     }
     return newList(lists);
   }

@@ -1,4 +1,4 @@
-package com.svetanis.datastructures.tree.binary.bt.traversal;
+package com.svetanis.datastructures.tree.binary.bt.traversal.lot;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.collect.Lists.newLinkedList;

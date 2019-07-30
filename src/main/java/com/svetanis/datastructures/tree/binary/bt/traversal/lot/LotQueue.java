@@ -1,4 +1,4 @@
-package com.svetanis.datastructures.tree.binary.bt.traversal;
+package com.svetanis.datastructures.tree.binary.bt.traversal.lot;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.collect.Lists.newLinkedList;
@@ -14,9 +14,9 @@ import java.util.Queue;
 import com.google.common.collect.ImmutableList;
 import com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node;
 
-public final class LotBetweenGivenTwoLevelsQueue {
+public final class LotQueue {
 
-  public static ImmutableList<Node> traverse(Node root, int low, int high) {
+  public static ImmutableList<Node> traverse(Node root) {
     // time complexity: O(n)
 
     if (isNull(root)) {
@@ -26,35 +26,27 @@ public final class LotBetweenGivenTwoLevelsQueue {
     List<Node> list = newArrayList();
     Queue<Node> queue = newLinkedList();
     queue.offer(root);
-    int level = 1;
-    int size = queue.size();
     while (!queue.isEmpty()) {
       Node node = queue.poll();
-      if (level >= low && level <= high) {
-        list.add(node);
-      }
+      list.add(node);
       if (isNotNull(node.left)) {
         queue.offer(node.left);
       }
       if (isNotNull(node.right)) {
         queue.offer(node.right);
       }
-      if (--size == 0) {
-        size = queue.size();
-        level++;
-      }
     }
     return newList(list);
   }
 
   public static void main(String[] args) {
-    Node root = newNode(20);
-    root.left = newNode(8);
-    root.right = newNode(22);
+    Node root = newNode(1);
+    root.left = newNode(2);
+    root.right = newNode(3);
     root.left.left = newNode(4);
-    root.left.right = newNode(12);
-    root.left.right.left = newNode(10);
-    root.left.right.right = newNode(14);
-    print(traverse(root, 2, 4));
+    root.left.right = newNode(5);
+    root.right.right = newNode(6);
+
+    print(traverse(root));
   }
 }
