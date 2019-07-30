@@ -13,39 +13,34 @@ import java.util.Queue;
 import com.google.common.collect.ImmutableList;
 import com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node;
 
+// Given a binary tree, return an array containing nodes in its left view. 
+// The left view of a binary tree is the set of nodes visible 
+// when the tree is seen from the left side.
+
 public final class LeftViewLevelOrder {
 
   public static ImmutableList<Node> leftView(Node root) {
     // time complexity: O(n)
-
     if (isNull(root)) {
       return newList();
     }
-
     List<Node> list = newArrayList();
     Queue<Node> queue = newLinkedList();
     queue.offer(root);
 
-    int size = queue.size();
-    int level = 1;
-    int max = 0;
     while (!queue.isEmpty()) {
-      Node node = queue.peek();
-      if (level > max) {
-        list.add(node);
-        max = level;
-      }
-      if (node.left != null) {
-        queue.offer(node.left);
-      }
-      if (node.right != null) {
-        queue.offer(node.right);
-      }
-      queue.poll();
-      size--;
-      if (size == 0) {
-        size = queue.size();
-        level++;
+      int size = queue.size();
+      for (int i = 0; i < size; i++) {
+        Node node = queue.poll();
+        if (i == 0) {
+          list.add(node);
+        }
+        if (node.left != null) {
+          queue.offer(node.left);
+        }
+        if (node.right != null) {
+          queue.offer(node.right);
+        }
       }
     }
     return newList(list);
@@ -57,6 +52,6 @@ public final class LeftViewLevelOrder {
     root.left.left = newNode(30);
     root.left.left = newNode(25);
     root.left.right = newNode(40);
-    print(leftView(root));
+    print(leftView(root)); // 12 10 25
   }
 }

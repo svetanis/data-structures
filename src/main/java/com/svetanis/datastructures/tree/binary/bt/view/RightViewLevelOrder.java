@@ -13,6 +13,10 @@ import java.util.Queue;
 import com.google.common.collect.ImmutableList;
 import com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node;
 
+// Given a binary tree, return an array containing nodes in its right view. 
+// The right view of a binary tree is the set of nodes visible 
+// when the tree is seen from the right side.
+
 public final class RightViewLevelOrder {
 
   public static ImmutableList<Node> rightView(Node root) {
@@ -24,20 +28,20 @@ public final class RightViewLevelOrder {
     List<Node> list = newArrayList();
     Queue<Node> queue = newLinkedList();
     queue.offer(root);
-    int size = queue.size();
+
     while (!queue.isEmpty()) {
-      Node node = queue.peek();
-      if (node.left != null) {
-        queue.offer(node.left);
-      }
-      if (node.right != null) {
-        queue.offer(node.right);
-      }
-      queue.poll();
-      size--;
-      if (size == 0) {
-        list.add(node);
-        size = queue.size();
+      int size = queue.size();
+      for (int i = 0; i < size; i++) {
+        Node node = queue.poll();
+        if (i == size - 1) {
+          list.add(node);
+        }
+        if (node.left != null) {
+          queue.offer(node.left);
+        }
+        if (node.right != null) {
+          queue.offer(node.right);
+        }
       }
     }
     return newList(list);
