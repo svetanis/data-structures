@@ -6,6 +6,10 @@ import static com.svetanis.datastructures.tree.binary.model.mutable.primitive.No
 
 import com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node;
 
+// Given a binary tree where each node can only have a digit (0-9) value, 
+// each root-to-leaf path will represent a number. 
+// Find the total sum of all the numbers represented by all paths.
+
 public final class SumRootToLeafNums {
 
   private static final int MOD = 1003;
@@ -14,18 +18,18 @@ public final class SumRootToLeafNums {
     return sum(root, 0);
   }
 
-  private static int sum(Node root, int value) {
+  private static int sum(Node root, int sum) {
     // Time Complexity: O(n)
 
     if (isNull(root)) {
       return 0;
     }
-    value = value * 10 + root.data;
+    sum = sum * 10 + root.data;
     if (isLeaf(root)) {
-      return value;
+      return sum;
     }
-    int left = sum(root.left, value);
-    int right = sum(root.right, value);
+    int left = sum(root.left, sum);
+    int right = sum(root.right, sum);
     return left + right;
   }
 
@@ -33,18 +37,18 @@ public final class SumRootToLeafNums {
     return sumMod(root, 0);
   }
 
-  private static int sumMod(Node root, int value) {
+  private static int sumMod(Node root, int sum) {
     // Time Complexity: O(n)
 
     if (isNull(root)) {
       return 0;
     }
-    value = (value * 10 + root.data) % MOD;
+    sum = (sum * 10 + root.data) % MOD;
     if (isLeaf(root)) {
-      return value;
+      return sum;
     }
-    int left = sumMod(root.left, value);
-    int right = sumMod(root.right, value);
+    int left = sumMod(root.left, sum);
+    int right = sumMod(root.right, sum);
     return (left + right) % MOD;
   }
 

@@ -14,6 +14,10 @@ import java.util.List;
 import com.google.common.collect.ImmutableList;
 import com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node;
 
+// Given a binary tree and a number ‘S’, 
+// find if the tree has a path from root-to-leaf 
+// such that the sum of all the node values of that path equals ‘S’.
+
 public final class RootToLeafPathGivenSum {
 
   public static ImmutableList<Integer> path(Node node, int k) {

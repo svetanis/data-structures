@@ -6,6 +6,10 @@ import static com.svetanis.datastructures.tree.binary.model.mutable.primitive.No
 
 import com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node;
 
+// Given a binary tree and a number ‘S’, 
+// find if the tree has a path from root-to-leaf 
+// such that the sum of all the node values of that path equals ‘S’.
+
 public final class PathSum {
 
   public static boolean hasPathSum(Node root, int k) {

@@ -13,6 +13,8 @@ import java.util.List;
 import com.google.common.collect.ImmutableList;
 import com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node;
 
+// Given a binary tree, print all of the paths from the root to leaf nodes.
+
 public final class RootToLeafPaths {
 
   public static ImmutableList<ImmutableList<Integer>> paths(Node root) {
