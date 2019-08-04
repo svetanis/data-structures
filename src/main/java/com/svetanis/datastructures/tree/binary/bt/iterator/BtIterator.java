@@ -1,4 +1,4 @@
-package com.svetanis.datastructures.tree.binary.bst;
+package com.svetanis.datastructures.tree.binary.bt.iterator;
 
 import static com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node.newNode;
 import static com.svetanis.datastructures.tree.binary.model.mutable.primitive.Nodes.isNotNull;
@@ -13,11 +13,11 @@ import com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node;
 // Note: next() and hasNext() should run in average O(1) time and uses O(h) memory, 
 // where h is the height of the tree.
 
-public final class BstIterator {
+public final class BtIterator {
 
   private Stack<Node> stack;
 
-  public BstIterator(Node root) {
+  public BtIterator(Node root) {
     this.stack = new Stack<>();
     pushLeft(root);
   }
@@ -52,7 +52,7 @@ public final class BstIterator {
     root.right = newNode(11);
     root.left.right = newNode(6);
     root.right.right = newNode(12);
-    BstIterator iter = new BstIterator(root);
+    BtIterator iter = new BtIterator(root);
     while (iter.hasNext()) {
       System.out.print(iter.next() + " ");
     }

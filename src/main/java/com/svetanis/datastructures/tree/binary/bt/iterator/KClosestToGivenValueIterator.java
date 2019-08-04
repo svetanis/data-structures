@@ -1,4 +1,4 @@
-package com.svetanis.datastructures.tree.binary.bst;
+package com.svetanis.datastructures.tree.binary.bt.iterator;
 
 import static com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node.newNode;
 import static com.svetanis.java.base.collect.Lists.newList;
@@ -17,7 +17,7 @@ import com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node;
 public final class KClosestToGivenValueIterator {
 
   public static ImmutableList<Integer> kClosest(Node root, int k, double target) {
-    BstIterator iter = new BstIterator(root);
+    BtIterator iter = new BtIterator(root);
     Queue<Integer> queue = new ArrayDeque<>();
     while (iter.hasNext()) {
       int val = iter.next();
