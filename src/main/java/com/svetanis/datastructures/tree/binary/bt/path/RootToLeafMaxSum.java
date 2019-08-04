@@ -13,8 +13,8 @@ public final class RootToLeafMaxSum {
     if (root == null) {
       return 0;
     }
-    int left = maxSum(root.left);
-    int right = maxSum(root.right);
+    int left = max(0, maxSum(root.left));
+    int right = max(0, maxSum(root.right));
     return root.data + max(left, right);
   }
 
@@ -31,7 +31,7 @@ public final class RootToLeafMaxSum {
     root.left.left = newNode(8);
     root.left.right = newNode(-4);
     System.out.println(maxSum(root));
-    
+
     Node root2 = newNode(1);
     root2.left = newNode(2);
     root2.right = newNode(3);
@@ -44,6 +44,6 @@ public final class RootToLeafMaxSum {
     root2.right.left.right = newNode(9);
     root2.right.right.right = newNode(5);
     System.out.println(maxSum(root2));
-    
+
   }
 }
