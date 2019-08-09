@@ -1,14 +1,17 @@
 package com.svetanis.datastructures.tree.binary.bt.view;
 
-import static com.google.common.collect.Lists.newLinkedList;
 import static com.google.common.collect.Maps.newTreeMap;
+import static com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node.newNode;
+import static com.svetanis.datastructures.tree.binary.model.mutable.primitive.Nodes.inOrder;
 import static com.svetanis.java.base.collect.Lists.newList;
 import static com.svetanis.java.base.utils.Print.print;
 
+import java.util.ArrayDeque;
 import java.util.Map;
 import java.util.Queue;
 
 import com.google.common.collect.ImmutableList;
+import com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node;
 
 public final class BottomViewBT {
 
@@ -20,21 +23,18 @@ public final class BottomViewBT {
       return newList();
     }
 
-    // initialize hDist = 0 for root element
-    int hDist = 0;
-
     Map<Integer, Integer> map = newTreeMap();
-    Queue<Node> queue = newLinkedList();
+    Queue<Item> queue = new ArrayDeque<>();
 
     // horizontal distance of root is 0
-    root.hDist = hDist;
-    queue.offer(root);
+    queue.offer(new Item(root, 0));
 
     // standard BFS or level order traversal loop
     while (!queue.isEmpty()) {
       // remove the front item and get its details
-      Node node = queue.poll();
-      hDist = node.hDist;
+      Item item = queue.poll();
+      Node node = item.node;
+      int hDist = item.hDist;
 
       // put the dequeued node to TreeMap
       // having key at horizontal distance
@@ -45,27 +45,25 @@ public final class BottomViewBT {
 
       // enqueue left and right children of current node
       if (node.left != null) {
-        node.left.hDist = hDist - 1;
-        queue.offer(node.left);
+        queue.offer(new Item(node.left, hDist - 1));
       }
 
       if (node.right != null) {
-        node.right.hDist = hDist + 1;
-        queue.offer(node.right);
+        queue.offer(new Item(node.right, hDist + 1));
       }
     }
     return newList(map.values());
   }
 
   public static void main(String[] args) {
-    Node root = new Node(20);
-    root.left = new Node(8);
-    root.right = new Node(22);
-    root.left.left = new Node(5);
-    root.left.right = new Node(3);
-    root.left.right.left = new Node(10);
-    root.left.right.right = new Node(14);
-    root.right.right = new Node(25);
+    Node root = newNode(20);
+    root.left = newNode(8);
+    root.right = newNode(22);
+    root.left.left = newNode(5);
+    root.left.right = newNode(3);
+    root.left.right.left = newNode(10);
+    root.left.right.right = newNode(14);
+    root.right.right = newNode(25);
 
     System.out.println("Input BT: ");
     inOrder(root);
@@ -75,15 +73,15 @@ public final class BottomViewBT {
     print(bottomView(root));
     System.out.println();
 
-    Node root2 = new Node(20);
-    root2.left = new Node(8);
-    root2.right = new Node(22);
-    root2.left.left = new Node(5);
-    root2.left.right = new Node(3);
-    root2.left.right.left = new Node(10);
-    root2.left.right.right = new Node(14);
-    root2.right.left = new Node(4);
-    root2.right.right = new Node(25);
+    Node root2 = newNode(20);
+    root2.left = newNode(8);
+    root2.right = newNode(22);
+    root2.left.left = newNode(5);
+    root2.left.right = newNode(3);
+    root2.left.right.left = newNode(10);
+    root2.left.right.right = newNode(14);
+    root2.right.left = newNode(4);
+    root2.right.right = newNode(25);
 
     System.out.println("Input BT: ");
     inOrder(root2);
@@ -92,33 +90,5 @@ public final class BottomViewBT {
     System.out.println("Bottom View of BT: ");
     print(bottomView(root2));
     System.out.println();
-  }
-
-  private static void inOrder(Node node) {
-    if (node == null) {
-      return;
-    }
-    inOrder(node.left);
-    System.out.print(node.data + " ");
-    inOrder(node.right);
-  }
-
-  private static class Node {
-    private int data;
-    private int hDist;
-    private Node left;
-    private Node right;
-
-    public Node(int data) {
-      this.data = data;
-      this.hDist = 0;
-      this.left = null;
-      this.right = null;
-    }
-
-    @Override
-    public String toString() {
-      return Integer.toString(data);
-    }
   }
 }
