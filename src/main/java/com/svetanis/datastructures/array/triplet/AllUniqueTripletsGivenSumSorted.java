@@ -1,13 +1,15 @@
 package com.svetanis.datastructures.array.triplet;
 
-import static com.google.common.collect.Sets.newHashSet;
+import static com.google.common.collect.Lists.newArrayList;
 import static com.svetanis.java.base.collect.Lists.newList;
-import static java.util.Arrays.sort;
+import static com.svetanis.java.base.collect.Lists.sort;
+import static java.util.Arrays.asList;
 
-import java.util.Set;
+import java.util.List;
 
 import com.google.common.collect.ImmutableList;
-import com.svetanis.java.base.utils.Triplet;
+
+// Given array of unsorted numbers, find all unique triplets in it that add up to zero.
 
 // fix the first element one by one and
 // find the other two elements
@@ -16,25 +18,31 @@ import com.svetanis.java.base.utils.Triplet;
 
 public final class AllUniqueTripletsGivenSumSorted {
 
-  public static ImmutableList<Triplet<Integer, Integer, Integer>> triplets(int[] a, int k) {
-    // time complexity: O(n^2)
-    int n = a.length;
-    sort(a);
-    Set<Triplet<Integer, Integer, Integer>> set = newHashSet();
-    for (int i = 0; i < n - 2; ++i) {
+  public static ImmutableList<ImmutableList<Integer>> triplets(List<Integer> a, int k) {
+    // Time Complexity: O(n^2)
+
+    int n = a.size();
+    List<ImmutableList<Integer>> lists = newArrayList();
+    for (int i = 0; i < n - 2; i++) {
+      if (i > 0 && a.get(i - 1).equals(a.get(i))) {
+        continue; // skip same element
+      }
       int left = i + 1;
       int right = n - 1;
+      
       while (left < right) {
-        int sum = a[i] + a[left] + a[right];
+        int sum = a.get(i) + a.get(left) + a.get(right);
         if (sum == k) {
-          set.add(Triplet.build(a[left], a[i], a[right]));
+          List<Integer> triplet = newArrayList(a.get(left), a.get(i), a.get(right));
+          lists.add(sort(triplet));
           left++;
           right--;
-          while (left < right && a[left] == a[left - 1]) {
-            left++;
+          
+          while (left < right && a.get(left) == a.get(left - 1)) {
+            left++; // skip same element
           }
-          while (left < right && a[right] == a[right + 1]) {
-            right--;
+          while (left < right && a.get(right) == a.get(right + 1)) {
+            right--; // skip same element
           }
         } else if (sum < k) {
           left++;
@@ -43,14 +51,17 @@ public final class AllUniqueTripletsGivenSumSorted {
         }
       }
     }
-    return newList(set);
+    return newList(lists);
   }
 
   public static void main(String[] args) {
-    int[] a = { -2, 2, 0, -1, 1 };
-    System.out.println(triplets(a, 0));
+    List<Integer> list1 = asList(-2, 2, 0, -1, 1);
+    System.out.println(triplets(sort(list1), 0));
 
-    int[] a1 = { 10, 3, -4, 1, -6, 9 };
-    System.out.println(triplets(a1, 0));
+    List<Integer> list2 = asList(10, 3, -4, 1, -6, 9);
+    System.out.println(triplets(sort(list2), 0));
+
+    List<Integer> list3 = asList(-31013930, -31013930, 9784175, 21229755);
+    System.out.println(triplets(sort(list3), 0));
   }
 }
