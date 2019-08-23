@@ -4,6 +4,10 @@ import static java.lang.Integer.MAX_VALUE;
 import static java.lang.Math.abs;
 import static java.util.Arrays.sort;
 
+// Given an array S of n integers, find three integers in S 
+// such that the sum is closest to a given number, target. 
+// Return the sum of the three integers.
+
 public final class TripletClosestToGivenSum {
 
   public static int triplet(int[] a, int k) {
