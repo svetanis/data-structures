@@ -4,7 +4,7 @@ import static java.lang.Math.max;
 
 // Given n non-negative integers representing an elevation map 
 // where the width of each bar is 1, 
-// compute how much water it is able to trap after raining.
+// compute how much water it is able to trap after raining
 
 public final class TrappingWaterSpaceEfficient {
 
@@ -13,18 +13,18 @@ public final class TrappingWaterSpaceEfficient {
 
     int n = a.length;
     int total = 0;
-    int leftMax = 0;
-    int rightMax = 0;
     int left = 0;
     int right = n - 1;
+    int maxLeft = a[left];
+    int maxRight = a[right];
     while (left < right) {
-      if (a[left] < a[right]) {
-        leftMax = max(leftMax, a[left]);
-        total += leftMax - a[left];
+      if (a[left] <= a[right]) {
+        maxLeft = max(maxLeft, a[left]);
+        total += maxLeft - a[left];
         left++;
       } else {
-        rightMax = max(rightMax, a[right]);
-        total += rightMax - a[right];
+        maxRight = max(maxRight, a[right]);
+        total += maxRight - a[right];
         right--;
       }
     }
