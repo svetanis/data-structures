@@ -6,6 +6,10 @@ import static java.lang.Math.min;
 
 import com.svetanis.java.base.utils.Triplet;
 
+//Given three sorted arrays A[], B[] and C[], 
+// find 3 elements i, j and k from A, B and C respectively 
+// such that max(abs(A[i] – B[j]), abs(B[j] – C[k]), abs(C[k] – A[i])) is minimized. 
+
 public final class ClosestThreeElements {
 
   public static Triplet<Integer, Integer, Integer> triplet(int[] a, int[] b, int[] c) {
