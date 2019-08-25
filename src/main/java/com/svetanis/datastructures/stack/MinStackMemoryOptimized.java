@@ -7,14 +7,15 @@ import java.util.Stack;
 // Design a stack that supports push, pop, top, and 
 // retrieving the minimum element in constant time.
 
-public final class MinStackAux {
+public final class MinStackMemoryOptimized {
+  // Time Complexity: O(1)
+  // Space Complexity: O(1)
 
+  private int min;
   private Stack<Integer> stack;
-  private Stack<Integer> aux;
 
-  public MinStackAux() {
-    this.stack = new Stack<>();
-    this.aux = new Stack<>();
+  public MinStackMemoryOptimized() {
+    this.stack = new Stack<Integer>();
   }
 
   public int size() {
@@ -26,9 +27,14 @@ public final class MinStackAux {
   }
 
   public void push(int x) {
-    stack.push(x);
-    if (aux.isEmpty() || aux.peek() >= x) {
-      aux.push(x);
+    if (stack.isEmpty()) {
+      stack.push(x);
+      min = x;
+    } else if (x > min) {
+      stack.push(x);
+    } else {
+      stack.push(2 * x - min);
+      min = x;
     }
   }
 
@@ -37,29 +43,33 @@ public final class MinStackAux {
       throw illegalState("stack underflow");
     }
     int top = stack.pop();
-    if (top == aux.peek()) {
-      aux.pop();
+    int result = 0;
+    if (top < min) {
+      result = min;
+      min = 2 * min - top;
+    } else {
+      result = top;
     }
-    return top;
+    return result;
   }
 
   public int peek() {
     if (stack.isEmpty()) {
       throw illegalState("stack underflow");
     }
-    return stack.peek();
+    int top = stack.peek();
+    return top < min ? min : top;
   }
 
   public int min() {
-    if (aux.empty()) {
+    if (stack.isEmpty()) {
       throw illegalState("stack underflow");
-    } else {
-      return aux.peek();
     }
+    return min;
   }
 
   public static void main(String[] args) {
-    MinStackAux stack = new MinStackAux();
+    MinStackMemoryOptimized stack = new MinStackMemoryOptimized();
     stack.push(6);
     System.out.println(stack.min()); // 6
 
@@ -86,6 +96,6 @@ public final class MinStackAux {
 
     stack.pop();
     System.out.println(stack.min()); // 6
-  }
 
+  }
 }

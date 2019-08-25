@@ -6,6 +6,9 @@ import java.util.Stack;
 
 import com.svetanis.java.base.Pair;
 
+// Design a stack that supports push, pop, top, and 
+// retrieving the maximum element in constant time.
+
 public final class MaxStack {
 
   private Stack<Pair<Integer, Integer>> stack;
@@ -22,6 +25,11 @@ public final class MaxStack {
     return stack.empty();
   }
 
+  public void push(int x) {
+    int max = empty() ? x : Math.max(x, stack.peek().getRight());
+    stack.push(Pair.build(x, max));
+  }
+
   public int pop() {
     if (empty()) {
       throw illegalState("stack underflow");
@@ -34,16 +42,6 @@ public final class MaxStack {
       throw illegalState("stack underflow");
     }
     return stack.peek().getLeft();
-  }
-
-  public void push(int x) {
-    int max;
-    if (empty()) {
-      max = x;
-    } else {
-      max = Math.max(x, stack.peek().getRight());
-    }
-    stack.push(Pair.build(x, max));
   }
 
   public int max() {
