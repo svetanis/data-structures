@@ -1,5 +1,6 @@
 package com.svetanis.datastructures.tree.binary.bt;
 
+import static com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node.newNode;
 import static com.svetanis.datastructures.tree.binary.model.mutable.primitive.Nodes.size;
 
 import com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node;
@@ -25,28 +26,28 @@ public final class CompleteBinaryTreeRecursive {
     // recur for left and right subtrees
     boolean left = isComplete(root.left, 2 * index + 1, size);
     boolean right = isComplete(root.right, 2 * index + 2, size);
-    return left && right; 
+    return left && right;
   }
 
   public static void main(String[] args) {
-    Node root = new Node(1);
-    root.left = new Node(2);
-    root.right = new Node(3);
-    root.left.left = new Node(4);
-    root.left.right = new Node(5);
-    root.right.right = new Node(6);
+    Node root = newNode(1);
+    root.left = newNode(2);
+    root.right = newNode(3);
+    root.left.left = newNode(4);
+    root.left.right = newNode(5);
+    root.right.right = newNode(6);
     System.out.println(isComplete(root));
 
-    Node root2 = new Node(1);
-    root2.left = new Node(2);
-    root2.left.left = new Node(4);
+    Node root2 = newNode(1);
+    root2.left = newNode(2);
+    root2.left.left = newNode(4);
     System.out.println(isComplete(root2));
 
-    Node root3 = new Node(1);
-    root3.left = new Node(2);
-    root3.right = new Node(3);
-    root3.left.left = new Node(4);
-    root3.left.right = new Node(5);
+    Node root3 = newNode(1);
+    root3.left = newNode(2);
+    root3.right = newNode(3);
+    root3.left.left = newNode(4);
+    root3.left.right = newNode(5);
     System.out.println(isComplete(root3));
   }
 }
