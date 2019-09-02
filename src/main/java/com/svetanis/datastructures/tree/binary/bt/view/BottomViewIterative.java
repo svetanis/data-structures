@@ -2,7 +2,6 @@ package com.svetanis.datastructures.tree.binary.bt.view;
 
 import static com.google.common.collect.Maps.newTreeMap;
 import static com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node.newNode;
-import static com.svetanis.datastructures.tree.binary.model.mutable.primitive.Nodes.inOrder;
 import static com.svetanis.java.base.collect.Lists.newList;
 import static com.svetanis.java.base.utils.Print.print;
 
@@ -13,7 +12,7 @@ import java.util.Queue;
 import com.google.common.collect.ImmutableList;
 import com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node;
 
-public final class BottomViewBT {
+public final class BottomViewIterative {
 
   public static ImmutableList<Integer> bottomView(Node root) {
     // Time Complexity: O(n)
@@ -64,14 +63,7 @@ public final class BottomViewBT {
     root.left.right.left = newNode(10);
     root.left.right.right = newNode(14);
     root.right.right = newNode(25);
-
-    System.out.println("Input BT: ");
-    inOrder(root);
-    System.out.println();
-
-    System.out.println("Bottom View of BT: ");
-    print(bottomView(root));
-    System.out.println();
+    print(bottomView(root)); // 5 10 3 14 25
 
     Node root2 = newNode(20);
     root2.left = newNode(8);
@@ -82,13 +74,6 @@ public final class BottomViewBT {
     root2.left.right.right = newNode(14);
     root2.right.left = newNode(4);
     root2.right.right = newNode(25);
-
-    System.out.println("Input BT: ");
-    inOrder(root2);
-    System.out.println();
-
-    System.out.println("Bottom View of BT: ");
-    print(bottomView(root2));
-    System.out.println();
+    print(bottomView(root2)); // 5 10 4 14 25
   }
 }
