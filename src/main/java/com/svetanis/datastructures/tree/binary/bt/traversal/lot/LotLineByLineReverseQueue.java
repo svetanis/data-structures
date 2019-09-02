@@ -16,7 +16,7 @@ import com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node;
 // traversal in reverse order, i.e., the lowest level comes first. 
 // Populate the values of all nodes in each level from left to right in separate sub-arrays.
 
-public final class LOTLineByLineReverseQueue {
+public final class LotLineByLineReverseQueue {
 
   public static ImmutableList<ImmutableList<Integer>> lot(Node root) {
     if (isNull(root)) {

@@ -2,39 +2,41 @@ package com.svetanis.datastructures.tree.binary.bt.traversal.lot;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node.newNode;
+import static com.svetanis.datastructures.tree.binary.model.mutable.primitive.Nodes.height;
 import static com.svetanis.datastructures.tree.binary.model.mutable.primitive.Nodes.isNull;
 import static com.svetanis.java.base.collect.Lists.newList;
 import static com.svetanis.java.base.utils.Print.printLists;
 
 import java.util.List;
 
-import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Multimap;
 import com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node;
 
-public final class LotHashing {
+public final class LotLineByLineRecursive {
 
   public static ImmutableList<ImmutableList<Integer>> traverse(Node root) {
-    // time complexity: O(n)
+    // time complexity: O(n^2)
 
-    Multimap<Integer, Integer> mm = ArrayListMultimap.create();
-    preorder(root, 1, mm);
-
+    int height = height(root);
     List<ImmutableList<Integer>> lists = newArrayList();
-    for (int key : mm.keySet()) {
-      lists.add(newList(mm.get(key)));
+    for (int i = 1; i <= height; i++) {
+      List<Integer> list = newArrayList();
+      givenLevel(root, i, list);
+      lists.add(newList(list));
     }
     return newList(lists);
   }
 
-  private static void preorder(Node root, int level, Multimap<Integer, Integer> mm) {
-    if (isNull(root)) {
+  private static void givenLevel(Node node, int k, List<Integer> list) {
+    if (isNull(node)) {
       return;
     }
-    mm.put(level, root.data);
-    preorder(root.left, level + 1, mm);
-    preorder(root.right, level + 1, mm);
+    if (k == 1) {
+      list.add(node.data);
+    } else if (k > 1) {
+      givenLevel(node.left, k - 1, list);
+      givenLevel(node.right, k - 1, list);
+    }
   }
 
   public static void main(String[] args) {
