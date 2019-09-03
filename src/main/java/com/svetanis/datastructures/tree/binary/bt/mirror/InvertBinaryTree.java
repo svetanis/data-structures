@@ -1,4 +1,4 @@
-package com.svetanis.datastructures.tree.binary.bt;
+package com.svetanis.datastructures.tree.binary.bt.mirror;
 
 import static com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node.newNode;
 import static com.svetanis.datastructures.tree.binary.model.mutable.primitive.Nodes.inOrder;
@@ -11,20 +11,24 @@ import com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node;
 
 public final class InvertBinaryTree {
 
-  public static Node invert(Node root) {
+  public static void invert(Node root) {
     if (isNull(root)) {
-      return root;
+      return;
     }
 
     // do the subtrees
     invert(root.left);
     invert(root.right);
 
+    swap(root);
+  }
+  
+  
+  private static void swap(Node root) {
     // swap the nodes
     Node temp = root.left;
     root.left = root.right;
     root.right = temp;
-    return root;
   }
 
   public static void main(String[] args) {
@@ -35,15 +39,12 @@ public final class InvertBinaryTree {
     root.left.right = newNode(5);
     root.right.left = newNode(6);
     root.right.right = newNode(7);
-    inOrder(root);  // 4 2 5 1 6 3 7 
-
-    Node inverted = invert(root);
+    inOrder(root); // 4 2 5 1 6 3 7
     System.out.println();
 
-    inOrder(inverted); // 7 3 6 1 5 2 4
+    invert(root);
 
+    inOrder(root); // 7 3 6 1 5 2 4
+    System.out.println();
   }
 }
-
-
-
