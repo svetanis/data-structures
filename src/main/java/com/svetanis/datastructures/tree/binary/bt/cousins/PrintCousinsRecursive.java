@@ -1,4 +1,4 @@
-package com.svetanis.datastructures.tree.binary.bt;
+package com.svetanis.datastructures.tree.binary.bt.cousins;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static com.svetanis.datastructures.tree.binary.bt.Level.level;

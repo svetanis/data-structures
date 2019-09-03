@@ -1,7 +1,7 @@
-package com.svetanis.datastructures.tree.binary.bt;
+package com.svetanis.datastructures.tree.binary.bt.cousins;
 
 import static com.svetanis.datastructures.tree.binary.bt.Level.level;
-import static com.svetanis.datastructures.tree.binary.bt.Sublings.sublings;
+import static com.svetanis.datastructures.tree.binary.bt.cousins.Sublings.sublings;
 import static com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node.newNode;
 
 import com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node;

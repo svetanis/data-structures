@@ -1,6 +1,6 @@
-package com.svetanis.datastructures.tree.binary.bt;
+package com.svetanis.datastructures.tree.binary.bt.compare;
 
-import static com.svetanis.datastructures.tree.binary.bt.MirrorBinaryTrees.mirror;
+import static com.svetanis.datastructures.tree.binary.bt.compare.MirrorBinaryTrees.mirror;
 import static com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node.newNode;
 import static com.svetanis.datastructures.tree.binary.model.mutable.primitive.Nodes.isNull;
 
