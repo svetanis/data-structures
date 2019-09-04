@@ -2,25 +2,35 @@ package com.svetanis.datastructures.tree.binary.bt.mirror;
 
 import static com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node.newNode;
 import static com.svetanis.datastructures.tree.binary.model.mutable.primitive.Nodes.inOrder;
+import static com.svetanis.datastructures.tree.binary.model.mutable.primitive.Nodes.isNotNull;
 import static com.svetanis.datastructures.tree.binary.model.mutable.primitive.Nodes.isNull;
+
+import java.util.ArrayDeque;
+import java.util.Deque;
 
 import com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node;
 
-public final class InvertBinaryTreeRecursive {
+public final class InvertBinaryTreeStack {
 
   public static void invert(Node root) {
     if (isNull(root)) {
       return;
     }
 
-    // do the subtrees
-    invert(root.left);
-    invert(root.right);
-
-    swap(root);
+    Deque<Node> stack = new ArrayDeque<>();
+    stack.add(root);
+    while (!stack.isEmpty()) {
+      Node node = stack.poll();
+      swap(node);
+      if (isNotNull(root.right)) {
+        stack.add(root.right);
+      }
+      if (isNotNull(root.left)) {
+        stack.add(root.left);
+      }
+    }
   }
-  
-  
+
   private static void swap(Node root) {
     // swap the nodes
     Node temp = root.left;

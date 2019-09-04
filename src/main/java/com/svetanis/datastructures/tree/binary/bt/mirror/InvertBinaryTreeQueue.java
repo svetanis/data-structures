@@ -10,10 +10,7 @@ import java.util.Queue;
 
 import com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node;
 
-// Mirror of a Binary Tree T is another Binary Tree M(T) 
-// with left and right children of all non-leaf nodes interchanged.
-
-public final class InvertBinaryTreeIterative {
+public final class InvertBinaryTreeQueue {
 
   public static void invert(Node root) {
     if (isNull(root)) {
