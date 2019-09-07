@@ -8,6 +8,8 @@ import static com.svetanis.datastructures.tree.binary.model.mutable.primitive.No
 import static com.svetanis.java.base.collect.Lists.newList;
 import static com.svetanis.java.base.utils.Print.printLists;
 
+import java.util.ArrayDeque;
+import java.util.Deque;
 import java.util.List;
 
 import com.google.common.collect.ImmutableList;
@@ -20,23 +22,23 @@ public final class RootToLeafPaths {
   public static ImmutableList<ImmutableList<Integer>> paths(Node root) {
     // Time complexity: O(n)
 
-    List<Integer> list = newArrayList();
+    Deque<Integer> dq = new ArrayDeque<>();
     List<ImmutableList<Integer>> lists = newArrayList();
-    path(root, list, lists);
+    path(root, dq, lists);
     return newList(lists);
   }
 
-  private static void path(Node node, List<Integer> list, List<ImmutableList<Integer>> lists) {
+  private static void path(Node node, Deque<Integer> dq, List<ImmutableList<Integer>> lists) {
     if (isNull(node)) {
       return;
     }
-    list.add(node.data);
+    dq.addLast(node.data);
     if (isLeaf(node)) {
-      lists.add(newList(list));
+      lists.add(newList(dq));
     }
-    path(node.left, list, lists);
-    path(node.right, list, lists);
-    list.remove(list.size() - 1);
+    path(node.left, dq, lists);
+    path(node.right, dq, lists);
+    dq.removeLast();
   }
 
   public static void main(String[] args) {
