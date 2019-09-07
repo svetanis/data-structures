@@ -13,7 +13,7 @@ import com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node;
 public final class LcaBtNoParentBottomUp {
 
   // without pointer to parent; Bottom Up;
-  // No guarantee that p or q exist in the tree. 
+  // No guarantee that p or q exist in the tree.
   // If one value doesn’t exist in the tree then return -1.
 
   public static Optional<Integer> lca(Node root, int p, int q) {
@@ -43,11 +43,7 @@ public final class LcaBtNoParentBottomUp {
     }
 
     // p and q are on one side
-    if (left != -1) {
-      return left;
-    } else {
-      return right;
-    }
+    return left != -1 ? left : right;
   }
 
   public static void main(String[] args) {
