@@ -11,6 +11,10 @@ import java.util.Map;
 import com.google.common.collect.ImmutableList;
 import com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node;
 
+// Given BT, calculate sum of all nodes for each diagonal
+// having negative slope. Assume that the left and right 
+// child of a node makes 45 degree angle with the parent.
+
 public final class DiagonalSumRecursive {
 
   public static ImmutableList<Integer> diagonalSum(Node root) {

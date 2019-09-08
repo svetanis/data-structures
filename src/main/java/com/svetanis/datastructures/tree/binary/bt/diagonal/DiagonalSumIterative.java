@@ -15,6 +15,10 @@ import com.google.common.collect.ImmutableList;
 import com.svetanis.datastructures.tree.binary.bt.view.Item;
 import com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node;
 
+// Given BT, calculate sum of all nodes for each diagonal
+// having negative slope. Assume that the left and right 
+// child of a node makes 45 degree angle with the parent.
+
 public final class DiagonalSumIterative {
 
   public static ImmutableList<Integer> diagonalSum(Node root) {
