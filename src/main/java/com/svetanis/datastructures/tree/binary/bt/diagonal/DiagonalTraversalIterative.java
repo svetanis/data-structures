@@ -32,7 +32,7 @@ public final class DiagonalTraversalIterative {
       Item item = queue.poll();
       Node node = item.node;
       int dist = item.hDist;
-      while (node != null) {
+      while (isNotNull(node)) {
         mm.put(dist, node.data);
         if (isNotNull(node.left)) {
           queue.offer(new Item(node.left, dist + 1));
