@@ -11,7 +11,9 @@ import java.util.Map;
 import com.google.common.collect.ImmutableMap;
 import com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node;
 
-public final class VerticalSumBtHashing {
+// Given BT, find vertical sum of the nodes that are in same vertical line.
+
+public final class VerticalSumHashing {
 
   public static ImmutableMap<Integer, Integer> verticalSum(Node root) {
 
