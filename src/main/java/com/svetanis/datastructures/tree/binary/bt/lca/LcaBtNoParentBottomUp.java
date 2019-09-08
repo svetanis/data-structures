@@ -5,6 +5,7 @@ import static com.google.common.base.Optional.of;
 import static com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node.newNode;
 import static com.svetanis.datastructures.tree.binary.model.mutable.primitive.Nodes.inOrder;
 import static com.svetanis.datastructures.tree.binary.model.mutable.primitive.Nodes.isAbsent;
+import static com.svetanis.datastructures.tree.binary.model.mutable.primitive.Nodes.isNotNull;
 import static com.svetanis.datastructures.tree.binary.model.mutable.primitive.Nodes.isNull;
 
 import com.google.common.base.Optional;
@@ -44,6 +45,30 @@ public final class LcaBtNoParentBottomUp {
 
     // p and q are on one side
     return left != -1 ? left : right;
+  }
+
+  public static Node lca(Node root, Node p, Node q) {
+    // Time complexity: O(n)
+
+    if (isNull(root) || isNull(p) || isNull(q)) {
+      return null;
+    }
+
+    if (root.data == p.data || root.data == q.data) {
+      return root;
+    }
+
+    Node left = lca(root.left, p, q);
+    Node right = lca(root.right, p, q);
+
+    // if p and q are on both sides
+    if (isNotNull(left) && isNotNull(right)) {
+      return root;
+    }
+
+    // either one of p, q is on one side
+    // or p, q is not in left and right subtrees
+    return isNotNull(left) ? left : right;
   }
 
   public static void main(String[] args) {
