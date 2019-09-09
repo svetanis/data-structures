@@ -26,6 +26,7 @@ public final class CornerNodes {
     Queue<Node> queue = newLinkedList();
     queue.offer(root);
     List<ImmutableList<Node>> lists = newArrayList();
+    
     while (!queue.isEmpty()) {
       int size = queue.size();
       List<Node> list = newArrayList();
