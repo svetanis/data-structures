@@ -1,44 +1,61 @@
 package com.svetanis.datastructures.tree.binary.bt.path;
 
 import static com.google.common.collect.Lists.newArrayList;
+import static com.google.common.collect.Maps.newHashMap;
 import static com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node.newNode;
 import static com.svetanis.datastructures.tree.binary.model.mutable.primitive.Nodes.inOrder;
 import static com.svetanis.datastructures.tree.binary.model.mutable.primitive.Nodes.isLeaf;
-import static com.svetanis.datastructures.tree.binary.model.mutable.primitive.Nodes.isNull;
+import static com.svetanis.datastructures.tree.binary.model.mutable.primitive.Nodes.isNotNull;
 import static com.svetanis.java.base.collect.Lists.newList;
 import static com.svetanis.java.base.utils.Print.printLists;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.List;
+import java.util.Map;
 
 import com.google.common.collect.ImmutableList;
 import com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node;
 
-// Given a binary tree, print all of the paths from the root to leaf nodes.
+// Given a binary tree, write an iterative algorithm
+// to print leaf to root path for every leaf node of BT.
 
-public final class RootToLeafPaths {
-
-  public static ImmutableList<ImmutableList<Integer>> paths(Node root) {
-    // Time complexity: O(n)
-
-    Deque<Integer> dq = new ArrayDeque<>();
+public final class RootToLeafPathsIterative {
+  
+  private static ImmutableList<ImmutableList<Integer>> paths(Node root){
+    // Time Complexity: O(n log n)
+    
     List<ImmutableList<Integer>> lists = newArrayList();
-    path(root, dq, lists);
+    Deque<Node> dq = new ArrayDeque<>();
+    dq.add(root);
+    Map<Node, Node> map = newHashMap();
+    map.put(root, null);
+    while(!dq.isEmpty()) {
+      Node node = dq.poll();
+      if(isLeaf(node)) {
+        lists.add(path(node, map));
+      }
+      if(isNotNull(node.right)) {
+        dq.add(node.right);
+        map.put(node.right, node);
+      }
+      if(isNotNull(node.left)) {
+        dq.add(node.left);
+        map.put(node.left, node);
+      }
+    }
     return newList(lists);
   }
-
-  private static void path(Node node, Deque<Integer> dq, List<ImmutableList<Integer>> lists) {
-    if (isNull(node)) {
-      return;
+  
+  private static ImmutableList<Integer> path(Node leaf, Map<Node, Node> map){
+    Node node = leaf;
+    List<Integer> list = newArrayList();
+    while(isNotNull(map.get(node))) {
+      list.add(node.data);
+      node = map.get(node);
     }
-    dq.addLast(node.data);
-    if (isLeaf(node)) {
-      lists.add(newList(dq));
-    }
-    path(node.left, dq, lists);
-    path(node.right, dq, lists);
-    dq.removeLast();
+    list.add(node.data);
+    return newList(list);
   }
 
   public static void main(String[] args) {
