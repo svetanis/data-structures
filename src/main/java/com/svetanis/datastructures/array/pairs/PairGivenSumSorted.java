@@ -4,6 +4,11 @@ import static java.util.Arrays.sort;
 
 import com.svetanis.java.base.Pair;
 
+// given an array of distinct integers
+// and a number k, find whether or not
+// there exist two elements in array
+// whose sum is exactly k
+
 public final class PairGivenSumSorted {
 
   public static Pair<Integer, Integer> pair(int[] a, int k) {
