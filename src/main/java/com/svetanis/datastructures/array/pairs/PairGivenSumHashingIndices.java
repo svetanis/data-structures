@@ -8,6 +8,10 @@ import java.util.Map;
 
 import com.svetanis.java.base.Pair;
 
+// given an array of distinct integer,
+// find indices of the two numbers 
+// such that they add up to a specific target
+
 public final class PairGivenSumHashingIndices {
 
   public static Pair<Integer, Integer> pair(List<Integer> list, int k) {
