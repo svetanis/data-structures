@@ -4,6 +4,10 @@ import static java.util.Arrays.sort;
 
 import com.svetanis.java.base.Pair;
 
+// given unsorted array and a number n, 
+// find if there exists a pair of elements
+// in the array whose difference is n
+
 public final class PairGivenDiffSorted {
 
 //  If arr[j] – arr[i] is smaller than n, we need to look for greater arr[j], so increment j. 
