@@ -11,9 +11,14 @@ import java.util.Set;
 import com.google.common.collect.ImmutableList;
 import com.svetanis.java.base.Pair;
 
+// given two unsorted arrays of distinct elements,
+// find all pairs from both arrays whose sum equals x
+
 public final class PairsGivenSumTwoUnsortedArrays {
 
-  public static ImmutableList<Pair<Integer, Integer>> pairs(List<Integer> list1, List<Integer> list2, int x) {
+  public static ImmutableList<Pair<Integer, Integer>> pairs(
+		  List<Integer> list1, 
+		  List<Integer> list2, int x) {
     // Time Complexity: O(n)
     // Aux Space : O(n)
 
