@@ -17,12 +17,8 @@ public final class PairGivenSumMaxShortestDist {
   // Time Complexity: O(n)
   // Auxiliary Space: O(n)
 	
-  public static int pair(int[] a, int k) {
+  public static int maxShortestDist(int[] a, int k) {
     Map<Integer, Integer> map = distMap(a);
-    return dist(a, k, map);
-  }
-
-  private static int dist(int[] a, int k, Map<Integer, Integer> map) {
     int min = MAX_VALUE;
     for (int x : a) {
       int y = k - x;
@@ -51,6 +47,6 @@ public final class PairGivenSumMaxShortestDist {
 
   public static void main(String[] args) {
     int[] a = { 3, 5, 8, 6, 7 };
-    System.out.println(pair(a, 11));
+    System.out.println(maxShortestDist(a, 11));
   }
 }
