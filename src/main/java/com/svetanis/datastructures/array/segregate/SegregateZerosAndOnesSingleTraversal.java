@@ -15,12 +15,11 @@ import static com.svetanis.java.base.utils.Swap.swap;
 
 public final class SegregateZerosAndOnesSingleTraversal {
 
-  public static void segregate(Integer[] a) {
-    // O(n)
+  public static void segregate(int[] a) {
+    // Time Complexity: O(n)
 
-    int n = a.length;
     int left = 0;
-    int right = n - 1;
+    int right = a.length - 1;
 
     while (left < right) {
       while (a[left] == 0 && left < right) {
@@ -38,7 +37,7 @@ public final class SegregateZerosAndOnesSingleTraversal {
   }
 
   public static void main(String[] args) {
-    Integer[] a = { 0, 1, 0, 1, 1, 1 };
+    int[] a = { 0, 1, 0, 1, 1, 1 };
     segregate(a);
     print(a);
   }
