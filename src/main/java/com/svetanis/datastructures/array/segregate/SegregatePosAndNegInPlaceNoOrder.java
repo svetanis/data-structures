@@ -5,7 +5,7 @@ import static com.svetanis.java.base.utils.Swap.swap;
 
 // given unsorted array of both positive and negative numbers
 // rearrange it such that all positive integers appear before 
-// all the positive integers in place; order doesn't matter
+// all the negative integers in place; order doesn't matter
 
 public final class SegregatePosAndNegInPlaceNoOrder {
 	// Time Complexity: O(n)
