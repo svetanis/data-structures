@@ -2,6 +2,10 @@ package com.svetanis.datastructures.array.segregate;
 
 import static com.svetanis.java.base.utils.Print.print;
 
+// given unsorted array of both positive and negative numbers
+// rearrange it such that all positive integers appear before 
+// all the negative integers in order with extra space allowed
+
 public final class SegregatePosAndNegExtraSpaceOrderMatters {
 
   public static void segregate(int[] a) {
