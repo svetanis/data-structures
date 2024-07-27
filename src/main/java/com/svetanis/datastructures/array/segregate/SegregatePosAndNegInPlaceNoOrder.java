@@ -3,12 +3,18 @@ package com.svetanis.datastructures.array.segregate;
 import static com.svetanis.java.base.utils.Print.print;
 import static com.svetanis.java.base.utils.Swap.swap;
 
+// given unsorted array of both positive and negative numbers
+// rearrange it such that all positive integers appear before 
+// all the positive integers in place; order doesn't matter
+
 public final class SegregatePosAndNegInPlaceNoOrder {
+	// Time Complexity: O(n)
+	// Auxiliary Space: O(1)
 
   public static int segregate(int[] a) {
-    int n = a.length;
-    int left = 0;
-    int right = n - 1;
+
+	int left = 0;
+    int right = a.length - 1;
 
     // shift all negative values to the end
     while (left < right) {
