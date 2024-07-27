@@ -16,9 +16,7 @@ public final class PythagoreanTriplet {
   }
   
   private static boolean isPythagoreanUtil(int[] a) {
-
     int n = a.length;
-
     for (int i = 0; i < n - 2; i++) {
       int left = i + 1;
       int right = n - 1;
