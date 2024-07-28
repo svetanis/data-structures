@@ -4,8 +4,7 @@ import static com.svetanis.java.base.utils.Print.print;
 import static com.svetanis.java.base.utils.Swap.swap;
 
 // given an unsorted array of 0s, 1s and 2s
-// sort array such that all 0s are first
-// then all 1s and all 2s are in last
+// sort the array in-place.
 
 public final class SegregateZerosOnesTwos {
 
