@@ -3,16 +3,20 @@ package com.svetanis.datastructures.array.segregate;
 import static com.svetanis.java.base.utils.Print.print;
 import static com.svetanis.java.base.utils.Swap.swap;
 
+// given an unsorted array of 0s, 1s and 2s
+// sort array such that all 0s are first
+// then all 1s and all 2s are in last
+
 public final class SegregateZerosOnesTwos {
 
   public static void segregate(int[] a) {
-    // O(n)
-    int n = a.length;
+    // Time Complexity: O(n)
+	  
     int low = 0;
     int mid = 0;
-    int high = n - 1;
+    int high = a.length - 1;
 
-    while (mid <= high && mid < n) {
+    while (mid <= high) {
       if (a[mid] == 0) {
         swap(a, low, mid);
         low++;
