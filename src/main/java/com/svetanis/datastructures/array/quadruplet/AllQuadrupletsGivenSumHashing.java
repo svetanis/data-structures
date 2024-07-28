@@ -36,9 +36,9 @@ public final class AllQuadrupletsGivenSumHashing {
 				Pair<Integer, Integer> p1 = Pair.build(i, j);
 				Optional<Pair<Integer, Integer>> p2 = getIfPresent(map, target);
 				if (p2.isPresent() && !isCommon(p1, p2.get())) {
-					int third = a[p2.get().getLeft()];
-					int fourth = a[p2.get().getRight()];
-					List<Integer> sorted = sort(asList(a[i], a[j], third, fourth));
+					int left = p2.get().getLeft();
+					int right = p2.get().getRight();
+					List<Integer> sorted = sort(asList(a[i], a[j], a[left], a[right]));
 					set.add(quadruplet(sorted));
 				}
 				if (!map.containsKey(sum)) {
