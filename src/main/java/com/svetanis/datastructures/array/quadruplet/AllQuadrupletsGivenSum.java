@@ -1,4 +1,4 @@
-package com.svetanis.datastructures.array.triplet;
+package com.svetanis.datastructures.array.quadruplet;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static com.svetanis.java.base.collect.Lists.newList;
@@ -22,12 +22,12 @@ public final class AllQuadrupletsGivenSum {
 		List<Quadruplet<Integer, Integer, Integer, Integer>> list = newArrayList();
 		for (int i = 0; i < a.length - 3; i++) {
 			// skip same element to avoid duplicates
-			if(i > 0 && a[i] == a[i - 1]) {
+			if (i > 0 && a[i] == a[i - 1]) {
 				continue;
 			}
 			for (int j = i + 1; j < a.length - 2; j++) {
 				// skip same element to avoid duplicates
-				if(j > i + 1 && a[j] == a[j - 1]) {
+				if (j > i + 1 && a[j] == a[j - 1]) {
 					continue;
 				}
 				int target = k - a[i] - a[j];
@@ -52,10 +52,10 @@ public final class AllQuadrupletsGivenSum {
 				left++;
 				right--;
 				// skip same element to avoid duplicates
-				while(left < right && a[left] == a[left - 1]) {
+				while (left < right && a[left] == a[left - 1]) {
 					left++;
 				}
-				while(left < right && a[right] == a[right + 1]) {
+				while (left < right && a[right] == a[right + 1]) {
 					right--;
 				}
 			}
