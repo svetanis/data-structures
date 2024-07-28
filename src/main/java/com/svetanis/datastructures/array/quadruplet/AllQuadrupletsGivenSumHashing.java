@@ -23,10 +23,9 @@ import com.svetanis.java.base.utils.Quadruplet;
 // to the target number
 
 public final class AllQuadrupletsGivenSumHashing {
+	// Time Complexity: O(n^2)
 
 	public static ImmutableList<Quadruplet<Integer, Integer, Integer, Integer>> quadruplets(int[] a, int k) {
-		// Time Complexity: O(n^2)
-
 		int n = a.length;
 		Map<Integer, Pair<Integer, Integer>> map = newHashMap();
 		Set<Quadruplet<Integer, Integer, Integer, Integer>> set = newHashSet();
