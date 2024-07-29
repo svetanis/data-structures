@@ -4,7 +4,7 @@ package com.svetanis.datastructures.array.quadruple;
 // count all quadruples from all the four arrays whose sum is equal to x
 // quadruple has an element from each of the four arrays
 
-public final class CountQuadrupletsGivenSumBinary {
+public final class CountQuadruplesGivenSumBinary {
 	// Time Complexity: O(n^3 log n)
 
 	public static int count(int[] a1, int[] a2, int[] a3, int[] a4, int target) {

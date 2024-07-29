@@ -12,7 +12,7 @@ import com.svetanis.java.base.Pair;
 // count all quadruples from all the four arrays whose sum is equal to x
 // quadruple has an element from each of the four arrays
 
-public final class CountQuadrupletsGivenSumTwoPointers {
+public final class CountQuadruplesGivenSumTwoPointers {
 	// Time Complexity: O(n^3 log n)
 
 	public static int count(int[] a1, int[] a2, int[] a3, int[] a4, int target) {

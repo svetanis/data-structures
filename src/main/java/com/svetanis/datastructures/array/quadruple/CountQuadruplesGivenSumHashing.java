@@ -12,7 +12,7 @@ import com.google.common.collect.ImmutableList;
 // count all quadruples from all the four arrays whose sum is equal to x
 // quadruple has an element from each of the four arrays
 
-public final class CountQuadrupletsGivenSumHashing {
+public final class CountQuadruplesGivenSumHashing {
 	// Time Complexity: O(n^2)
 
 	public static int count(int[] a1, int[] a2, int[] a3, int[] a4, int target) {
