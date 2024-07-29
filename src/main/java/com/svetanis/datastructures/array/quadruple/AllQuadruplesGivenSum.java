@@ -1,4 +1,4 @@
-package com.svetanis.datastructures.array.quadruplet;
+package com.svetanis.datastructures.array.quadruple;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static com.svetanis.java.base.collect.Lists.newList;
@@ -8,18 +8,18 @@ import static java.util.Arrays.sort;
 import java.util.List;
 
 import com.google.common.collect.ImmutableList;
-import com.svetanis.java.base.utils.Quadruplet;
+import com.svetanis.java.base.utils.Quadruple;
 
 // given an array of unsorted numbers and a target
-// find all unique quadruplets whose sum is equal 
+// find all unique quadruples whose sum is equal 
 // to the target number
 
-public final class AllQuadrupletsGivenSum {
+public final class AllQuadruplesGivenSum {
 	// Time complexity: O(n^3)
 
-	public static ImmutableList<Quadruplet<Integer, Integer, Integer, Integer>> quadruplets(int[] a, int k) {
+	public static ImmutableList<Quadruple<Integer, Integer, Integer, Integer>> quadruples(int[] a, int k) {
 		sort(a);
-		List<Quadruplet<Integer, Integer, Integer, Integer>> list = newArrayList();
+		List<Quadruple<Integer, Integer, Integer, Integer>> list = newArrayList();
 		for (int i = 0; i < a.length - 3; i++) {
 			// skip same element to avoid duplicates
 			if (i > 0 && a[i] == a[i - 1]) {
@@ -37,10 +37,10 @@ public final class AllQuadrupletsGivenSum {
 		return newList(list);
 	}
 
-	private static ImmutableList<Quadruplet<Integer, Integer, Integer, Integer>> qdp(int[] a, int k, int i, int j) {
+	private static ImmutableList<Quadruple<Integer, Integer, Integer, Integer>> qdp(int[] a, int k, int i, int j) {
 		int left = j + 1;
 		int right = a.length - 1;
-		List<Quadruplet<Integer, Integer, Integer, Integer>> list = newArrayList();
+		List<Quadruple<Integer, Integer, Integer, Integer>> list = newArrayList();
 		while (left < right) {
 			int sum = a[left] + a[right];
 			if (sum < k) {
@@ -48,7 +48,7 @@ public final class AllQuadrupletsGivenSum {
 			} else if (sum > k) {
 				right--;
 			} else {
-				list.add(Quadruplet.build(a[i], a[j], a[left], a[right]));
+				list.add(Quadruple.build(a[i], a[j], a[left], a[right]));
 				left++;
 				right--;
 				// skip same element to avoid duplicates
@@ -65,9 +65,9 @@ public final class AllQuadrupletsGivenSum {
 
 	public static void main(String[] args) {
 		int[] a = { 4, 1, 2, -1, 1, -3 };
-		printLines(quadruplets(a, 1));
+		printLines(quadruples(a, 1));
 
 		int[] a1 = { 2, 0, -1, 1, -2, 2 };
-		printLines(quadruplets(a1, 2));
+		printLines(quadruples(a1, 2));
 	}
 }

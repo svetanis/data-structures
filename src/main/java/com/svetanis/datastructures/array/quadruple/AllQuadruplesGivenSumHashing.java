@@ -1,4 +1,4 @@
-package com.svetanis.datastructures.array.quadruplet;
+package com.svetanis.datastructures.array.quadruple;
 
 import static com.google.common.collect.Maps.newHashMap;
 import static com.google.common.collect.Sets.newHashSet;
@@ -16,19 +16,19 @@ import java.util.Set;
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
 import com.svetanis.java.base.Pair;
-import com.svetanis.java.base.utils.Quadruplet;
+import com.svetanis.java.base.utils.Quadruple;
 
 // given an array of unsorted numbers and a target
-// find all unique quadruplets whose sum is equal 
+// find all unique quadruples whose sum is equal 
 // to the target number
 
-public final class AllQuadrupletsGivenSumHashing {
+public final class AllQuadruplesGivenSumHashing {
 	// Time Complexity: O(n^2)
 
-	public static ImmutableList<Quadruplet<Integer, Integer, Integer, Integer>> quadruplets(int[] a, int k) {
+	public static ImmutableList<Quadruple<Integer, Integer, Integer, Integer>> quadruples(int[] a, int k) {
 		int n = a.length;
 		Map<Integer, Pair<Integer, Integer>> map = newHashMap();
-		Set<Quadruplet<Integer, Integer, Integer, Integer>> set = newHashSet();
+		Set<Quadruple<Integer, Integer, Integer, Integer>> set = newHashSet();
 		for (int i = 0; i < n - 1; i++) {
 			for (int j = i + 1; j < n; j++) {
 				int sum = a[i] + a[j];
@@ -39,7 +39,7 @@ public final class AllQuadrupletsGivenSumHashing {
 					int left = p2.get().getLeft();
 					int right = p2.get().getRight();
 					List<Integer> sorted = sort(asList(a[i], a[j], a[left], a[right]));
-					set.add(quadruplet(sorted));
+					set.add(quadruple(sorted));
 				}
 				if (!map.containsKey(sum)) {
 					map.put(sum, Pair.build(i, j));
@@ -57,17 +57,17 @@ public final class AllQuadrupletsGivenSumHashing {
 		return one || two || three || four;
 	}
 
-	private static Quadruplet<Integer, Integer, Integer, Integer> quadruplet(Iterable<Integer> iterable) {
+	private static Quadruple<Integer, Integer, Integer, Integer> quadruple(Iterable<Integer> iterable) {
 		Iterator<Integer> iter = iterable.iterator();
-		return Quadruplet.build(iter.next(), iter.next(), iter.next(), iter.next());
+		return Quadruple.build(iter.next(), iter.next(), iter.next(), iter.next());
 	}
 
 	public static void main(String[] args) {
 		int[] a = { 4, 1, 2, -1, 1, -3 };
-		printLines(quadruplets(a, 1));
+		printLines(quadruples(a, 1));
 
 		int[] a1 = { 2, 0, -1, 1, -2, 2 };
-		printLines(quadruplets(a1, 2));
+		printLines(quadruples(a1, 2));
 	}
 }
 
