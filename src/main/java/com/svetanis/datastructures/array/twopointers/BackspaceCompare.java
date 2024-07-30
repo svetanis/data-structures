@@ -1,7 +1,12 @@
 package com.svetanis.datastructures.array.twopointers;
 
-public final class BackspaceCompare {
+// given two strings containing backspaces 
+// (identified by the char #)
+// check if the two strings are equal
 
+public final class BackspaceCompare {
+// Time Complexity: O(n + m)
+	
   public static boolean compare(String str1, String str2) {
     
     int n = str1.length();
