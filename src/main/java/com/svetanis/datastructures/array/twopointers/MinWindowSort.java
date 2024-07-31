@@ -33,11 +33,11 @@ public final class MinWindowSort {
 
     Pair<Integer, Integer> pair = getPair(a, left, right);
 
-    left = extendLeft(a, left, pair.getLeft());
+    int start = extendLeft(a, left, pair.getLeft());
 
-    right = extendRight(a, right, pair.getRight());
+    int end = extendRight(a, right, pair.getRight());
 
-    return Pair.build(left, right);
+    return Pair.build(start, end);
   }
 
   private static int getLeft(int[] a) {
