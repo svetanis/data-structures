@@ -12,6 +12,9 @@ import com.svetanis.java.base.Pair;
 public final class PairGivenSumSorted {
 
   public static Pair<Integer, Integer> pair(int[] a, int target) {
+	// Time Complexity: O(n)
+	// Space Complexity: O(1) 
+	  
     int left = 0;
 	int right = a.length - 1;
     while (left < right) {
@@ -19,7 +22,7 @@ public final class PairGivenSumSorted {
         return Pair.build(a[left], a[right]);
       } else if (a[left] + a[right] < target) {
         left++;
-      } else { // a[left] + a[right] > target
+      } else { 
         right--;
       }
     }
