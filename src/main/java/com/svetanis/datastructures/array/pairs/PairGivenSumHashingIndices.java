@@ -14,14 +14,14 @@ import com.svetanis.java.base.Pair;
 
 public final class PairGivenSumHashingIndices {
 
-  public static Pair<Integer, Integer> pair(List<Integer> list, int k) {
+  public static Pair<Integer, Integer> pair(List<Integer> list, int target) {
     // Time Complexity: O(n)
     // Space Complexity: O(n)
 
     int n = list.size();
     Map<Integer, Integer> map = newHashMap();
     for (int i = 0; i < n; i++) {
-      int diff = k - list.get(i);
+      int diff = target - list.get(i);
       if (map.containsKey(diff)) {
         return Pair.build(map.get(diff), i);
       }

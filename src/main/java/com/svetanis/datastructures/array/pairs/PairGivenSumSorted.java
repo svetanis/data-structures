@@ -11,21 +11,15 @@ import com.svetanis.java.base.Pair;
 
 public final class PairGivenSumSorted {
 
-  public static Pair<Integer, Integer> pair(int[] a, int k) {
-    // time complexity: O(n log n)
-
-    int n = a.length;
-    sort(a);
-    return pair(a, 0, n - 1, k);
-  }
-
-  public static Pair<Integer, Integer> pair(int[] a, int left, int right, int k) {
+  public static Pair<Integer, Integer> pair(int[] a, int target) {
+    int left = 0;
+	int right = a.length - 1;
     while (left < right) {
-      if (a[left] + a[right] == k) {
+      if (a[left] + a[right] == target) {
         return Pair.build(a[left], a[right]);
-      } else if (a[left] + a[right] < k) {
+      } else if (a[left] + a[right] < target) {
         left++;
-      } else { // a[left] + a[right] > k
+      } else { // a[left] + a[right] > target
         right--;
       }
     }
@@ -34,6 +28,7 @@ public final class PairGivenSumSorted {
 
   public static void main(String[] args) {
     int[] a = { 1, 4, 45, 6, 10, -8 };
+    sort(a);
     System.out.println(pair(a, 16));
   }
 }

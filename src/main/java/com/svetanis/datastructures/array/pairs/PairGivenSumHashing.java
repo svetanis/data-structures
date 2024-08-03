@@ -15,11 +15,11 @@ import com.svetanis.java.base.Pair;
 
 public final class PairGivenSumHashing {
 
-  public static Pair<Integer, Integer> pair(List<Integer> list, int k) {
+  public static Pair<Integer, Integer> pair(List<Integer> list, int target) {
     int n = list.size();
     Set<Integer> set = newHashSet();
     for (int i = 0; i < n; i++) {
-      int diff = k - list.get(i);
+      int diff = target - list.get(i);
       if (set.contains(diff)) {
         return Pair.build(list.get(i), diff);
       }
