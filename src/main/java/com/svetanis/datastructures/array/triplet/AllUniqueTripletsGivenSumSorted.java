@@ -1,14 +1,13 @@
 package com.svetanis.datastructures.array.triplet;
 
-import static com.google.common.collect.Lists.newArrayList;
+import static com.google.common.collect.Sets.newHashSet;
 import static com.svetanis.java.base.collect.Lists.newList;
-import static com.svetanis.java.base.collect.Lists.sort;
-import static java.util.Arrays.asList;
+import static java.util.Arrays.sort;
 
-import java.util.Arrays;
-import java.util.List;
+import java.util.Set;
 
 import com.google.common.collect.ImmutableList;
+import com.svetanis.java.base.utils.Triplet;
 
 // Given array of unsorted numbers, find all unique triplets in it that add up to zero.
 
@@ -19,51 +18,61 @@ import com.google.common.collect.ImmutableList;
 
 public final class AllUniqueTripletsGivenSumSorted {
 
-  public static ImmutableList<ImmutableList<Integer>> triplets(int[] a, int target) {
-    // Time Complexity: O(n^2)
+	public static ImmutableList<Triplet<Integer, Integer, Integer>> triplets(int[] a, int target) {
+		// Time Complexity: O(n^2)
 
-    int n = a.length;
-    Arrays.sort(a);
-    List<ImmutableList<Integer>> lists = newArrayList();
-    for (int i = 0; i < n - 2; i++) {
-      // skip same element to avoid duplicate triplets	
-      if (i > 0 && a[i - 1] == a[i]) {
-        continue; 
-      }
-      int left = i + 1;
-      int right = n - 1;
-      
-      while (left < right) {
-        int sum = a[i] + a[left] + a[right];
-        if (sum == target) {
-          lists.add(sort(asList(a[left], a[i], a[right])));
-          left++;
-          right--;
-          // skip same element to avoid duplicate triplets
-          while (left < right && a[left] == a[left - 1]) {
-            left++; 
-          }
-          while (left < right && a[right] == a[right + 1]) {
-            right--; 
-          }
-        } else if (sum < target) {
-          left++;
-        } else {
-          right--;
-        }
-      }
-    }
-    return newList(lists);
-  }
+		sort(a);
+		Set<Triplet<Integer, Integer, Integer>> set = newHashSet();
+		for (int i = 0; i < a.length - 2; i++) {
+			// skip same element to avoid duplicate triplets
+			if (i > 0 && a[i - 1] == a[i]) {
+				continue;
+			}
+			set.addAll(triplets(a, target, i));
+		}
+		return newList(set);
+	}
 
-  public static void main(String[] args) {
-    int[] a1 = {-2, 2, 0, -1, 1};
-    System.out.println(triplets(a1, 0));
+	private static ImmutableList<Triplet<Integer, Integer, Integer>> triplets(int[] a, int target, int first) {
+		int left = first + 1;
+		int right = a.length - 1;
+		Set<Triplet<Integer, Integer, Integer>> set = newHashSet();
+		while (left < right) {
+			int sum = a[first] + a[left] + a[right];
+			if (sum == target) {
+				set.add(Triplet.build(a[first], a[left], a[right]));
+				left++;
+				right--;
+				// skip same element to avoid duplicate triplets
+				while (left < right && a[left] == a[left - 1]) {
+					left++;
+				}
+				while (left < right && a[right] == a[right + 1]) {
+					right--;
+				}
+			} else if (sum < target) {
+				left++;
+			} else {
+				right--;
+			}
+		}
+		return newList(set);
+	}
 
-    int[] a2 = {10, 3, -4, 1, -6, 9};
-    System.out.println(triplets(a2, 0));
+	public static void main(String[] args) {
+		int[] a1 = { -2, 2, 0, -1, 1 };
+		System.out.println(triplets(a1, 0));
 
-    int[] a3 = {-31013930, -31013930, 9784175, 21229755};
-    System.out.println(triplets(a3, 0));
-  }
+		int[] a2 = { 10, 3, -4, 1, -6, 9 };
+		System.out.println(triplets(a2, 0));
+
+		int[] a3 = { -31013930, -31013930, 9784175, 21229755 };
+		System.out.println(triplets(a3, 0));
+		
+		int[] a4 = { -3, 0, 1, 2, -1, 1, -2 };
+		System.out.println(triplets(a4, 0));
+
+		int[] a5 = { -5, 2, -1, -2, 3 };
+		System.out.println(triplets(a5, 0));
+	}
 }
