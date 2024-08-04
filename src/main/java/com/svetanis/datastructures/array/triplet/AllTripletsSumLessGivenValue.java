@@ -16,7 +16,7 @@ import com.svetanis.java.base.utils.Triplet;
 public final class AllTripletsSumLessGivenValue {
 
 	public static ImmutableList<Triplet<Integer, Integer, Integer>> triplets(int[] a, int k) {
-		// Time complexity: O(n log n)
+		// Time complexity: O(n^2)
 		sort(a);
 
 		List<Triplet<Integer, Integer, Integer>> list = newArrayList();

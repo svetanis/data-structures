@@ -8,7 +8,7 @@ import static java.util.Arrays.sort;
 public final class CountTripletsSumLessGivenValue {
 
 	public static int count(int[] a, int k) {
-		// Time complexity: O(n log n)
+		// Time complexity: O(n^2)
 		sort(a);
 
 		int count = 0;
