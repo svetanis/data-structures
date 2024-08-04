@@ -7,7 +7,11 @@ import static com.svetanis.datastructures.linkedlist.single.search.MiddleNode.mi
 
 import com.svetanis.datastructures.linkedlist.single.Node;
 
+// given the head of a Singly LinkedList
+// check if the SLL is a palindrom or not
+
 public final class Palindrome {
+  // Time Complexity: O(n)
 
   public static boolean isPalindrome(Node head) {
     if (head == null || head.next == null) {
