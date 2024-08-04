@@ -8,6 +8,8 @@ package com.svetanis.datastructures.linkedlist.single.cycle;
 public final class HappyNumber {
 
   public static boolean happyNum(int n) {
+	// Time Complexity: O(log n)
+	  
     int slow = squareSum(n);
     int fast = squareSum(slow);
     while (slow != fast) {
