@@ -6,54 +6,52 @@ import static java.util.Arrays.asList;
 
 import com.svetanis.datastructures.linkedlist.single.Node;
 
-// given a Singly LinkedList
-// find whether the SLL contains a loop
-// and if loop is present, remove it
+// given the head of a LinkedList with
+// a cycle, find the length of the cycle
 
-public final class CycleRemove {
+// once the fast and slow pointers meet,
+// save the slow pointer and iterate the
+// whole cycle with another pointer until
+// we see the slow pointer again to find 
+// the length of the cycle
 
-  public static void cycleRemove(Node head) {
+public final class CycleLength {
+
+  public static int cycleLength(Node head) {
 	// Time Complexity: O(n)
 	  
-    if (head == null || head.next == null) {
-      return;
+    if (head == null) {
+      return 0;
     }
-
     Node slow = head;
     Node fast = head;
-
     // find the meeting point
     while (fast != null && fast.next != null) {
       slow = slow.next;
       fast = fast.next.next;
       if (slow == fast) {
-        break;
+        return length(slow);
       }
     }
-
-    // no meeting point? - no loop
-    if (fast.next == null) {
-      return;
-    }
-    // move slow to head.
-    // keep fast at meeting point.
-    // each are k steps from the loop start.
-    // if they move at the same pace,
-    // they must meet at Loop Start
-    slow = head;
-    while (slow.next != fast.next) {
-      slow = slow.next;
-      fast = fast.next;
-    }
-    fast.next = null; // remove loop
+    return 0;
   }
 
+  private static int length(Node node) {
+	int count = 0;
+    Node current = node;
+	do {
+		current = current.next;
+		count++;
+	} while(current != node);
+	return count;
+  }
+  
   public static void main(String[] args) {
     Node head = fromList(asList(50, 20, 15, 4, 10));
     print(head);
+    System.out.println(cycleLength(head));
     // create a loop for testing
     head.next.next.next.next.next = head.next.next;
-    cycleRemove(head);
-    print(head);
+    System.out.println(cycleLength(head));
   }
 }
