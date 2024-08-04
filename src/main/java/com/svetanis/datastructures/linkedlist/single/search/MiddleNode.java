@@ -6,7 +6,11 @@ import static com.svetanis.datastructures.linkedlist.single.Nodes.print;
 
 import com.svetanis.datastructures.linkedlist.single.Node;
 
+// given a head of a Singly LinkedList,
+// find the middle node of the SLL
+
 public final class MiddleNode {
+  // Time Complexity: O(n)
 
   public static Node middle(Node head) {
     if (head == null) {
