@@ -6,12 +6,14 @@ import static com.svetanis.datastructures.linkedlist.single.Nodes.print;
 
 import com.svetanis.datastructures.linkedlist.single.Node;
 
+// given a Single LinkedList, 
+// reverse every k nodes
+
 public final class ReverseInGroups {
-
+  // Time Complexity: O(n)
+	
   public static Node reverseInGroups(Node head, int k) {
-
     int count = 0;
-
     Node curr = head;
     Node next = null;
     Node prev = null;

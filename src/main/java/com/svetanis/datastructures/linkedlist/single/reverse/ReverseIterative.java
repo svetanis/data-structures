@@ -6,6 +6,10 @@ import static com.svetanis.datastructures.linkedlist.single.Nodes.print;
 
 import com.svetanis.datastructures.linkedlist.single.Node;
 
+// given the head of Singly LinkedList,
+// reverse the SLL. return the new head
+// of the reversed SLL
+
 public final class ReverseIterative {
 
   public static Node reverse(Node head) {
@@ -16,20 +20,6 @@ public final class ReverseIterative {
     Node next = null;
     while (curr != null) {
       next = curr.next;
-      curr.next = prev;
-      prev = curr;
-      curr = next;
-    }
-    head = prev;
-    return head;
-  }
-
-  public static Node reverseCompact(Node head) {
-
-    Node curr = head;
-    Node prev = null;
-    while (curr != null) {
-      Node next = curr.next;
       curr.next = prev;
       prev = curr;
       curr = next;
