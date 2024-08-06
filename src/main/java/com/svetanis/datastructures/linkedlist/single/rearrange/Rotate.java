@@ -7,13 +7,17 @@ import static com.svetanis.datastructures.linkedlist.single.search.KthNode.kthNo
 
 import com.svetanis.datastructures.linkedlist.single.Node;
 
+// given a Singly LinkedList,
+// rotate the SLL counter-clockwise 
+// by k nodes
+
 public final class Rotate {
 
   public static Node rotate(Node head, int k) {
     // Time Complexity: O(n)
 
-    if (k == 0 || head == null) {
-      return null;
+    if (k <= 0 || head == null || head.next == null) {
+      return head;
     }
 
     Node curr = kthNode(head, k - 1);
