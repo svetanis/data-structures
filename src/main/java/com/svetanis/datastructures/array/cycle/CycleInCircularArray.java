@@ -11,7 +11,7 @@ package com.svetanis.datastructures.array.cycle;
 public final class CycleInCircularArray {
 
 	public static boolean hasCycle(int[] a) {
-		// Time Complexity: O(n)
+		// Time Complexity: O(n^2)
 
 		for (int i = 0; i < a.length; i++) {
 			int slow = i;
