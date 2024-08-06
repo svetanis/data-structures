@@ -11,14 +11,15 @@ import com.svetanis.datastructures.linkedlist.single.Node;
 // L0 -> Ln -> L1 -> Ln-1 -> L2 -> Ln-2 …
 
 public final class Zipping {
-
+  // Time Complexity: O(n)
+	
   public static Node zip(Node head) {
     
     if(head == null) {
       return null;
     }
 
-    // find the middle point of LL
+    // 1. find the middle point of LL
     Node slow = head;
     Node fast = head.next;
     while (fast != null && fast.next != null) {
@@ -28,9 +29,12 @@ public final class Zipping {
 
     Node list1 = head;
     Node list2 = slow.next;
-    slow.next = null;// split the list into two lists
+    // 2. split the SLL in two halves
+    slow.next = null;
+    // 3. reverse the second half
     Node reversed = reverse(list2);
-    
+
+    // 4. do alternate merge of first and second halves
     while (list1 != null && reversed != null) {
       // connect current.next to reversed,
       // and advance current
