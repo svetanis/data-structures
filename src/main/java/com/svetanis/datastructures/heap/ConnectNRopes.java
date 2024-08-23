@@ -20,10 +20,11 @@ public final class ConnectNRopes {
 			// extract shortest two ropes from priority queue
 			int first = pq.poll();
 			int second = pq.poll();
+			int sum = first + second;
 			// connect the ropes: update result and
 			// insert the new rope to priority queue
-			cost += (first + second);
-			pq.add(first + second);
+			cost += sum;
+			pq.add(sum);
 		}
 		return cost;
 	}
