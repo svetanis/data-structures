@@ -19,7 +19,10 @@ import com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node;
 public final class LotLineByLineQueue {
 
   public static ImmutableList<ImmutableList<Integer>> lot(Node root) {
-    if (isNull(root)) {
+    // Time Complexity: O(n)
+  	// Space Complexity: O(n)
+  	
+  	if (isNull(root)) {
       return newList();
     }
 

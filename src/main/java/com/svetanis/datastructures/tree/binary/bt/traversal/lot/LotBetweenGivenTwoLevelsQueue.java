@@ -14,6 +14,9 @@ import java.util.Queue;
 import com.google.common.collect.ImmutableList;
 import com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node;
 
+// given a binary tree and two level numbers low and high
+// print nodes from level low to level high
+
 public final class LotBetweenGivenTwoLevelsQueue {
 
   public static ImmutableList<Node> traverse(Node root, int low, int high) {
