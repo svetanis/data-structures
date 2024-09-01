@@ -18,6 +18,16 @@ public class Node {
 		this.next = null;
 	}
 
+	public void printTree() {
+		Node curr = this;
+		System.out.println("Traversal using next pointer:");
+		while (curr != null) {
+			System.out.print(curr.data + " ");
+			curr = curr.next;
+		}
+		System.out.println();
+	}
+
 	public void printLevelOrder() {
 		Node next = this;
 		while (next != null) {
