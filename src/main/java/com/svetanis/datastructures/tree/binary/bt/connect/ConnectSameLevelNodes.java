@@ -5,73 +5,61 @@ import static com.svetanis.datastructures.tree.binary.bt.connect.Node.newNode;
 
 import java.util.Queue;
 
-// Given a binary tree, connect each node with its level order successor. 
-// The last node of each level should point to a null node.
+// Given a binary tree, 
+// connect each node with 
+// its level order successor. 
+// The last node of each level 
+// should point to a null node.
 
 public final class ConnectSameLevelNodes {
+	// Time Complexity: O(n)
+	// Space Complexity: O(n)
 
-  public static Node connect(Node root) {
-    Queue<Node> queue = newLinkedList();
-    queue.offer(root);
-    while (!queue.isEmpty()) {
-      Node prev = null;
-      int size = queue.size();
+	public static void connect(Node root) {
+		if (root == null) {
+			return;
+		}
+		Queue<Node> queue = newLinkedList();
+		queue.offer(root);
+		while (!queue.isEmpty()) {
+			Node prev = null;
+			int size = queue.size();
+			for (int i = 0; i < size; i++) {
+				Node curr = queue.poll();
+				if (prev != null) {
+					prev.next = curr;
+				}
+				prev = curr;
+				if (curr.left != null) {
+					queue.offer(curr.left);
+				}
+				if (curr.right != null) {
+					queue.offer(curr.right);
+				}
+			}
+		}
+	}
 
-      for (int i = 0; i < size; i++) {
-        Node node = queue.poll();
-        if (prev != null) {
-          prev.next = node;
-        }
-        prev = node;
-        if (node.left != null) {
-          queue.offer(node.left);
-        }
-        if (node.right != null) {
-          queue.offer(node.right);
-        }
-      }
-    }
-    return root;
-  }
+	public static void main(String[] args) {
+		Node root1 = newNode(12);
+		root1.left = newNode(7);
+		root1.right = newNode(1);
+		root1.left.left = newNode(9);
+		root1.right.left = newNode(10);
+		root1.right.right = newNode(5);
 
-  public static void main(String[] args) {
-    Node root = newNode(10);
-    root.left = newNode(8);
-    root.right = newNode(2);
-    root.left.left = newNode(3);
-    root.right.right = newNode(90);
+		connect(root1);
+		root1.printLevelOrder();
 
-    connect(root);
+		Node root2 = newNode(1);
+		root2.left = newNode(2);
+		root2.right = newNode(3);
+		root2.left.left = newNode(4);
+		root2.left.right = newNode(5);
+		root2.right.left = newNode(6);
+		root2.right.right = newNode(7);
 
-    if (root.next != null) {
-      System.out.println(root + ": " + root.next);
-    } else {
-      System.out.println(root + ": -1");
-    }
-
-    if (root.left.next != null) {
-      System.out.println(root.left + ": " + root.left.next);
-    } else {
-      System.out.println(root.left + ": -1");
-    }
-
-    if (root.right.next != null) {
-      System.out.println(root.right + ": " + root.right.next);
-    } else {
-      System.out.println(root.right + ": -1");
-    }
-
-    if (root.left.left.next != null) {
-      System.out.println(root.left.left + ": " + root.left.left.next);
-    } else {
-      System.out.println(root.left.left + ": -1");
-    }
-    if (root.right.right.next != null) {
-      System.out.println(root.right.right + ": " + root.right.right.next);
-    } else {
-      System.out.println(root.right.right + ": -1");
-    }
-
-  }
-
+		connect(root2);
+		root2.printLevelOrder();
+	}
 }
