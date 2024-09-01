@@ -23,7 +23,8 @@ public final class MinDepth {
 
 		while (!queue.isEmpty()) {
 			minDepth++;
-			for (int i = 0; i < queue.size(); i++) {
+			int size = queue.size();
+			for (int i = 0; i < size; i++) {
 				Node node = queue.poll();
 				if (isLeaf(node)) {
 					return minDepth;

@@ -19,8 +19,9 @@ public final class MaxDepth {
 
 		int height = 0;
 		while (!queue.isEmpty()) {
+			int size = queue.size();
 			height++;
-			for (int i = 0; i < queue.size(); i++) {
+			for (int i = 0; i < size; i++) {
 				Node node = queue.poll();
 				if (isNotNull(node.left)) {
 					queue.offer(node.left);

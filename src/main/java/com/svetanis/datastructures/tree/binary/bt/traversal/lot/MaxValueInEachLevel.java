@@ -32,7 +32,8 @@ public final class MaxValueInEachLevel {
 		List<Integer> list = newArrayList();
 		while (!queue.isEmpty()) {
 			int max = 0;
-			for (int i = 0; i < queue.size(); i++) {
+			int size = queue.size();
+			for (int i = 0; i < size; i++) {
 				Node node = queue.poll();
 				max = max(max, node.data);
 				if (isNotNull(node.left)) {
