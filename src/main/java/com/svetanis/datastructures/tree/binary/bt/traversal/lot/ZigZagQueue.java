@@ -3,6 +3,7 @@ package com.svetanis.datastructures.tree.binary.bt.traversal.lot;
 import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.collect.Lists.newLinkedList;
 import static com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node.newNode;
+import static com.svetanis.datastructures.tree.binary.model.mutable.primitive.Nodes.isNotNull;
 import static com.svetanis.datastructures.tree.binary.model.mutable.primitive.Nodes.isNull;
 import static com.svetanis.java.base.collect.Lists.newList;
 import static com.svetanis.java.base.utils.Print.printLists;
@@ -19,48 +20,51 @@ import com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node;
 
 public final class ZigZagQueue {
 
-  public static ImmutableList<ImmutableList<Integer>> traverse(Node root) {
+	public static ImmutableList<ImmutableList<Integer>> traverse(Node root) {
+		// Time Complexity: O(n)
+		// Space Complexity: O(n)
 
-    if (isNull(root)) {
-      return newList();
-    }
+		if (isNull(root)) {
+			return newList();
+		}
 
-    boolean leftToRight = true;
-    Queue<Node> queue = newLinkedList();
-    queue.offer(root);
-    List<ImmutableList<Integer>> lists = newArrayList();
+		boolean leftToRight = true;
+		Queue<Node> queue = newLinkedList();
+		queue.offer(root);
+		List<ImmutableList<Integer>> lists = newArrayList();
 
-    while (!queue.isEmpty()) {
-      int size = queue.size();
-      List<Integer> list = newLinkedList();
-      for (int i = 0; i < size; i++) {
-        Node node = queue.poll();
-        if (leftToRight) {
-          list.add(node.data);
-        } else {
-          list.add(0, node.data);
-        }
-        if (node.left != null) {
-          queue.offer(node.left);
-        }
-        if (node.right != null) {
-          queue.offer(node.right);
-        }
-      }
-      lists.add(newList(list));
-      leftToRight = !leftToRight;
-    }
-    return newList(lists);
-  }
+		while (!queue.isEmpty()) {
+			int size = queue.size();
+			List<Integer> list = newLinkedList();
+			for (int i = 0; i < size; i++) {
+				Node node = queue.poll();
+				if (leftToRight) {
+					list.add(node.data);
+				} else {
+					list.add(0, node.data);
+				}
+				if (isNotNull(node.left)) {
+					queue.offer(node.left);
+				}
+				if (isNotNull(node.right)) {
+					queue.offer(node.right);
+				}
+			}
+			lists.add(newList(list));
+			leftToRight = !leftToRight;
+		}
+		return newList(lists);
+	}
 
-  public static void main(String[] args) {
-    Node root = newNode(1);
-    root.left = newNode(2);
-    root.right = newNode(3);
-    root.left.left = newNode(7);
-    root.left.right = newNode(6);
-    root.right.left = newNode(5);
-    root.right.right = newNode(4);
-    printLists(traverse(root));
-  }
+	public static void main(String[] args) {
+		Node root = newNode(12);
+		root.left = newNode(7);
+		root.right = newNode(1);
+		root.left.left = newNode(9);
+		root.right.left = newNode(10);
+		root.right.right = newNode(5);
+		root.right.left.left = newNode(20);
+		root.right.left.right = newNode(17);
+		printLists(traverse(root));
+	}
 }
