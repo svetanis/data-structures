@@ -18,6 +18,8 @@ import com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node;
 // Find the largest value on each level of a binary tree.
 
 public final class MaxValueInEachLevel {
+	// Time Complexity: O(n)
+	// Space Complexity: O(n)
 
 	public static ImmutableList<Integer> lot(Node root) {
 		if (isNull(root)) {
