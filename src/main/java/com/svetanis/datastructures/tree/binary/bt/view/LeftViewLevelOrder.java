@@ -13,45 +13,61 @@ import java.util.Queue;
 import com.google.common.collect.ImmutableList;
 import com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node;
 
-// Given a binary tree, return an array containing nodes in its left view. 
-// The left view of a binary tree is the set of nodes visible 
+// Given a binary tree, 
+// return an array containing 
+// nodes in its left view. 
+
+// The left view of a binary tree 
+// is the set of nodes visible 
 // when the tree is seen from the left side.
 
 public final class LeftViewLevelOrder {
 
-  public static ImmutableList<Node> leftView(Node root) {
-    // time complexity: O(n)
-    if (isNull(root)) {
-      return newList();
-    }
-    List<Node> list = newArrayList();
-    Queue<Node> queue = newLinkedList();
-    queue.offer(root);
+	public static ImmutableList<Node> leftView(Node root) {
+		// Time Complexity: O(n)
 
-    while (!queue.isEmpty()) {
-      int size = queue.size();
-      for (int i = 0; i < size; i++) {
-        Node node = queue.poll();
-        if (i == 0) {
-          list.add(node);
-        }
-        if (node.left != null) {
-          queue.offer(node.left);
-        }
-        if (node.right != null) {
-          queue.offer(node.right);
-        }
-      }
-    }
-    return newList(list);
-  }
+		if (isNull(root)) {
+			return newList();
+		}
+		List<Node> list = newArrayList();
+		Queue<Node> queue = newLinkedList();
+		queue.offer(root);
 
-  public static void main(String[] args) {
-    Node root = newNode(12);
-    root.left = newNode(10);
-    root.left.left = newNode(30);
-    root.left.left = newNode(25);
-    root.left.right = newNode(40);
-    print(leftView(root)); // 12 10 25
-  }
+		while (!queue.isEmpty()) {
+			int size = queue.size();
+			for (int i = 0; i < size; i++) {
+				Node node = queue.poll();
+				if (i == 0) {
+					list.add(node);
+				}
+				if (node.left != null) {
+					queue.offer(node.left);
+				}
+				if (node.right != null) {
+					queue.offer(node.right);
+				}
+			}
+		}
+		return newList(list);
+	}
+
+	public static void main(String[] args) {
+		Node root1 = newNode(1);
+		root1.left = newNode(2);
+		root1.right = newNode(3);
+		root1.left.left = newNode(4);
+		root1.left.right = newNode(5);
+		root1.right.left = newNode(6);
+		root1.right.right = newNode(7);
+		print(leftView(root1)); // 1, 2, 4
+
+		Node root2 = newNode(12);
+		root2.left = newNode(7);
+		root2.right = newNode(1);
+		root2.left.left = newNode(9);
+		root2.left.left.left = newNode(3);
+		root2.right.left = newNode(10);
+		root2.right.right = newNode(5);
+		print(leftView(root2)); // 12, 7, 9, 3
+	}
 }
