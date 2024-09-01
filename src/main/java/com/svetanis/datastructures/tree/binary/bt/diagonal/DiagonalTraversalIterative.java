@@ -31,7 +31,7 @@ public final class DiagonalTraversalIterative {
     while (!queue.isEmpty()) {
       Item item = queue.poll();
       Node node = item.node;
-      int dist = item.hDist;
+      int dist = item.hd;
       while (isNotNull(node)) {
         mm.put(dist, node.data);
         if (isNotNull(node.left)) {

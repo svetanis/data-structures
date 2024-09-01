@@ -4,10 +4,10 @@ import com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node;
 
 public final class Item {
   public Node node;
-  public int hDist;
+  public int hd;
 
-  public Item(Node node, int hDist) {
+  public Item(Node node, int hd) {
     this.node = node;
-    this.hDist = hDist;
+		this.hd = hd;
   }
 }

@@ -33,7 +33,7 @@ public final class DiagonalSumIterative {
     while (!queue.isEmpty()) {
       Item item = queue.poll();
       Node node = item.node;
-      int dist = item.hDist;
+      int dist = item.hd;
       while (isNotNull(node)) {
         int sum = 0;
         if (map.containsKey(dist)) {
