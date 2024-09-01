@@ -31,9 +31,8 @@ public final class LotLineByLineReverseQueue {
 		List<ImmutableList<Integer>> lists = newLinkedList();
 
 		while (!queue.isEmpty()) {
-			int size = queue.size();
 			List<Integer> list = newArrayList();
-			for (int i = 0; i < size; i++) {
+			for (int i = 0; i < queue.size(); i++) {
 				Node node = queue.poll();
 				list.add(node.data);
 				if (isNotNull(node.left)) {

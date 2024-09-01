@@ -34,9 +34,8 @@ public final class ZigZagQueue {
 		List<ImmutableList<Integer>> lists = newArrayList();
 
 		while (!queue.isEmpty()) {
-			int size = queue.size();
 			List<Integer> list = newLinkedList();
-			for (int i = 0; i < size; i++) {
+			for (int i = 0; i < queue.size(); i++) {
 				Node node = queue.poll();
 				if (leftToRight) {
 					list.add(node.data);
