@@ -3,6 +3,7 @@ package com.svetanis.datastructures.tree.binary.bt.view;
 import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.collect.Lists.newLinkedList;
 import static com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node.newNode;
+import static com.svetanis.datastructures.tree.binary.model.mutable.primitive.Nodes.isNotNull;
 import static com.svetanis.datastructures.tree.binary.model.mutable.primitive.Nodes.isNull;
 import static com.svetanis.java.base.collect.Lists.newList;
 import static com.svetanis.java.base.utils.Print.print;
@@ -40,10 +41,10 @@ public final class LeftViewLevelOrder {
 				if (i == 0) {
 					list.add(node);
 				}
-				if (node.left != null) {
+				if (isNotNull(node.left)) {
 					queue.offer(node.left);
 				}
-				if (node.right != null) {
+				if (isNotNull(node.right)) {
 					queue.offer(node.right);
 				}
 			}
