@@ -19,44 +19,53 @@ import com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node;
 
 public final class RootToLeafPathsGivenSum {
 
-  public static ImmutableList<ImmutableList<Integer>> paths(Node node, int k) {
-    List<Integer> list = newArrayList();
-    List<ImmutableList<Integer>> lists = newArrayList();
-    paths(node, k, list, lists);
-    return newList(lists);
-  }
+	public static ImmutableList<ImmutableList<Integer>> paths(Node node, int sum) {
+		List<Integer> path = newArrayList();
+		List<ImmutableList<Integer>> paths = newArrayList();
+		paths(node, sum, path, paths);
+		return newList(paths);
+	}
 
-  private static void paths(Node node, int k, List<Integer> list, List<ImmutableList<Integer>> lists) {
-    // Time complexity: O(n)
+	private static void paths(Node node, int sum, List<Integer> path, List<ImmutableList<Integer>> paths) {
+		// Time complexity: O(n)
 
-    if (isNull(node)) {
-      return;
-    }
-    list.add(node.data);
-    if (isLeaf(node) && k == node.data) {
-      lists.add(newList(list));
-    }
-    paths(node.left, k - node.data, list, lists);
-    paths(node.right, k - node.data, list, lists);
-    list.remove(list.size() - 1);
-  }
+		if (isNull(node)) {
+			return;
+		}
+		// add the current node to the path
+		path.add(node.data);
+		// if the current node is a leaf &
+		// its value is equal to sum,
+		// save the current path
+		if (isLeaf(node) && sum == node.data) {
+			paths.add(newList(path));
+		} else {
+			// traverse left subtree
+			paths(node.left, sum - node.data, path, paths);
+			// traverse right subtree
+			paths(node.right, sum - node.data, path, paths);
+		}
+		// backtrack: remove the current node from the path
+		// while going up the recursive call stack
+		path.remove(path.size() - 1);
+	}
 
-  public static void main(String[] args) {
-    // sum = 21 : 10->8->3
-    // sum = 23 : 10->8->5
-    // sum = 21 : 10->9->2
+	public static void main(String[] args) {
+		// sum = 21 : 10->8->3
+		// sum = 23 : 10->8->5
+		// sum = 21 : 10->9->2
 
-    Node root = newNode(10);
-    root.left = newNode(8);
-    root.right = newNode(9);
-    root.left.left = newNode(3);
-    root.left.right = newNode(5);
-    root.right.left = newNode(2);
+		Node root = newNode(10);
+		root.left = newNode(8);
+		root.right = newNode(9);
+		root.left.left = newNode(3);
+		root.left.right = newNode(5);
+		root.right.left = newNode(2);
 
-    inOrder(root);
-    System.out.println();
+		inOrder(root);
+		System.out.println();
 
-    // given sum root-to-leaf path
-    printLists(paths(root, 21));
-  }
+		// given sum root-to-leaf path
+		printLists(paths(root, 21));
+	}
 }
