@@ -19,45 +19,53 @@ import com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node;
 
 public final class RootToLeafPathsRecursive {
 
-  public static ImmutableList<ImmutableList<Integer>> paths(Node root) {
-    // Time complexity: O(n)
+	public static ImmutableList<ImmutableList<Integer>> paths(Node root) {
+		// Time complexity: O(n)
 
-    Deque<Integer> dq = new ArrayDeque<>();
-    List<ImmutableList<Integer>> lists = newArrayList();
-    path(root, dq, lists);
-    return newList(lists);
-  }
+		Deque<Integer> path = new ArrayDeque<>();
+		List<ImmutableList<Integer>> paths = newArrayList();
+		paths(root, path, paths);
+		return newList(paths);
+	}
 
-  private static void path(Node node, Deque<Integer> dq, List<ImmutableList<Integer>> lists) {
-    if (isNull(node)) {
-      return;
-    }
-    dq.addLast(node.data);
-    if (isLeaf(node)) {
-      lists.add(newList(dq));
-    }
-    path(node.left, dq, lists);
-    path(node.right, dq, lists);
-    dq.removeLast();
-  }
+	private static void paths(Node node, Deque<Integer> path, List<ImmutableList<Integer>> paths) {
+		if (isNull(node)) {
+			return;
+		}
+		// add the current node to the path
+		path.addLast(node.data);
+		// if the current node is a leaf
+		// save the current path
+		if (isLeaf(node)) {
+			paths.add(newList(path));
+		} else {
+			// traverse left subtree
+			paths(node.left, path, paths);
+			// traverse right subtree
+			paths(node.right, path, paths);
+		}
+		// backtrack: remove the current node from the path
+		// while going up the recursive call stack
+		path.removeLast();
+	}
 
-  public static void main(String[] args) {
-    // 10->8->3
-    // 10->8->5
-    // 10->2->2
-    Node root = newNode(10);
-    root.left = newNode(8);
-    root.right = newNode(2);
-    root.left.left = newNode(3);
-    root.left.right = newNode(5);
-    root.right.left = newNode(2);
+	public static void main(String[] args) {
+		// 10->8->3
+		// 10->8->5
+		// 10->2->2
+		Node root = newNode(10);
+		root.left = newNode(8);
+		root.right = newNode(2);
+		root.left.left = newNode(3);
+		root.left.right = newNode(5);
+		root.right.left = newNode(2);
 
-    inOrder(root);
-    System.out.println();
+		inOrder(root);
+		System.out.println();
 
-    // print Root-to-leaf path
-    System.out.println("Root-to-leaf paths: ");
-    printLists(paths(root));
-    System.out.println();
-  }
+		// print Root-to-leaf path
+		System.out.println("Root-to-leaf paths: ");
+		printLists(paths(root));
+		System.out.println();
+	}
 }

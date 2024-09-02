@@ -8,6 +8,8 @@ import static com.svetanis.datastructures.tree.binary.model.mutable.primitive.No
 import static com.svetanis.java.base.collect.Lists.newList;
 import static com.svetanis.java.base.utils.Print.printLists;
 
+import java.util.ArrayDeque;
+import java.util.Deque;
 import java.util.List;
 
 import com.google.common.collect.ImmutableList;
@@ -20,20 +22,20 @@ import com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node;
 public final class RootToLeafPathsGivenSum {
 
 	public static ImmutableList<ImmutableList<Integer>> paths(Node node, int sum) {
-		List<Integer> path = newArrayList();
+		Deque<Integer> path = new ArrayDeque<>();
 		List<ImmutableList<Integer>> paths = newArrayList();
 		paths(node, sum, path, paths);
 		return newList(paths);
 	}
 
-	private static void paths(Node node, int sum, List<Integer> path, List<ImmutableList<Integer>> paths) {
+	private static void paths(Node node, int sum, Deque<Integer> path, List<ImmutableList<Integer>> paths) {
 		// Time complexity: O(n)
 
 		if (isNull(node)) {
 			return;
 		}
 		// add the current node to the path
-		path.add(node.data);
+		path.addLast(node.data);
 		// if the current node is a leaf &
 		// its value is equal to sum,
 		// save the current path
@@ -47,7 +49,7 @@ public final class RootToLeafPathsGivenSum {
 		}
 		// backtrack: remove the current node from the path
 		// while going up the recursive call stack
-		path.remove(path.size() - 1);
+		path.removeLast();
 	}
 
 	public static void main(String[] args) {

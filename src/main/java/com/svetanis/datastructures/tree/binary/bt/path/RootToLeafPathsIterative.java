@@ -21,60 +21,60 @@ import com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node;
 // to print leaf to root path for every leaf node of BT.
 
 public final class RootToLeafPathsIterative {
-  
-  private static ImmutableList<ImmutableList<Integer>> paths(Node root){
-    // Time Complexity: O(n log n)
-    
-    List<ImmutableList<Integer>> lists = newArrayList();
-    Deque<Node> dq = new ArrayDeque<>();
-    dq.add(root);
-    Map<Node, Node> map = newHashMap();
-    map.put(root, null);
-    while(!dq.isEmpty()) {
-      Node node = dq.poll();
-      if(isLeaf(node)) {
-        lists.add(path(node, map));
-      }
-      if(isNotNull(node.right)) {
-        dq.add(node.right);
-        map.put(node.right, node);
-      }
-      if(isNotNull(node.left)) {
-        dq.add(node.left);
-        map.put(node.left, node);
-      }
-    }
-    return newList(lists);
-  }
-  
-  private static ImmutableList<Integer> path(Node leaf, Map<Node, Node> map){
-    Node node = leaf;
-    List<Integer> list = newArrayList();
-    while(isNotNull(map.get(node))) {
-      list.add(node.data);
-      node = map.get(node);
-    }
-    list.add(node.data);
-    return newList(list);
-  }
 
-  public static void main(String[] args) {
-    // 10->8->3
-    // 10->8->5
-    // 10->2->2
-    Node root = newNode(10);
-    root.left = newNode(8);
-    root.right = newNode(2);
-    root.left.left = newNode(3);
-    root.left.right = newNode(5);
-    root.right.left = newNode(2);
+	private static ImmutableList<ImmutableList<Integer>> paths(Node root) {
+		// Time Complexity: O(n log n)
 
-    inOrder(root);
-    System.out.println();
+		Deque<Node> dq = new ArrayDeque<>();
+		dq.add(root);
+		Map<Node, Node> map = newHashMap();
+		map.put(root, null);
+		List<ImmutableList<Integer>> paths = newArrayList();
+		while (!dq.isEmpty()) {
+			Node node = dq.poll();
+			if (isLeaf(node)) {
+				paths.add(path(node, map));
+			}
+			if (isNotNull(node.left)) {
+				dq.add(node.left);
+				map.put(node.left, node);
+			}
+			if (isNotNull(node.right)) {
+				dq.add(node.right);
+				map.put(node.right, node);
+			}
+		}
+		return newList(paths);
+	}
 
-    // print Root-to-leaf path
-    System.out.println("Root-to-leaf paths: ");
-    printLists(paths(root));
-    System.out.println();
-  }
+	private static ImmutableList<Integer> path(Node leaf, Map<Node, Node> map) {
+		Node node = leaf;
+		List<Integer> list = newArrayList();
+		while (isNotNull(map.get(node))) {
+			list.add(0, node.data);
+			node = map.get(node);
+		}
+		list.add(0, node.data);
+		return newList(list);
+	}
+
+	public static void main(String[] args) {
+		// 10->8->3
+		// 10->8->5
+		// 10->2->2
+		Node root = newNode(10);
+		root.left = newNode(8);
+		root.right = newNode(2);
+		root.left.left = newNode(3);
+		root.left.right = newNode(5);
+		root.right.left = newNode(2);
+
+		inOrder(root);
+		System.out.println();
+
+		// print Root-to-leaf path
+		System.out.println("Root-to-leaf paths: ");
+		printLists(paths(root));
+		System.out.println();
+	}
 }
