@@ -7,6 +7,7 @@ import static com.svetanis.datastructures.tree.binary.model.mutable.primitive.No
 import static com.svetanis.datastructures.tree.binary.model.mutable.primitive.Nodes.isNull;
 import static com.svetanis.java.base.collect.Lists.newList;
 import static java.lang.Integer.MIN_VALUE;
+import static java.lang.Math.max;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
@@ -32,23 +33,23 @@ public final class RootToLeafMaxSumPathRecursive2 {
 		return newList(path);
 	}
 
-	private static int paths(Node node, AtomicInteger max, Deque<Integer> dq, List<Integer> path) {
-		if (isNull(node)) {
+	private static int paths(Node root, AtomicInteger max, Deque<Integer> dq, List<Integer> path) {
+		if (isNull(root)) {
 			return 0;
 		}
 		// add the current node to the path
-		dq.addLast(node.data);
+		dq.addLast(root.data);
 		// traverse left subtree
-		int left = paths(node.left, max, dq, path);
+		int left = max(0, paths(root.left, max, dq, path));
 		// traverse right subtree
-		int right = paths(node.right, max, dq, path);
+		int right = max(0, paths(root.right, max, dq, path));
 		// max sum path passing through current node
-		int sum = node.data + left + right;
+		int sum = root.data + left + right;
 
 		// if the current node is a leaf
 		// & the sum is greater than max
 		// save the current path
-		if (isLeaf(node)) {
+		if (isLeaf(root)) {
 			if (sum > max.get()) {
 				max.set(sum);
 				path.clear();
@@ -57,8 +58,8 @@ public final class RootToLeafMaxSumPathRecursive2 {
 		}
 		// backtrack: remove the current node from the path
 		// while going up the recursive call stack
-		dq.removeLast();
-		return sum;
+		int val = dq.removeLast();
+		return sum - val;
 	}
 
 	public static void main(String[] args) {
