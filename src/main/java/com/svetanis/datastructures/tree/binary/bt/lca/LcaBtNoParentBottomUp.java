@@ -89,5 +89,12 @@ public final class LcaBtNoParentBottomUp {
 		System.out.println(lca(root, 5, 1));
 		System.out.println(lca(root, 6, 4));
 		System.out.println(lca(root, 4, 10));
+		System.out.println();
+
+		Node root2 = newNode(3);
+		root2.left = newNode(1);
+		root2.right = newNode(5);
+		root2.right.right = newNode(8);
+		System.out.println(lca(root2, 5, 7));
 	}
 }
