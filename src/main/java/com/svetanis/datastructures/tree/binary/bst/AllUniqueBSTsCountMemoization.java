@@ -1,13 +1,22 @@
-package com.svetanis.datastructures.tree.binary.bt.construction;
+package com.svetanis.datastructures.tree.binary.bst;
+
+import static com.google.common.collect.Maps.newHashMap;
+
+import java.util.Map;
 
 // given a number n count
 // structurally unique BSTs
 // that can store values 1 to n
 
-public final class AllUniqueBSTsCountRecursive {
+public final class AllUniqueBSTsCountMemoization {
 	// Time Complexity: O(n * 2^n)
 
+	private static final Map<Integer, Integer> MAP = newHashMap();
+
 	public static int count(int n) {
+		if (MAP.containsKey(n)) {
+			MAP.get(n);
+		}
 		if (n <= 1) {
 			return 1;
 		}
@@ -18,6 +27,7 @@ public final class AllUniqueBSTsCountRecursive {
 			int right = count(n - i);
 			count += (left * right);
 		}
+		MAP.put(n, count);
 		return count;
 	}
 
