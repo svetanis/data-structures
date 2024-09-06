@@ -7,38 +7,46 @@ import static com.svetanis.datastructures.tree.binary.model.mutable.primitive.No
 
 import com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node;
 
+// given a BST of integers with duplicate entries
+// if an element has a duplicate entry,
+// it is in the right subtree of that element
+// count the total number of duplicates
+
+// traverse the given BST in-order and compare
+// the previous element with the current element
+
 public final class CountDuplicates {
 
-  public static int duplicates(Node root) {
-    return duplicates(root, root);
-  }
+	public static int duplicates(Node root) {
+		return duplicates(root, root);
+	}
 
-  private static int duplicates(Node root, Node prev) {
-    int count = 0;
-    if (isNull(root)) {
-      return count;
-    }
-    count += duplicates(root.left, prev);
-    if (root != prev && root.data == prev.data) {
-      count++;
-    }
-    count += duplicates(root.right, root);
-    return count;
-  }
+	private static int duplicates(Node root, Node prev) {
+		int count = 0;
+		if (isNull(root)) {
+			return count;
+		}
+		count += duplicates(root.left, prev);
+		if (root != prev && root.data == prev.data) {
+			count++;
+		}
+		count += duplicates(root.right, root);
+		return count;
+	}
 
-  public static void main(String[] args) {
-    Node root = newNode(5);
-    insert(root, 5);
-    insert(root, 3);
-    insert(root, 2);
-    insert(root, 2);
-    insert(root, 4);
-    insert(root, 4);
-    insert(root, 6);
-    insert(root, 6);
+	public static void main(String[] args) {
+		Node root = newNode(5);
+		insert(root, 5);
+		insert(root, 3);
+		insert(root, 2);
+		insert(root, 2);
+		insert(root, 4);
+		insert(root, 4);
+		insert(root, 6);
+		insert(root, 6);
 
-    inOrder(root);
-    System.out.println();
-    System.out.println(duplicates(root));
-  }
+		inOrder(root);
+		System.out.println();
+		System.out.println(duplicates(root));
+	}
 }
