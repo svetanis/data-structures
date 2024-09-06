@@ -2,7 +2,6 @@ package com.svetanis.datastructures.tree.binary.bst;
 
 import static com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node.newNode;
 import static com.svetanis.datastructures.tree.binary.model.mutable.primitive.Nodes.isNull;
-import static java.lang.Integer.MAX_VALUE;
 import static java.lang.Integer.MIN_VALUE;
 
 import com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node;
@@ -10,28 +9,22 @@ import com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node;
 // given a Binary Tree (BT)
 // determine if it is a BST or not
 
-// conditions to check:
-// 1. if the node is the left child
-// then it must be smaller than the parent
-// and must pass down the value from its
-// parent to its right subtree to make sure
-// none of the nodes in that subtree is
-// greater than the parent
+// in-order traversal of BST returns
+// the nodes in sorted order
+// to determine if given BT is BST or not
+// perform in-order traversal and keep
+// track of the last visited node while
+// traversing the tree and check whether
+// its key is smaller compared to the current key
 
-// 2. if the node is the right child 
-// of its parent, then it must be larger
-// than the parent and it must pass down
-// the value from its parent to its left
-// subtree to make sure none of the nodes
-// in that subtree is lesser than then the parent
-
-public final class ValidBst {
+public final class ValidBstInOrder {
 
 	public static boolean isValidBst(Node root) {
-		return isValidBst(root, MIN_VALUE, MAX_VALUE);
+		Node prev = new Node(MIN_VALUE);
+		return isValidBst(root, prev);
 	}
 
-	private static boolean isValidBst(Node root, int min, int max) {
+	private static boolean isValidBst(Node root, Node prev) {
 		// Time complexity O(n);
 		// Space complexity: O(h)
 
@@ -40,16 +33,19 @@ public final class ValidBst {
 			return true;
 		}
 
-		// false if this node violates
-		// the min/max constraint
-		if (root.data < min || root.data > max) {
+		// check if left subtree is BST or not
+		boolean left = isValidBst(root.left, prev);
+
+		// value of current node should be
+		// more than that of prev node
+		if (root.data <= prev.data) {
 			return false;
 		}
 
-		// otherwise check the subtrees recursively,
-		// tightening the min or max constraint
-		boolean left = isValidBst(root.left, min, root.data);
-		boolean right = isValidBst(root.right, root.data, max);
+		// update the prev node
+		prev.data = root.data;
+		// check if right subtree is BST or not
+		boolean right = isValidBst(root.right, prev);
 		return left && right;
 	}
 
