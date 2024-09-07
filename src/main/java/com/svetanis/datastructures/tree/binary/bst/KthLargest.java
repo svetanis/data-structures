@@ -9,31 +9,37 @@ import static com.svetanis.datastructures.tree.binary.model.mutable.primitive.No
 import com.google.common.base.Optional;
 import com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node;
 
+// given a BST and positive integer k
+// find k'th largest element in BST
+
 public final class KthLargest {
 
-  public static Optional<Integer> kthLargest(Node root, int k) {
+	public static Optional<Integer> kthLargest(Node root, int k) {
+		// Time Complexity : O(n) or O(k + h)
+		// Aux Space Complexity: O(h)
+		// Total Space Complexity: O(n)
 
-    if (isNull(root)) {
-      return absent();
-    }
-    int right = size(root.right);
-    if (k == right + 1) {
-      return of(root.data);
-    } else if (right < k) {
-      return kthLargest(root.left, k - right - 1);
-    } else {
-      return kthLargest(root.right, k);
-    }
-  }
+		if (isNull(root)) {
+			return absent();
+		}
+		int right = size(root.right);
+		if (k == right + 1) {
+			return of(root.data);
+		} else if (right < k) {
+			return kthLargest(root.left, k - right - 1);
+		} else {
+			return kthLargest(root.right, k);
+		}
+	}
 
-  public static void main(String[] args) {
-    Node root = newNode(20);
-    root.left = newNode(8);
-    root.right = newNode(22);
-    root.left.left = newNode(4);
-    root.left.right = newNode(12);
-    root.left.right.left = newNode(10);
-    root.left.right.right = newNode(14);
-    System.out.println(kthLargest(root, 5));
-  }
+	public static void main(String[] args) {
+		Node root = newNode(20);
+		root.left = newNode(8);
+		root.right = newNode(22);
+		root.left.left = newNode(4);
+		root.left.right = newNode(12);
+		root.left.right.left = newNode(10);
+		root.left.right.right = newNode(14);
+		System.out.println(kthLargest(root, 5));
+	}
 }
