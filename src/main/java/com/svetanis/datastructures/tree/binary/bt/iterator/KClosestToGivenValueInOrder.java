@@ -11,8 +11,8 @@ import java.util.Queue;
 import com.google.common.collect.ImmutableList;
 import com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node;
 
-//Given BST and a target value. 
-//Find k nodes that have values closest to target.
+// Given BST and a target value. 
+// Find k nodes that have values closest to target.
 
 public final class KClosestToGivenValueInOrder {
 
