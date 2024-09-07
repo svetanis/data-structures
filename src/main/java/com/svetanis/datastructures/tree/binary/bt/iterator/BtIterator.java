@@ -3,7 +3,8 @@ package com.svetanis.datastructures.tree.binary.bt.iterator;
 import static com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node.newNode;
 import static com.svetanis.datastructures.tree.binary.model.mutable.primitive.Nodes.isNotNull;
 
-import java.util.Stack;
+import java.util.ArrayDeque;
+import java.util.Deque;
 
 import com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node;
 
@@ -15,46 +16,46 @@ import com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node;
 
 public final class BtIterator {
 
-  private Stack<Node> stack;
+	private Deque<Node> dq;
 
-  public BtIterator(Node root) {
-    this.stack = new Stack<>();
-    pushLeft(root);
-  }
+	public BtIterator(Node root) {
+		this.dq = new ArrayDeque<>();
+		pushLeft(root);
+	}
 
-  public boolean hasNext() {
-    return !stack.isEmpty();
-  }
+	public boolean hasNext() {
+		return !dq.isEmpty();
+	}
 
-  public int next() {
-    Node node = stack.pop();
-    pushLeft(node.right);
-    return node.data;
-  }
+	public int next() {
+		Node node = dq.pop();
+		pushLeft(node.right);
+		return node.data;
+	}
 
-  private void pushLeft(Node node) {
-    if (isNotNull(node)) {
-      stack.push(node);
-      pushLeft(node.left);
-    }
-  }
+	private void pushLeft(Node node) {
+		if (isNotNull(node)) {
+			dq.push(node);
+			pushLeft(node.left);
+		}
+	}
 
-  private void pushLeftIterative(Node node) {
-    while (node != null) {
-      stack.push(node);
-      node = node.left;
-    }
-  }
+	private void pushLeftIterative(Node node) {
+		while (isNotNull(node)) {
+			dq.push(node);
+			node = node.left;
+		}
+	}
 
-  public static void main(String[] args) {
-    Node root = newNode(10);
-    root.left = newNode(1);
-    root.right = newNode(11);
-    root.left.right = newNode(6);
-    root.right.right = newNode(12);
-    BtIterator iter = new BtIterator(root);
-    while (iter.hasNext()) {
-      System.out.print(iter.next() + " ");
-    }
-  }
+	public static void main(String[] args) {
+		Node root = newNode(10);
+		root.left = newNode(1);
+		root.right = newNode(11);
+		root.left.right = newNode(6);
+		root.right.right = newNode(12);
+		BtIterator iter = new BtIterator(root);
+		while (iter.hasNext()) {
+			System.out.print(iter.next() + " ");
+		}
+	}
 }
