@@ -23,7 +23,7 @@ import com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node;
 public final class KthSmallestInorder {
 
 	public static Optional<Integer> kthSmallest(Node root, int k) {
-		// Time complexity: O(n)
+		// Time complexity: O(h + k)
 
 		// count of nodes visited
 		AtomicInteger count = new AtomicInteger();

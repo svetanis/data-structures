@@ -21,7 +21,7 @@ import com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node;
 public final class SumKthSmallest {
 
 	public static int sum(Node root, int k) {
-		// Time complexity: O(h)
+		// Time complexity: O(h + k)
 
 		// count of nodes visited
 		AtomicInteger count = new AtomicInteger();
