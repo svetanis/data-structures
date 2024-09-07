@@ -20,13 +20,13 @@ public final class ClosestToKElementIterative {
 		if (isNull(root)) {
 			return -1;
 		}
-		if (root.data == k) {
-			return root.data;
-		}
 
 		int key = -1;
 		int min = MAX_VALUE;
 		while (isNotNull(root)) {
+			if (root.data == k) {
+				return root.data;
+			}
 			int diff = abs(k - root.data);
 			if (min > diff) {
 				min = diff;

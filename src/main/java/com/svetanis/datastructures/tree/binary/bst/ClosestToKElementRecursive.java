@@ -16,9 +16,6 @@ import com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node;
 public final class ClosestToKElementRecursive {
 
 	public static int closestToK(Node root, int k) {
-		if (root.data == k) {
-			return root.data;
-		}
 		AtomicInteger min = new AtomicInteger(MAX_VALUE);
 		AtomicInteger key = new AtomicInteger(-1);
 		closestToK(root, k, min, key);
@@ -29,6 +26,11 @@ public final class ClosestToKElementRecursive {
 		// Time complexity: O(h)
 
 		if (isNull(root)) {
+			return;
+		}
+
+		if (root.data == k) {
+			key.set(root.data);
 			return;
 		}
 
