@@ -74,7 +74,8 @@ public final class ReconstructingSequence {
 		return queue;
 	}
 
-	private static void buildGraph(int[][] sequences, Map<Integer, Integer> inDegree, Map<Integer, List<Integer>> map) {
+	private static void buildGraph(int[][] sequences, Map<Integer, Integer> inDegree, 
+			Map<Integer, List<Integer>> map) {
 		for (int[] s : sequences) {
 			for (int i = 1; i < s.length; i++) {
 				int parent = s[i - 1];
