@@ -1,25 +1,21 @@
-package com.svetanis.datastructures.graph.directed.ts.grokking;
+package com.svetanis.datastructures.graph.directed.ts.kahn;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.collect.Lists.newLinkedList;
 import static com.google.common.collect.Maps.filterValues;
 import static com.google.common.collect.Maps.newHashMap;
-import static com.svetanis.java.base.collect.Lists.newList;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 
-import com.google.common.collect.ImmutableList;
-
 // given a directed graph, 
-// find the topological ordering 
-// of its vertices
+// find if it has a cycle 
 
-public final class TopologicalSortingBfs {
+public final class IsCyclicDGraphBfs {
 	// Time Complexity: O(V + E)
 
-	public static ImmutableList<Integer> sort(int v, int[][] m) {
+	public static boolean hasCycle(int v, int[][] m) {
 		Map<Integer, Integer> inDegree = inDegreeInit(v);
 		Map<Integer, List<Integer>> graph = graphInit(v);
 		buildGraph(v, m, inDegree, graph);
@@ -37,7 +33,7 @@ public final class TopologicalSortingBfs {
 				inDegree.put(child, f);
 			}
 		}
-		return list.size() != v ? newList() : newList(list);
+		return list.size() != v ? true : false;
 	}
 
 	private static Queue<Integer> sources(Map<Integer, Integer> map) {
@@ -79,8 +75,8 @@ public final class TopologicalSortingBfs {
 		int[][] m1 = { { 3, 2 }, { 3, 0 }, { 2, 0 }, { 2, 1 } };
 		int[][] m2 = { { 4, 2 }, { 4, 3 }, { 2, 0 }, { 2, 1 }, { 3, 1 } };
 		int[][] m3 = { { 6, 4 }, { 6, 2 }, { 5, 3 }, { 5, 4 }, { 3, 0 }, { 3, 1 }, { 3, 2 }, { 4, 1 } };
-		System.out.println(sort(4, m1)); // 3, 2, 0, 1
-		System.out.println(sort(5, m2)); // 4, 2, 3, 0, 1
-		System.out.println(sort(7, m3)); // 5, 6, 3, 4, 0, 2, 1
+		System.out.println(hasCycle(4, m1)); // 3, 2, 0, 1
+		System.out.println(hasCycle(5, m2)); // 4, 2, 3, 0, 1
+		System.out.println(hasCycle(7, m3)); // 5, 6, 3, 4, 0, 2, 1
 	}
 }

@@ -1,28 +1,25 @@
-package com.svetanis.datastructures.graph.directed.ts.grokking;
+package com.svetanis.datastructures.graph.directed.ts.kahn;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.collect.Lists.newLinkedList;
 import static com.google.common.collect.Maps.filterValues;
 import static com.google.common.collect.Maps.newHashMap;
-import static com.svetanis.java.base.collect.Lists.newList;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 
-import com.google.common.collect.ImmutableList;
-
 // there are n tasks, labeled from 0 to n - 1
 // each task can have some prerequisite tasks
 // which need to be completed before it can
 // be scheduled. given the number of tasks and
-// a list of prerequisite pairs, find the 
-// ordering of tasks 
+// a list of prerequisite pairs, find out if
+// it is possible to schedule all the tasks
 
-public final class TasksScheduleOrdering {
+public final class TasksScheduling {
 	// Time Complexity: O(V + E)
 
-	public static ImmutableList<Integer> schedulingTasks(int tasks, int[][] m) {
+	public static boolean isSchedulingPossible(int tasks, int[][] m) {
 		Map<Integer, Integer> inDegree = inDegreeInit(tasks);
 		Map<Integer, List<Integer>> graph = graphInit(tasks);
 		buildGraph(tasks, m, inDegree, graph);
@@ -43,10 +40,7 @@ public final class TasksScheduleOrdering {
 		// if topological ordering doesn't contain all tasks
 		// then there is a cyclic dependency between tasks
 		// therefore it will not be possible to schedule all tasks
-		if (list.size() != tasks) {
-			return newList();
-		}
-		return newList(list);
+		return list.size() == tasks;
 	}
 
 	private static Queue<Integer> sources(Map<Integer, Integer> map) {
@@ -88,8 +82,8 @@ public final class TasksScheduleOrdering {
 		int[][] m0 = { { 0, 1 }, { 1, 2 } };
 		int[][] m1 = { { 0, 1 }, { 1, 2 }, { 2, 0 } };
 		int[][] m2 = { { 2, 5 }, { 0, 5 }, { 0, 4 }, { 1, 4 }, { 3, 2 }, { 1, 3 } };
-		System.out.println(schedulingTasks(3, m0)); // 0, 1, 2
-		System.out.println(schedulingTasks(3, m1)); // empty
-		System.out.println(schedulingTasks(6, m2)); // 0, 1, 4, 3, 2, 5
+		System.out.println(isSchedulingPossible(3, m0)); // true
+		System.out.println(isSchedulingPossible(3, m1)); // false
+		System.out.println(isSchedulingPossible(6, m2)); // true
 	}
 }

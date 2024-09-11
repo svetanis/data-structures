@@ -1,28 +1,28 @@
-package com.svetanis.datastructures.graph.directed.ts.grokking;
+package com.svetanis.datastructures.graph.directed.ts.kahn;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.collect.Lists.newLinkedList;
 import static com.google.common.collect.Maps.filterValues;
 import static com.google.common.collect.Maps.newHashMap;
+import static com.svetanis.java.base.collect.Lists.newList;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 
-// there are n tasks, labeled from 0 to n - 1
-// each task can have some prerequisite tasks
-// which need to be completed before it can
-// be scheduled. given the number of tasks and
-// a list of prerequisite pairs, find out if
-// it is possible to schedule all the tasks
+import com.google.common.collect.ImmutableList;
 
-public final class TasksScheduling {
+// given a directed graph, 
+// find the topological ordering 
+// of its vertices
+
+public final class TopologicalSortingBfs {
 	// Time Complexity: O(V + E)
 
-	public static boolean isSchedulingPossible(int tasks, int[][] m) {
-		Map<Integer, Integer> inDegree = inDegreeInit(tasks);
-		Map<Integer, List<Integer>> graph = graphInit(tasks);
-		buildGraph(tasks, m, inDegree, graph);
+	public static ImmutableList<Integer> sort(int v, int[][] m) {
+		Map<Integer, Integer> inDegree = inDegreeInit(v);
+		Map<Integer, List<Integer>> graph = graphInit(v);
+		buildGraph(v, m, inDegree, graph);
 		List<Integer> list = newArrayList();
 		Queue<Integer> queue = sources(inDegree);
 		while (!queue.isEmpty()) {
@@ -37,10 +37,7 @@ public final class TasksScheduling {
 				inDegree.put(child, f);
 			}
 		}
-		// if topological ordering doesn't contain all tasks
-		// then there is a cyclic dependency between tasks
-		// therefore it will not be possible to schedule all tasks
-		return list.size() == tasks;
+		return list.size() != v ? newList() : newList(list);
 	}
 
 	private static Queue<Integer> sources(Map<Integer, Integer> map) {
@@ -79,11 +76,11 @@ public final class TasksScheduling {
 	}
 
 	public static void main(String[] args) {
-		int[][] m0 = { { 0, 1 }, { 1, 2 } };
-		int[][] m1 = { { 0, 1 }, { 1, 2 }, { 2, 0 } };
-		int[][] m2 = { { 2, 5 }, { 0, 5 }, { 0, 4 }, { 1, 4 }, { 3, 2 }, { 1, 3 } };
-		System.out.println(isSchedulingPossible(3, m0)); // true
-		System.out.println(isSchedulingPossible(3, m1)); // false
-		System.out.println(isSchedulingPossible(6, m2)); // true
+		int[][] m1 = { { 3, 2 }, { 3, 0 }, { 2, 0 }, { 2, 1 } };
+		int[][] m2 = { { 4, 2 }, { 4, 3 }, { 2, 0 }, { 2, 1 }, { 3, 1 } };
+		int[][] m3 = { { 6, 4 }, { 6, 2 }, { 5, 3 }, { 5, 4 }, { 3, 0 }, { 3, 1 }, { 3, 2 }, { 4, 1 } };
+		System.out.println(sort(4, m1)); // 3, 2, 0, 1
+		System.out.println(sort(5, m2)); // 4, 2, 3, 0, 1
+		System.out.println(sort(7, m3)); // 5, 6, 3, 4, 0, 2, 1
 	}
 }

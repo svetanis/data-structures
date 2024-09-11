@@ -1,4 +1,4 @@
-package com.svetanis.datastructures.graph.directed.ts.grokking;
+package com.svetanis.datastructures.graph.directed.ts.kahn;
 
 import static com.google.common.base.Optional.absent;
 import static com.google.common.base.Optional.of;
