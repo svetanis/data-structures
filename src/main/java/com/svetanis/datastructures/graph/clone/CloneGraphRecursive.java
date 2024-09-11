@@ -1,34 +1,36 @@
 package com.svetanis.datastructures.graph.clone;
 
-import static com.svetanis.datastructures.graph.clone.CloneGraphDfs.bfs;
+import static com.svetanis.datastructures.graph.bfs.BfsTraversal.bfs;
+
+import com.svetanis.datastructures.graph.Node;
+
+// create a deep copy of a 
+// connected undirected graph
 
 public final class CloneGraphRecursive {
 
-  public static void clone(Node src) {
-    clone(src, new Node());
-  }
+	public static Node clone(Node src) {
+		Node copy = new Node(src.getData());
+		clone(src, copy);
+		return copy;
+	}
 
-  public static void clone(Node src, Node dst) {
-    if (src != null) {
-      dst.data = src.data;
-    }
+	private static void clone(Node src, Node dst) {
+		for (Node neighbor : src.getNeighbors()) {
+			Node clone = new Node(neighbor.getData());
+			dst.add(clone);
+			clone(neighbor, clone);
+		}
+	}
 
-    for (Node child : src.children) {
-      Node clone = new Node();
-      dst.children.add(clone);
-      clone(child, clone);
-    }
-  }
-
-  public static void main(String[] args) {
-    Node node1 = new Node(1);
-    Node node2 = new Node(2);
-    Node node3 = new Node(3);
-    node1.children.add(node2);
-    node1.children.add(node3);
-    bfs(node1);
-    clone(node1);
-    bfs(node1);
-  }
-
+	public static void main(String[] args) {
+		Node node1 = new Node(1);
+		Node node2 = new Node(2);
+		Node node3 = new Node(3);
+		node1.add(node2);
+		node1.add(node3);
+		System.out.println(bfs(node1));
+		Node clone = clone(node1);
+		System.out.println(bfs(clone));
+	}
 }
