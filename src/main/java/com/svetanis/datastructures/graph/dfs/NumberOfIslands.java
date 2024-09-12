@@ -62,7 +62,7 @@ public final class NumberOfIslands {
 	private static boolean isSafe(int[][] g, int row, int col, boolean[][] visited) {
 		boolean one = row >= 0 && row < g.length; // row number is in range
 		boolean two = col >= 0 && col < g[0].length; // col number is in range
-		return one && two && g[row][col] == 1 && !visited[row][col];
+		return one && two && g[row][col] != 0 && !visited[row][col];
 	}
 
 	public static void main(String[] args) {
