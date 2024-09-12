@@ -23,7 +23,7 @@ public final class NearestOneBinaryMatrix {
 
 	public static int[][] nearestOne(int[][] grid) {
 		int[][] dist = init(grid);
-		bfs(grid, dist);
+		bfs(dist);
 		return dist;
 	}
 
@@ -42,14 +42,14 @@ public final class NearestOneBinaryMatrix {
 		return dist;
 	}
 
-	private static void bfs(int[][] matrix, int[][] dist) {
+	private static void bfs(int[][] dist) {
 		Queue<Point> queue = initQueue(dist);
 		while (!queue.isEmpty()) {
 			Point p = queue.poll();
 			for (int i = 0; i < 4; i++) {
 				int r = p.x + dx[i];
 				int c = p.y + dy[i];
-				if (isValid(dist, r, c) && dist[r][c] > dist[p.x][p.y] + 1) {
+				if (valid(dist, r, c) && dist[r][c] > dist[p.x][p.y] + 1) {
 					dist[r][c] = dist[p.x][p.y] + 1;
 					queue.offer(new Point(r, c));
 				}
@@ -69,7 +69,7 @@ public final class NearestOneBinaryMatrix {
 		return queue;
 	}
 
-	private static boolean isValid(int[][] dist, int row, int col) {
+	private static boolean valid(int[][] dist, int row, int col) {
 		boolean isRow = row >= 0 && row < dist.length;
 		boolean isCol = col >= 0 && col < dist[0].length;
 		return isRow && isCol;

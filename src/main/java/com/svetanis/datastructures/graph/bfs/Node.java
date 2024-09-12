@@ -9,6 +9,10 @@ public final class Node {
 	protected int dist;
 	private int hash;
 
+	public Node(int x, int y) {
+		this(x, y, 0);
+	}
+
 	public Node(int x, int y, int dist) {
 		this.x = x;
 		this.y = y;

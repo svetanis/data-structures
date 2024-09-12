@@ -22,7 +22,7 @@ public final class ShortestDistFromGuard {
 			for (int i = 0; i < dx.length; i++) {
 				int x = node.x + dx[i];
 				int y = node.y + dy[i];
-				if (isValid(x, y, n, m) && isSafe(matrix, grid, x, y)) {
+				if (valid(x, y, n, m) && safe(matrix, grid, x, y)) {
 					int dist = node.dist + 1;
 					grid[x][y] = dist;
 					queue.offer(new Node(x, y, dist));
@@ -32,14 +32,14 @@ public final class ShortestDistFromGuard {
 		return grid;
 	}
 
-	private static boolean isSafe(char[][] matrix, int[][] grid, int r, int c) {
+	private static boolean safe(char[][] matrix, int[][] grid, int r, int c) {
 		if (matrix[r][c] != 'O' || grid[r][c] != -1) {
 			return false;
 		}
 		return true;
 	}
 
-	private static boolean isValid(int r, int c, int n, int m) {
+	private static boolean valid(int r, int c, int n, int m) {
 		return r >= 0 && r < n && c >= 0 && c < m;
 	}
 
