@@ -46,16 +46,4 @@ public final class KnightShortestPath {
   public static void main(String[] args) {
     System.out.println(knight(5, 5, 0, 0, 4, 1));
   }
-
-  private static class Node {
-    int x;
-    int y;
-    int dist;
-
-    public Node(int x, int y, int dist) {
-      this.x = x;
-      this.y = y;
-      this.dist = dist;
-    }
-  }
 }
