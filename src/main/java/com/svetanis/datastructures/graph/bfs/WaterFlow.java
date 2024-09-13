@@ -13,12 +13,23 @@ import java.util.Set;
 import com.google.common.collect.ImmutableList;
 import com.svetanis.java.base.Pair;
 
-// given a binary matrix, where each 
-// element can either be 0 or 1
-// find the shortest path between a
-// given source cell to a destination.
-// the path can only be created out of 
-// a cell if its value is 1
+// there is a rectangular island that borders
+// both the Pacific and Atlantic oceans.
+// the Pacific Ocean touches the islands's
+// left and top edges, and the Atlantic Ocean
+// touches the islands's right and bottom edges.
+
+// the island receives a lot of rain, and the
+// rain water can flow to neighboring cells
+// directly north, south, east, and west if
+// the neighboring cell's height is less than
+// or equal to the current cell's height. 
+// Water can flow from any cell adjacent to an
+// ocean into the ocean.
+
+// return a list of grid coordinates where
+// each pair denotes that rain water can 
+// flow from that cell to both oceans
 
 public final class WaterFlow {
 	// Time Complexity: O(n * m)
