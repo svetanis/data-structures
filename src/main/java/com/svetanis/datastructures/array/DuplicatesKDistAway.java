@@ -11,7 +11,7 @@ import java.util.Map;
 // indices such that nums[i] == nums[j]
 // and abs(i - j) <= k
 
-public final class ContainsDuplicates {
+public final class DuplicatesKDistAway {
 	// Time Complexity: O(n)
 
 	public static boolean duplicates(List<Integer> list, int k) {
