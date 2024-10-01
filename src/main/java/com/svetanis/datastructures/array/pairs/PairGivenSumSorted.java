@@ -16,7 +16,7 @@ public final class PairGivenSumSorted {
 	// Space Complexity: O(1) 
 	  
     int left = 0;
-	int right = a.length - 1;
+    int right = a.length - 1;
     while (left < right) {
       if (a[left] + a[right] == target) {
         return Pair.build(a[left], a[right]);
