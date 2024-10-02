@@ -8,37 +8,40 @@ import static java.lang.Math.max;
 
 public final class TrappingWaterSpaceEfficient {
 
-  public static int trapWater(int[] a) {
-    // Time Complexity: O(n)
+	public static int trapWater(int[] a) {
+		// Time Complexity: O(n)
 
-    int n = a.length;
-    int total = 0;
-    int left = 0;
-    int right = n - 1;
-    int maxLeft = a[left];
-    int maxRight = a[right];
-    while (left < right) {
-      if (a[left] <= a[right]) {
-        maxLeft = max(maxLeft, a[left]);
-        total += maxLeft - a[left];
-        left++;
-      } else {
-        maxRight = max(maxRight, a[right]);
-        total += maxRight - a[right];
-        right--;
-      }
-    }
-    return total;
-  }
+		int n = a.length;
+		int total = 0;
+		int left = 0;
+		int right = n - 1;
+		int maxLeft = a[left];
+		int maxRight = a[right];
+		while (left < right) {
+			if (a[left] <= a[right]) {
+				maxLeft = max(maxLeft, a[left]);
+				total += maxLeft - a[left];
+				left++;
+			} else {
+				maxRight = max(maxRight, a[right]);
+				total += maxRight - a[right];
+				right--;
+			}
+		}
+		return total;
+	}
 
-  public static void main(String[] args) {
-    int[] a1 = { 2, 0, 2 };
-    System.out.println(trapWater(a1));
+	public static void main(String[] args) {
+		int[] a1 = { 2, 0, 2 };
+		System.out.println(trapWater(a1));
 
-    int[] a2 = { 3, 0, 0, 2, 0, 4 };
-    System.out.println(trapWater(a2));
+		int[] a2 = { 3, 0, 0, 2, 0, 4 };
+		System.out.println(trapWater(a2));
 
-    int[] a3 = { 0, 1, 0, 2, 1, 0, 1, 3, 2, 1, 2, 1 };
-    System.out.println(trapWater(a3));
-  }
+		int[] a3 = { 0, 1, 0, 2, 1, 0, 1, 3, 2, 1, 2, 1 };
+		System.out.println(trapWater(a3));
+
+		int[] a4 = { 1, 8, 6, 2, 5, 4, 8, 3, 7 };
+		System.out.println(trapWater(a4));
+	}
 }
