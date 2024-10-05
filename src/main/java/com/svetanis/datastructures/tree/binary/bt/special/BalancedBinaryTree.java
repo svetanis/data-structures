@@ -16,42 +16,40 @@ import com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node;
 // for every node is 0 or 1.
 
 public final class BalancedBinaryTree {
+	// Time complexity: O(n)
 
-  public static boolean isBalanced(Node root) {
-    // Time complexity: O(n)
-    AtomicBoolean balanced = new AtomicBoolean(true);
-    isBalanced(root, balanced);
-    return balanced.get();
-  }
+	public static boolean isBalanced(Node root) {
+		AtomicBoolean balanced = new AtomicBoolean(true);
+		isBalanced(root, balanced);
+		return balanced.get();
+	}
 
-  private static int isBalanced(Node root, AtomicBoolean balanced) {
-    // time complexity: O(n)
+	private static int isBalanced(Node root, AtomicBoolean balanced) {
+		if (isNull(root) || !balanced.get()) {
+			return 0;
+		}
+		int left = isBalanced(root.left, balanced);
+		int right = isBalanced(root.right, balanced);
+		if (abs(left - right) > 1) {
+			balanced.set(false);
+		}
+		return 1 + max(left, right);
+	}
 
-    if (isNull(root) || !balanced.get()) {
-      return 0;
-    }
-    int left = isBalanced(root.left, balanced);
-    int right = isBalanced(root.right, balanced);
-    if (abs(left - right) > 1) {
-      balanced.set(false);
-    }
-    return 1 + max(left, right);
-  }
+	public static void main(String[] args) {
+		Node root1 = newNode(5);
+		insert(root1, 3);
+		insert(root1, 2);
+		insert(root1, 1);
+		insert(root1, 4);
+		insert(root1, 6);
+		System.out.println(isBalanced(root1));
 
-  public static void main(String[] args) {
-    Node root1 = newNode(5);
-    insert(root1, 3);
-    insert(root1, 2);
-    insert(root1, 1);
-    insert(root1, 4);
-    insert(root1, 6);
-    System.out.println(isBalanced(root1));
-
-    Node root2 = newNode(1);
-    root2.left = newNode(2);
-    root2.right = newNode(3);
-    root2.left.left = newNode(4);
-    root2.left.right = newNode(5);
-    System.out.println(isBalanced(root2));
-  }
+		Node root2 = newNode(1);
+		root2.left = newNode(2);
+		root2.right = newNode(3);
+		root2.left.left = newNode(4);
+		root2.left.right = newNode(5);
+		System.out.println(isBalanced(root2));
+	}
 }
