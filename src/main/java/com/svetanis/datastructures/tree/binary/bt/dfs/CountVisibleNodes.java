@@ -1,4 +1,4 @@
-package com.svetanis.datastructures.tree.binary.bt.view;
+package com.svetanis.datastructures.tree.binary.bt.dfs;
 
 import static com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node.newNode;
 import static com.svetanis.datastructures.tree.binary.model.mutable.primitive.Nodes.isNull;
@@ -18,7 +18,7 @@ import com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node;
 // the root and itself. given a binary
 // tree, count the number of visible nodes
 
-public final class VisibleNode {
+public final class CountVisibleNodes {
 	// Time Complexity: O(n)
 	// Space Complexity: O(h)
 
