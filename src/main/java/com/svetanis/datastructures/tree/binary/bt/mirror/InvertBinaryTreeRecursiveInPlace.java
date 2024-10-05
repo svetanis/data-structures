@@ -2,11 +2,7 @@ package com.svetanis.datastructures.tree.binary.bt.mirror;
 
 import static com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node.newNode;
 import static com.svetanis.datastructures.tree.binary.model.mutable.primitive.Nodes.inOrder;
-import static com.svetanis.datastructures.tree.binary.model.mutable.primitive.Nodes.isNotNull;
 import static com.svetanis.datastructures.tree.binary.model.mutable.primitive.Nodes.isNull;
-
-import java.util.ArrayDeque;
-import java.util.Queue;
 
 import com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node;
 
@@ -17,27 +13,18 @@ import com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node;
 // subtree, and invert them both. inverting
 // an empty tree does nothing.
 
-public final class InvertBinaryTreeQueue {
+public final class InvertBinaryTreeRecursiveInPlace {
 	// Time Complexity: O(n)
-	// Space Complexity: (n)
+	// Space Complexity: (h)
 
 	public static void invert(Node root) {
 		if (isNull(root)) {
 			return;
 		}
-
-		Queue<Node> queue = new ArrayDeque<>();
-		queue.add(root);
-		while (!queue.isEmpty()) {
-			Node node = queue.poll();
-			swap(node);
-			if (isNotNull(root.left)) {
-				queue.add(root.left);
-			}
-			if (isNotNull(root.right)) {
-				queue.add(root.right);
-			}
-		}
+		// do the subtrees
+		invert(root.left);
+		invert(root.right);
+		swap(root);
 	}
 
 	private static void swap(Node root) {
