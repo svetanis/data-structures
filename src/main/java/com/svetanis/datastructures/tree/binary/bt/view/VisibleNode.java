@@ -2,6 +2,7 @@ package com.svetanis.datastructures.tree.binary.bt.view;
 
 import static com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node.newNode;
 import static com.svetanis.datastructures.tree.binary.model.mutable.primitive.Nodes.isNull;
+import static java.lang.Integer.MIN_VALUE;
 import static java.lang.Math.max;
 
 import com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node;
@@ -22,7 +23,7 @@ public final class VisibleNode {
 	// Space Complexity: O(h)
 
 	public static int countVisible(Node root) {
-		return dfs(root, root.data);
+		return dfs(root, MIN_VALUE);
 	}
 
 	private static int dfs(Node node, int max) {
