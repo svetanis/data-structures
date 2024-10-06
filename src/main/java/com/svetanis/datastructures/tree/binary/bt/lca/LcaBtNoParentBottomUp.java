@@ -19,6 +19,8 @@ import com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node;
 // If one value doesn’t exist in the tree then return -1.
 
 public final class LcaBtNoParentBottomUp {
+	// Time Complexity: O(n)
+	// Space Complexity: O(h)
 
 	public static Optional<Integer> lca(Node root, int p, int q) {
 		if (isNull(root) || isAbsent(root, p) || isAbsent(root, q)) {
