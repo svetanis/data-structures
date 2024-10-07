@@ -32,19 +32,16 @@ public final class RightViewLevelOrder {
 		List<Node> list = newArrayList();
 		Queue<Node> queue = newLinkedList();
 		queue.offer(root);
-
 		while (!queue.isEmpty()) {
 			int size = queue.size();
+			list.add(queue.peek());
 			for (int i = 0; i < size; i++) {
 				Node node = queue.poll();
-				if (i == size - 1) {
-					list.add(node);
+				if (isNotNull(node.right)) {
+					queue.offer(node.right);
 				}
 				if (isNotNull(node.left)) {
 					queue.offer(node.left);
-				}
-				if (isNotNull(node.right)) {
-					queue.offer(node.right);
 				}
 			}
 		}
