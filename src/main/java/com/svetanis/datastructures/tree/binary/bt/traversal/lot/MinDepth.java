@@ -17,7 +17,7 @@ public final class MinDepth {
 	// Space Complexity: O(n)
 
 	public static int lot(Node root) {
-		int minDepth = 0;
+		int minDepth = -1;
 		Queue<Node> queue = newLinkedList();
 		queue.offer(root);
 
