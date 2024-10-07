@@ -36,11 +36,9 @@ public final class LeftViewLevelOrder {
 
 		while (!queue.isEmpty()) {
 			int size = queue.size();
+			list.add(queue.peek());
 			for (int i = 0; i < size; i++) {
 				Node node = queue.poll();
-				if (i == 0) {
-					list.add(node);
-				}
 				if (isNotNull(node.left)) {
 					queue.offer(node.left);
 				}
