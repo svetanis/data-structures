@@ -40,6 +40,18 @@ public final class Node {
 		}
 	}
 
+	public int getX() {
+		return x;
+	}
+
+	public int getY() {
+		return y;
+	}
+
+	public int getDist() {
+		return dist;
+	}
+
 	@Override
 	public String toString() {
 		return "[" + x + ", " + y + ", " + dist + "]";
