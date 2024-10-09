@@ -11,6 +11,8 @@ import java.util.List;
 import java.util.Queue;
 import java.util.Set;
 
+import com.svetanis.datastructures.graph.Coordinate;
+
 // In computer graphics, an uncompressed 
 // raster image is presented as a matrix of numbers. 
 // Each entry of the matrix represents the color of a pixel. 

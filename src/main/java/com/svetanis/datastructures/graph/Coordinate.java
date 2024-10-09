@@ -1,4 +1,4 @@
-package com.svetanis.datastructures.graph.floodfill;
+package com.svetanis.datastructures.graph;
 
 import static com.google.common.base.Objects.equal;
 import static com.svetanis.java.base.Objects.notEqual;
@@ -6,8 +6,8 @@ import static java.util.Objects.hash;
 
 public final class Coordinate {
 
-	private int row;
-	private int col;
+	private final int row;
+	private final int col;
 	private int hash;
 
 	public Coordinate() {

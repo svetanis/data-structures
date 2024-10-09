@@ -1,4 +1,4 @@
-package com.svetanis.datastructures.graph.dfs;
+package com.svetanis.datastructures.graph.islands;
 
 // given an n x m 2D binary grid 
 // which represents a map of 1s (land)
@@ -11,7 +11,9 @@ package com.svetanis.datastructures.graph.dfs;
 // all four edges of the grid are 
 // surrounded by water
 
-public final class NumberOfIslands {
+public final class NumberOfIslandsMatrix {
+	// Time complexity: O(r * c)
+	// Space Complexity: O(r + c)
 
 	// horizontal + vertical moves
 	private static int[] dx = { -1, 0, 0, 1 };
@@ -21,23 +23,19 @@ public final class NumberOfIslands {
 	// private static int[] ddy = { -1, 0, 1, -1, 1, -1, 0, 1 };
 
 	public static int count(int[][] g) {
-		// Time complexity: O(ROW x COL)
-
 		int count = 0;
-		int row = g.length;
-		int col = g[0].length;
-
-		boolean[][] visited = new boolean[row][col];
-
+		int n = g.length;
+		int m = g[0].length;
+		boolean[][] visited = new boolean[n][m];
 		// traverse through all cells of given matrix
 		// if a cell with value 1 is not visited yet,
 		// then new island found.
 		// visit all cells in this island
 		// and increment island count
-		for (int i = 0; i < row; i++) {
-			for (int j = 0; j < col; j++) {
-				if (g[i][j] != 0 && !visited[i][j]) {
-					dfs(g, i, j, visited);
+		for (int r = 0; r < n; r++) {
+			for (int c = 0; c < m; c++) {
+				if (g[r][c] != 0 && !visited[r][c]) {
+					dfs(g, r, c, visited);
 					count++;
 				}
 			}
