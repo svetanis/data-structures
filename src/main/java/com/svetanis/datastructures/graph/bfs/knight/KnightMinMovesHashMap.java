@@ -1,43 +1,38 @@
 package com.svetanis.datastructures.graph.bfs.knight;
 
-import static com.google.common.collect.Sets.newHashSet;
+import static com.google.common.collect.Maps.newHashMap;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Queue;
-import java.util.Set;
 
 import com.svetanis.datastructures.graph.Coordinate;
 
-public final class KnightMinMoves {
+public final class KnightMinMovesHashMap {
 	// Time Complexity: O(n^2)
 
 	private static final int[] dx = { 2, 1, -1, -2, -2, -1, 1, 2 };
 	private static final int[] dy = { 1, 2, 2, 1, -1, -2, -2, -1 };
 
 	public static int ksp(int n, Coordinate src, Coordinate dst) {
-		Set<Coordinate> set = newHashSet();
+		Map<Coordinate, Integer> map = newHashMap();
 		Queue<Coordinate> queue = new ArrayDeque<>();
 		queue.add(src);
-		set.add(src);
-		int steps = 0;
+		map.put(src, 0);
 		while (!queue.isEmpty()) {
-			int size = queue.size();
-			for (int i = 0; i < size; i++) {
-				Coordinate curr = queue.poll();
-				if (curr.getRow() == dst.getRow() && curr.getCol() == dst.getCol()) {
-					return steps;
-				}
-				List<Coordinate> neighbors = neighbors(curr, n);
-				for (Coordinate neighbor : neighbors) {
-					if (!set.contains(neighbor)) {
-						set.add(neighbor);
-						queue.add(neighbor);
-					}
+			Coordinate curr = queue.poll();
+			if (curr.getRow() == dst.getRow() && curr.getCol() == dst.getCol()) {
+				return map.get(curr);
+			}
+			List<Coordinate> neighbors = neighbors(curr, n);
+			for (Coordinate neighbor : neighbors) {
+				if (!map.containsKey(neighbor)) {
+					map.put(neighbor, map.get(curr) + 1);
+					queue.add(neighbor);
 				}
 			}
-			steps++;
 		}
 		return -1;
 	}
