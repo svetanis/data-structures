@@ -12,7 +12,28 @@ import java.util.Set;
 import java.util.StringJoiner;
 import java.util.stream.Collectors;
 
+// given a 4-wheel lock where each wheel
+// contains the numbers '0' through '9'
+// turning a wheel can either increase or
+// decrease its number by one, wrapping 
+// around from '9' to '0' or vice versa.
+// a single move involves rotating any one
+// of the wheels by one slot. 
+
+// the lock starts with the combination '0000'.
+// however, there are specific combinations termed
+// as "deadends". if the lock lands on any of these
+// deadend combinations, where wheels jam, making it
+// impossible to proceed.
+
+// find the least number of moves needed to reach 
+// a given target combination from the starting point
+// without hitting any deadend. if reaching the target
+// is impossible due to deadends, return -1.
+
 public final class OpenLockSubmit {
+	// Time Complexity: O(n)
+	// Space Complexity: O(n)
 
 	private static Map<Character, Character> nextDigit = nextDigit();
 	private static Map<Character, Character> prevDigit = nextDigit.entrySet().stream()
