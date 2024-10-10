@@ -10,44 +10,44 @@ import java.util.Set;
 
 public final class WordLadderLength {
 
-  public static int ladderLen(String src, String dst, Set<String> set) {
-    return bfs(src, dst, set);
-  }
+	public static int ladderLen(String src, String dst, Set<String> words) {
+		return bfs(src, dst, words);
+	}
 
-  private static int bfs(String src, String dst, Set<String> set) {
-    boolean isLarge = largeDictionary(src, set);
-    Queue<Node> queue = newLinkedList();
-    queue.add(new Node(src, 1));
-    set.add(dst);
-    
-    while (!queue.isEmpty()) {
-      Node node = queue.poll();
-      String word = node.word;
-      if (word.equals(dst)) {
-        return node.len;
-      }
-      for (String v : neighbors(word, set, isLarge)) {
-        if (set.contains(v)) {
-          queue.add(new Node(v, node.len + 1));
-          set.remove(v);
-        }
-      }
-    }
-    return 0;
-  }
+	private static int bfs(String src, String dst, Set<String> words) {
+		boolean isLarge = largeDictionary(src, words);
+		Queue<Node> queue = newLinkedList();
+		queue.add(new Node(src, 1));
+		words.add(dst);
 
-  public static void main(String[] args) {
-    Set<String> set = newHashSet("hit", "hot", "dot", "dog", "dog", "cog");
-    System.out.println(ladderLen("hit", "cog", set));
-  }
+		while (!queue.isEmpty()) {
+			Node node = queue.poll();
+			String word = node.word;
+			if (word.equals(dst)) {
+				return node.len;
+			}
+			for (String neighbor : neighbors(word, words, isLarge)) {
+				if (words.contains(neighbor)) {
+					queue.add(new Node(neighbor, node.len + 1));
+					words.remove(neighbor);
+				}
+			}
+		}
+		return 0;
+	}
 
-  private static class Node {
-    private int len;
-    private String word;
+	public static void main(String[] args) {
+		Set<String> set = newHashSet("hit", "hot", "dot", "dog", "dog", "cog");
+		System.out.println(ladderLen("hit", "cog", set));
+	}
 
-    public Node(String word, int len) {
-      this.word = word;
-      this.len = len;
-    }
-  }
+	private static class Node {
+		private int len;
+		private String word;
+
+		public Node(String word, int len) {
+			this.word = word;
+			this.len = len;
+		}
+	}
 }
