@@ -1,10 +1,12 @@
-package com.svetanis.datastructures.graph.bfs;
+package com.svetanis.datastructures.graph.bfs.multisource;
 
 import static com.google.common.collect.Lists.newLinkedList;
 import static com.svetanis.java.base.utils.Print.print;
 import static java.util.Arrays.fill;
 
 import java.util.Queue;
+
+import com.svetanis.datastructures.graph.Cell;
 
 public final class ShortestDistFromGuard {
 
@@ -15,17 +17,17 @@ public final class ShortestDistFromGuard {
 		int n = matrix.length;
 		int m = matrix[0].length;
 		int[][] grid = initGrid(matrix);
-		Queue<Node> queue = initQueue(matrix);
+		Queue<Cell> queue = initQueue(matrix);
 		while (!queue.isEmpty()) {
-			Node node = queue.poll();
+			Cell node = queue.poll();
 
 			for (int i = 0; i < dx.length; i++) {
-				int x = node.x + dx[i];
-				int y = node.y + dy[i];
+				int x = node.getX() + dx[i];
+				int y = node.getY() + dy[i];
 				if (valid(x, y, n, m) && safe(matrix, grid, x, y)) {
-					int dist = node.dist + 1;
+					int dist = node.getDist() + 1;
 					grid[x][y] = dist;
-					queue.offer(new Node(x, y, dist));
+					queue.offer(new Cell(x, y, dist));
 				}
 			}
 		}
@@ -43,14 +45,14 @@ public final class ShortestDistFromGuard {
 		return r >= 0 && r < n && c >= 0 && c < m;
 	}
 
-	private static Queue<Node> initQueue(char[][] matrix) {
+	private static Queue<Cell> initQueue(char[][] matrix) {
 		int n = matrix.length;
 		int m = matrix[0].length;
-		Queue<Node> queue = newLinkedList();
+		Queue<Cell> queue = newLinkedList();
 		for (int i = 0; i < n; i++) {
 			for (int j = 0; j < m; j++) {
 				if (matrix[i][j] == 'G') {
-					queue.offer(new Node(i, j, 0));
+					queue.offer(new Cell(i, j, 0));
 				}
 			}
 		}

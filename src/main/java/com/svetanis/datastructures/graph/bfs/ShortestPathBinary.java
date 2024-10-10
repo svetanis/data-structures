@@ -9,6 +9,7 @@ import java.util.Queue;
 import java.util.Set;
 
 import com.google.common.base.Optional;
+import com.svetanis.datastructures.graph.Cell;
 
 // given a binary matrix, where each 
 // element can either be 0 or 1
@@ -17,33 +18,33 @@ import com.google.common.base.Optional;
 // the path can only be created out of 
 // a cell if its value is 1
 
-public final class ShortestPathBinaryMaze {
+public final class ShortestPathBinary {
 	// Time Complexity: O(n * m)
 
 	private static final int[] dx = { -1, 0, 0, 1 };
 	private static final int[] dy = { 0, -1, 1, 0 };
 
-	public static Optional<Integer> shortestPath(int[][] grid, Node src, Node dst) {
-		if (grid[src.x][src.y] != 1 || grid[dst.x][dst.y] != 1) {
+	public static Optional<Integer> shortestPath(int[][] grid, Cell src, Cell dst) {
+		if (grid[src.getX()][src.getY()] != 1 || grid[dst.getX()][dst.getY()] != 1) {
 			return absent();
 		}
-		Set<Node> set = newHashSet();
-		Queue<Node> queue = newLinkedList();
-		queue.add(new Node(src.x, src.y));
+		Set<Cell> set = newHashSet();
+		Queue<Cell> queue = newLinkedList();
+		queue.add(new Cell(src.getX(), src.getY()));
 		while (!queue.isEmpty()) {
-			Node node = queue.poll();
-			if (node.x == dst.x && node.y == dst.y) {
-				return of(node.dist);
+			Cell node = queue.poll();
+			if (node.getX() == dst.getX() && node.getY() == dst.getY()) {
+				return of(node.getDist());
 			}
 			if (!set.contains(node)) {
 				set.add(node);
 				// check all 4 moves and enqueue
 				// each valid movement in the queue
 				for (int i = 0; i < dx.length; i++) {
-					int r = node.x + dx[i];
-					int c = node.y + dy[i];
+					int r = node.getX() + dx[i];
+					int c = node.getY() + dy[i];
 					if (valid(grid, r, c)) {
-						queue.add(new Node(r, c, node.dist + 1));
+						queue.add(new Cell(r, c, node.getDist() + 1));
 					}
 				}
 			}
@@ -69,8 +70,8 @@ public final class ShortestPathBinaryMaze {
 				{ 1, 0, 1, 1, 1, 1, 0, 1, 1, 1 }, //
 				{ 1, 1, 0, 0, 0, 0, 1, 0, 0, 1 } };//
 
-		Node src = new Node(0, 0);
-		Node dst = new Node(3, 4);
+		Cell src = new Cell(0, 0);
+		Cell dst = new Cell(3, 4);
 		System.out.println(shortestPath(matrix, src, dst));
 	}
 }

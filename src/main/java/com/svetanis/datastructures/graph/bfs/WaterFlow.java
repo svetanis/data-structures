@@ -11,6 +11,7 @@ import java.util.Queue;
 import java.util.Set;
 
 import com.google.common.collect.ImmutableList;
+import com.svetanis.datastructures.graph.Cell;
 import com.svetanis.java.base.Pair;
 
 // there is a rectangular island that borders
@@ -38,10 +39,10 @@ public final class WaterFlow {
 	private static final int[] dy = { 0, -1, 1, 0 };
 
 	public static ImmutableList<Pair<Integer, Integer>> shortestPath(int[][] grid) {
-		Set<Node> pv = newHashSet(); // pacific visited set
-		Set<Node> av = newHashSet(); // atlantic visited set
-		Queue<Node> pq = newLinkedList(); // pacific queue
-		Queue<Node> aq = newLinkedList(); // atlantic queue
+		Set<Cell> pv = newHashSet(); // pacific visited set
+		Set<Cell> av = newHashSet(); // atlantic visited set
+		Queue<Cell> pq = newLinkedList(); // pacific queue
+		Queue<Cell> aq = newLinkedList(); // atlantic queue
 		init(grid, pq, aq);
 		// do bfs for each ocean to
 		// find all cells reachable
@@ -49,37 +50,37 @@ public final class WaterFlow {
 		bfs(grid, pq, pv);
 		bfs(grid, aq, av);
 		// cells reachable from both oceans
-		Set<Node> intersection = intersection(pv, av);
-		List<Node> sorted = sort(intersection, n -> n.dist);
-		return transform(sorted, n -> Pair.build(n.x, n.y));
+		Set<Cell> intersection = intersection(pv, av);
+		List<Cell> sorted = sort(intersection, n -> n.getDist());
+		return transform(sorted, n -> Pair.build(n.getX(), n.getY()));
 	}
 
-	private static void bfs(int[][] grid, Queue<Node> queue, Set<Node> set) {
+	private static void bfs(int[][] grid, Queue<Cell> queue, Set<Cell> set) {
 		while (!queue.isEmpty()) {
-			Node node = queue.poll();
+			Cell node = queue.poll();
 			if (!set.contains(node)) {
 				set.add(node);
 				// check all 4 moves and enqueue
 				// each valid movement in the queue
 				for (int i = 0; i < dx.length; i++) {
-					int r = node.x + dx[i];
-					int c = node.y + dy[i];
-					if (valid(grid, r, c) && grid[r][c] >= grid[node.x][node.y]) {
+					int r = node.getX() + dx[i];
+					int c = node.getY() + dy[i];
+					if (valid(grid, r, c) && grid[r][c] >= grid[node.getX()][node.getY()]) {
 						int index = r * grid[0].length + c;
-						queue.add(new Node(r, c, index));
+						queue.add(new Cell(r, c, index));
 					}
 				}
 			}
 		}
 	}
 
-	private static void init(int[][] grid, Queue<Node> pq, Queue<Node> aq) {
+	private static void init(int[][] grid, Queue<Cell> pq, Queue<Cell> aq) {
 		int height = grid.length;
 		int width = grid[0].length;
 		for (int i = 0; i < height; i++) {
 			for (int j = 0; j < width; j++) {
 				int index = i * width + j;
-				Node node = new Node(i, j, index);
+				Cell node = new Cell(i, j, index);
 				// Pacific Ocean's edge
 				if (i == 0 || j == 0) {
 					pq.add(node);

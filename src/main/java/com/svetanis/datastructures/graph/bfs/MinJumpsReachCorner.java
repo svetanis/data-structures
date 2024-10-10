@@ -7,6 +7,7 @@ import static com.google.common.collect.Lists.newLinkedList;
 import java.util.Queue;
 
 import com.google.common.base.Optional;
+import com.svetanis.datastructures.graph.Cell;
 
 // given 2D grid and starting position (0,0)
 // each cell contains a positive integer
@@ -21,14 +22,14 @@ public final class MinJumpsReachCorner {
 	public static Optional<Integer> minJumps(int[][] grid) {
 		int n = grid.length;
 		int m = grid[0].length;
-		Queue<Node> queue = newLinkedList();
-		queue.add(new Node(0, 0, 1));
+		Queue<Cell> queue = newLinkedList();
+		queue.add(new Cell(0, 0, 1));
 
 		while (!queue.isEmpty()) {
-			Node node = queue.poll();
-			int x = node.x;
-			int y = node.y;
-			int count = node.dist;
+			Cell node = queue.poll();
+			int x = node.getX();
+			int y = node.getY();
+			int count = node.getDist();
 
 			if (x == n - 1 && y == m - 1) {
 				return of(count);
@@ -37,11 +38,11 @@ public final class MinJumpsReachCorner {
 			int dir = grid[x][y];
 
 			if (valid(x + dir, y, n, m)) {
-				queue.add(new Node(x + dir, y, count + 1));
+				queue.add(new Cell(x + dir, y, count + 1));
 			}
 
 			if (valid(x, y + dir, n, m)) {
-				queue.add(new Node(x, y + dir, count + 1));
+				queue.add(new Cell(x, y + dir, count + 1));
 			}
 
 		}
