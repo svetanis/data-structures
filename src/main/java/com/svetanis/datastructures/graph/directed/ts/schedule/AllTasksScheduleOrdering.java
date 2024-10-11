@@ -1,4 +1,4 @@
-package com.svetanis.datastructures.graph.directed.ts.kahn;
+package com.svetanis.datastructures.graph.directed.ts.schedule;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.collect.Lists.newLinkedList;

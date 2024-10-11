@@ -1,4 +1,4 @@
-package com.svetanis.datastructures.graph.directed.ts;
+package com.svetanis.datastructures.graph.directed.ts.schedule;
 
 import static com.svetanis.datastructures.graph.directed.ts.TopologicalSortingKahn.inDegree;
 
