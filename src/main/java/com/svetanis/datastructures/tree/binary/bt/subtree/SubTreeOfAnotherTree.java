@@ -18,6 +18,10 @@ public final class SubTreeOfAnotherTree {
 		if (isNull(root)) {
 			return false;
 		}
+		// empty tree is always a subtree
+		if (isNull(subRoot)) {
+			return true;
+		}
 		if (isIdentical(root, subRoot)) {
 			return true;
 		}
