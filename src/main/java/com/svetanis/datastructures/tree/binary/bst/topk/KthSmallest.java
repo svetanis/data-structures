@@ -1,4 +1,4 @@
-package com.svetanis.datastructures.tree.binary.bst;
+package com.svetanis.datastructures.tree.binary.bst.topk;
 
 import static com.google.common.base.Optional.absent;
 import static com.google.common.base.Optional.of;
@@ -9,12 +9,12 @@ import static com.svetanis.datastructures.tree.binary.model.mutable.primitive.No
 import com.google.common.base.Optional;
 import com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node;
 
-// given a BST and positive integer k
-// find k'th largest element in BST
+// given a BST and and integer k,
+// find k'th smallest element in BST
 
-public final class KthLargest {
+public final class KthSmallest {
 
-	public static Optional<Integer> kthLargest(Node root, int k) {
+	public static Optional<Integer> kthSmallest(Node root, int k) {
 		// Time Complexity : O(n) or O(k + h)
 		// Aux Space Complexity: O(h)
 		// Total Space Complexity: O(n)
@@ -22,13 +22,13 @@ public final class KthLargest {
 		if (isNull(root)) {
 			return absent();
 		}
-		int right = size(root.right);
-		if (k == right + 1) {
+		int left = size(root.left);
+		if (k == left + 1) {
 			return of(root.data);
-		} else if (right < k) {
-			return kthLargest(root.left, k - right - 1);
+		} else if (left < k) {
+			return kthSmallest(root.right, k - left - 1);
 		} else {
-			return kthLargest(root.right, k);
+			return kthSmallest(root.left, k);
 		}
 	}
 
@@ -40,6 +40,6 @@ public final class KthLargest {
 		root.left.right = newNode(12);
 		root.left.right.left = newNode(10);
 		root.left.right.right = newNode(14);
-		System.out.println(kthLargest(root, 5));
+		System.out.println(kthSmallest(root, 3));
 	}
 }

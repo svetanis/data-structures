@@ -1,4 +1,4 @@
-package com.svetanis.datastructures.tree.binary.bst;
+package com.svetanis.datastructures.tree.binary.bst.topk;
 
 import static com.google.common.base.Optional.absent;
 import static com.google.common.base.Optional.of;

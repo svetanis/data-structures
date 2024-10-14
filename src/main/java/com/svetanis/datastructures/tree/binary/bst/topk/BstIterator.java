@@ -1,4 +1,4 @@
-package com.svetanis.datastructures.tree.binary.bst;
+package com.svetanis.datastructures.tree.binary.bst.topk;
 
 import static com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node.newNode;
 import static com.svetanis.datastructures.tree.binary.model.mutable.primitive.Nodes.isNotNull;

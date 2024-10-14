@@ -1,45 +1,27 @@
-package com.svetanis.datastructures.tree.binary.bst;
+package com.svetanis.datastructures.tree.binary.bst.topk;
 
 import static com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node.newNode;
 import static com.svetanis.datastructures.tree.binary.model.mutable.primitive.Nodes.inOrder;
-import static com.svetanis.datastructures.tree.binary.model.mutable.primitive.Nodes.isLeaf;
 import static com.svetanis.datastructures.tree.binary.model.mutable.primitive.Nodes.isNotNull;
-import static com.svetanis.datastructures.tree.binary.model.mutable.primitive.Nodes.isNull;
 
 import com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node;
 
-// find the second largest element in BST
+// given a BST and a number k
+// find the greatest number 
+// that is less than or equal to k
 
-public final class SecondLargestRecursive {
-	// Best Time Complexity (balanced): O(log n)
-
-	public static Node secondLargest(Node root) {
-
-		// empty tree
-		if (isNull(root)) {
-			return null;
-		}
-
-		// this is a parent of the largest
-		// and largest has no left subtree
-		if (isNotNull(root.right) && isLeaf(root.right)) {
-			return root;
-		}
-
-		// largest has left subtree and
-		// second largest is largest element
-		// in the left subtree
-		if (isNull(root.right) && isNotNull(root.left)) {
-			return largestRecursive(root.left);
-		}
-
-		// otherwise keep going to the right
-		return secondLargest(root.right);
-	}
+public final class LargestElement {
 
 	public static Node largestRecursive(Node root) {
 		while (isNotNull(root.right)) {
 			return largestRecursive(root.right);
+		}
+		return root;
+	}
+
+	public static Node largest(Node root) {
+		while (isNotNull(root.right)) {
+			root = root.right;
 		}
 		return root;
 	}
@@ -55,9 +37,11 @@ public final class SecondLargestRecursive {
 		root.right.right.left = newNode(10);
 		root.right.right.left.left = newNode(9);
 		root.right.right.left.right = newNode(11);
+
 		inOrder(root);
 		System.out.println();
-		System.out.println(secondLargest(root));
+		System.out.println(largest(root));
+		System.out.println(largestRecursive(root));
 
 		Node root1 = newNode(5);
 		root1.left = newNode(3);
@@ -68,6 +52,8 @@ public final class SecondLargestRecursive {
 		root1.right.right = newNode(9);
 		inOrder(root1);
 		System.out.println();
-		System.out.println(secondLargest(root1));
+		System.out.println(largest(root1));
+		System.out.println(largestRecursive(root1));
+
 	}
 }

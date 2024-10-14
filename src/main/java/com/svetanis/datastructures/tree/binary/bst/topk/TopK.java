@@ -1,4 +1,4 @@
-package com.svetanis.datastructures.tree.binary.bst;
+package com.svetanis.datastructures.tree.binary.bst.topk;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node.newNode;

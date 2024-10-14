@@ -1,4 +1,4 @@
-package com.svetanis.datastructures.tree.binary.bst;
+package com.svetanis.datastructures.tree.binary.bst.topk;
 
 import static com.google.common.base.Optional.absent;
 import static com.google.common.base.Optional.of;
@@ -10,54 +10,52 @@ import java.util.concurrent.atomic.AtomicInteger;
 import com.google.common.base.Optional;
 import com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node;
 
-// given a BST and positive integer k
-// find k'th largest element in BST
+// given a BST and and integer k,
+// find k'th smallest element in BST
 
-// K-LARGEST : INORDER TRAVERSAL
-// reverse in-order traversal of BST
-// sorts all nodes in descending order
+// K-SMALLEST : INORDER TRAVERSAL
+// in-order traversal of BST sorts
+// all nodes in ascending order
 // while doing traversal, count nodes
 // visited so far. stop when the count
 // becomes equal to k
 
-public final class KthLargestInorder {
+public final class KthSmallestInorder {
 
-	public static Optional<Integer> kthLargest(Node root, int k) {
+	public static Optional<Integer> kthSmallest(Node root, int k) {
 		// Time complexity: O(h + k)
 
-		// count of visited nodes
+		// count of nodes visited
 		AtomicInteger count = new AtomicInteger();
-		int kLargest = kthLargest(root, k, count);
-		return kLargest != -1 ? of(kLargest) : absent();
+		int kSmallest = kthSmallest(root, k, count);
+		return kSmallest != -1 ? of(kSmallest) : absent();
 	}
 
-	private static int kthLargest(Node root, int k, AtomicInteger count) {
+	private static int kthSmallest(Node root, int k, AtomicInteger count) {
 
-		// base case
 		if (isNull(root) || count.get() >= k) {
 			return -1;
 		}
-		// follow reverse in-order traversal so that
-		// the largest element is visited first
 
-		// recur for right subtree
-		int right = kthLargest(root.right, k, count);
+		// follow inorder traversal
+		// recur for left subtree first
+		int left = kthSmallest(root.left, k, count);
 
-		if (right != -1) {
-			return right;
+		if (left != -1) {
+			return left;
 		}
 
 		// increment count of visited nodes
 		int curr = count.incrementAndGet();
 
-		// if c becomes k now,
-		// then this is the k'th largest
+		// if count becomes k now, then
+		// this is the k'th smallest node
 		if (curr == k) {
 			return root.data;
 		}
 
-		// recur for left subtree
-		return kthLargest(root.left, k, count);
+		// recur for right subtree
+		return kthSmallest(root.right, k, count);
 	}
 
 	public static void main(String[] args) {
@@ -68,6 +66,6 @@ public final class KthLargestInorder {
 		root.left.right = newNode(12);
 		root.left.right.left = newNode(10);
 		root.left.right.right = newNode(14);
-		System.out.println(kthLargest(root, 5));
+		System.out.println(kthSmallest(root, 3));
 	}
 }
