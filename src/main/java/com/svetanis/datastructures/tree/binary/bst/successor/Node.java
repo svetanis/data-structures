@@ -1,4 +1,4 @@
-package com.svetanis.datastructures.tree.binary.model.mutable.primitive.parent;
+package com.svetanis.datastructures.tree.binary.bst.successor;
 
 public final class Node {
 

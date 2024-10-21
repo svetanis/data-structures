@@ -1,12 +1,10 @@
 package com.svetanis.datastructures.tree.binary.bst.successor;
 
-import static com.svetanis.datastructures.tree.binary.model.mutable.primitive.parent.Nodes.inOrder;
-import static com.svetanis.datastructures.tree.binary.model.mutable.primitive.parent.Nodes.insert;
-import static com.svetanis.datastructures.tree.binary.model.mutable.primitive.parent.Nodes.isNotNull;
-import static com.svetanis.datastructures.tree.binary.model.mutable.primitive.parent.Nodes.isNull;
-import static com.svetanis.datastructures.tree.binary.model.mutable.primitive.parent.Nodes.min;
-
-import com.svetanis.datastructures.tree.binary.model.mutable.primitive.parent.Node;
+import static com.svetanis.datastructures.tree.binary.bst.successor.Nodes.inOrder;
+import static com.svetanis.datastructures.tree.binary.bst.successor.Nodes.insert;
+import static com.svetanis.datastructures.tree.binary.bst.successor.Nodes.isNotNull;
+import static com.svetanis.datastructures.tree.binary.bst.successor.Nodes.isNull;
+import static com.svetanis.datastructures.tree.binary.bst.successor.Nodes.min;
 
 // Step. 1 : if right subtree of node is not null,
 // then succ lies in right subtree
