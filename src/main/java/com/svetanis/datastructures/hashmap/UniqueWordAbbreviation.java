@@ -13,6 +13,8 @@ import com.google.common.base.Function;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 
+// 288. Unique Word Abbreviation
+
 public final class UniqueWordAbbreviation {
 
 	public UniqueWordAbbreviation(List<String> list) {
@@ -22,12 +24,14 @@ public final class UniqueWordAbbreviation {
 	private final Multimap<String, String> multi;
 
 	public boolean isUnique(String word) {
+		// Time Complexity: O(k), k is word length
 		String abbreviation = abbreviation(word);
 		Set<String> set = newSet(multi.get(abbreviation));
 		return set.isEmpty() || set.size() == 1 && set.contains(word);
 	}
 
 	private Multimap<String, String> dictionary(List<String> list) {
+		// Time Complexity: O(n * k), n is number of words, k is word length
 		Function<String, String> values = s -> abbreviation(s);
 		Multimap<String, String> multi = asMultimap(list, identity(), values);
 		return invertFrom(multi, HashMultimap.create());
