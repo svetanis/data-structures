@@ -49,5 +49,7 @@ public final class MajorityElementMooreVotingAlgo {
 	public static void main(String[] args) {
 		int[] a = { 1, 3, 3, 3, 3, 1, 2 };
 		System.out.println(majorityElement(a));
+		int[] a1 = {1, 2, 3, 1, 1, 2, 1};
+		System.out.println(majorityElement(a1));
 	}
 }
