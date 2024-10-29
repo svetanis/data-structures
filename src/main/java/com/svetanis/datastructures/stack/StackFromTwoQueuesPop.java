@@ -1,50 +1,59 @@
 package com.svetanis.datastructures.stack;
 
-import static com.google.common.collect.Lists.newLinkedList;
+import java.util.ArrayDeque;
+import java.util.Deque;
 
-import java.util.Queue;
+// 225. Implement Stack using Queue
+
+// You must use only standard operations of a queue, 
+// which means that only push to back, peek/pop from front, 
+// size and is empty operations are valid.
 
 public final class StackFromTwoQueuesPop {
-  private Queue<Integer> q1;
-  private Queue<Integer> q2;
 
-  public StackFromTwoQueuesPop() {
-    this.q1 = newLinkedList();
-    this.q2 = newLinkedList();
-  }
+	public StackFromTwoQueuesPop() {
+		this.main = new ArrayDeque<>();
+		this.aux = new ArrayDeque<>();
+	}
 
-  public boolean isEmpty() {
-    return q1.isEmpty();
-  }
+	private Deque<Integer> main;
+	private Deque<Integer> aux;
 
-  public void push(int value) {
-    q1.offer(value);
-  }
+	public boolean isEmpty() {
+		return main.isEmpty();
+	}
 
-  public int pop() {
-    while (q1.size() != 1) {
-      q2.offer(q1.poll());
-    }
-    int result = q1.poll();
-    // swap q1 and q2
-    Queue<Integer> temp = q1;
-    q1 = q2;
-    q2 = temp;
-    return result;
-  }
+	public void push(int value) {
+		main.offer(value);
+	}
 
-  public static void main(String[] args) {
-    StackFromTwoQueuesPop stack = new StackFromTwoQueuesPop();
-    stack.push(24);
-    stack.push(34);
-    stack.push(4);
-    stack.push(10);
-    stack.push(1);
-    stack.push(43);
-    stack.push(21);
-    System.out.println(stack.pop());
-    System.out.println(stack.pop());
-    System.out.println(stack.pop());
-  }
+	public int pop() {
+		while (main.size() != 1) {
+			aux.offer(main.poll());
+		}
+		int result = main.poll();
+		// swap q1 and q2
+		swap();
+		return result;
+	}
+
+	private void swap() {
+		Deque<Integer> temp = main;
+		main = aux;
+		aux = temp;
+	}
+
+	public static void main(String[] args) {
+		StackFromTwoQueuesPop stack = new StackFromTwoQueuesPop();
+		stack.push(24);
+		stack.push(34);
+		stack.push(4);
+		stack.push(10);
+		stack.push(1);
+		stack.push(43);
+		stack.push(21);
+		System.out.println(stack.pop());
+		System.out.println(stack.pop());
+		System.out.println(stack.pop());
+	}
 }
-
