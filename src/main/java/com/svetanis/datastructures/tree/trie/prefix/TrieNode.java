@@ -1,4 +1,4 @@
-package com.svetanis.datastructures.tree.trie.count;
+package com.svetanis.datastructures.tree.trie.prefix;
 
 import static com.google.common.collect.Maps.newHashMap;
 
@@ -37,16 +37,21 @@ public final class TrieNode {
 		node.insert(str, index + 1);
 	}
 
-	public int query(String s) {
-		return query(s, 0);
+	public int prefixQuery(String prefix) {
+		return prefixQuery(prefix, 0);
 	}
 
-	private int query(String s, int index) {
-		if (index == s.length() || freq == 1) {
+	private int prefixQuery(String s, int index) {
+		if (index == s.length()) {
+			return freq;
+		}
+		char c = s.charAt(index);
+		if (children.containsKey(c)) {
+			TrieNode node = children.get(c);
+			return node.prefixQuery(s, index + 1);
+		} else {
 			return 0;
 		}
-		TrieNode node = children.get(s.charAt(index));
-		return 1 + node.query(s, index + 1);
 	}
 
 	@Override
