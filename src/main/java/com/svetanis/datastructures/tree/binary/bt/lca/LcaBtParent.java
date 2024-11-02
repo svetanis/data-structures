@@ -5,41 +5,18 @@ package com.svetanis.datastructures.tree.binary.bt.lca;
 // assume each Node has a parent pointer
 // the tree has n nodes and height h
 
-public final class LcaBtParentLevel {
+public final class LcaBtParent {
 	// Time Complexity: O(h)
 	// Space Complexity: O(1)
 
-	// LCA Level Based
 	public static Node lca(Node root, Node u, Node v) {
-		while (level(root, u.data) > level(root, v.data)) {
-			u = u.parent;
+		Node node1 = u;
+		Node node2 = v;
+		while (node1 != node2) {
+			node1 = node1.parent == null ? v : node1.parent;
+			node2 = node2.parent == null ? u : node2.parent;
 		}
-		while (level(root, v.data) > level(root, u.data)) {
-			v = v.parent;
-		}
-		while (u.data != v.data) {
-			u = u.parent;
-			v = v.parent;
-		}
-		return u;
-	}
-
-	private static int level(Node root, int data) {
-		return level(root, data, 1);
-	}
-
-	private static int level(Node node, int data, int level) {
-		if (node == null) {
-			return 0;
-		}
-		if (node.data == data) {
-			return level;
-		}
-		int left = level(node.left, data, level + 1);
-		if (left != 0) {
-			return left;
-		}
-		return level(node.right, data, level + 1);
+		return node1;
 	}
 
 	public static void main(String[] args) {

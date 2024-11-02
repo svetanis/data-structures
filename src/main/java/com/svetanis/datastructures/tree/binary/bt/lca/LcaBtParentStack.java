@@ -1,45 +1,39 @@
 package com.svetanis.datastructures.tree.binary.bt.lca;
 
+import java.util.ArrayDeque;
+import java.util.Deque;
+
 // 1650. Lowest Common Ancestor of a Binary Tree III
 // given two nodes in a BT, find LCA
 // assume each Node has a parent pointer
 // the tree has n nodes and height h
 
-public final class LcaBtParentLevel {
-	// Time Complexity: O(h)
-	// Space Complexity: O(1)
+public final class LcaBtParentStack {
 
-	// LCA Level Based
 	public static Node lca(Node root, Node u, Node v) {
-		while (level(root, u.data) > level(root, v.data)) {
-			u = u.parent;
-		}
-		while (level(root, v.data) > level(root, u.data)) {
-			v = v.parent;
-		}
-		while (u.data != v.data) {
-			u = u.parent;
-			v = v.parent;
-		}
-		return u;
+		Deque<Node> s1 = stack(root, u);
+		Deque<Node> s2 = stack(root, v);
+		return lca(s1, s2);
 	}
 
-	private static int level(Node root, int data) {
-		return level(root, data, 1);
+	private static Node lca(Deque<Node> s1, Deque<Node> s2) {
+		Node lca = null;
+		while (!s1.isEmpty() && !s2.isEmpty() && s1.peek() == s2.peek()) {
+			lca = s1.peek();
+			s1.pop();
+			s2.pop();
+		}
+		return lca;
 	}
 
-	private static int level(Node node, int data, int level) {
-		if (node == null) {
-			return 0;
+	private static Deque<Node> stack(Node root, Node node) {
+		Deque<Node> stack = new ArrayDeque<>();
+		while (node != root) {
+			stack.push(node);
+			node = node.parent;
 		}
-		if (node.data == data) {
-			return level;
-		}
-		int left = level(node.left, data, level + 1);
-		if (left != 0) {
-			return left;
-		}
-		return level(node.right, data, level + 1);
+		stack.push(root);
+		return stack;
 	}
 
 	public static void main(String[] args) {
@@ -94,4 +88,5 @@ public final class LcaBtParentLevel {
 			return Integer.toString(data);
 		}
 	}
+
 }
