@@ -5,9 +5,7 @@ import static com.svetanis.datastructures.tree.binary.model.mutable.primitive.No
 
 import com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node;
 
-// given a BST and a range
-// count number of nodes
-// that lie in the given range
+// 938. Range Sum of BST
 
 public final class SumInRangeRecursive {
 
