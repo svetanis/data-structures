@@ -11,7 +11,9 @@ import com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node;
 // Find the total sum of all the numbers represented by all paths.
 
 public final class SumRootToLeafNums {
-
+  // Time Complexity: O(n)
+	// Space Complexity: O(log n)
+	
   private static final int MOD = 1003;
   
   public static int sum(Node root) {
@@ -19,8 +21,6 @@ public final class SumRootToLeafNums {
   }
 
   private static int sum(Node root, int sum) {
-    // Time Complexity: O(n)
-
     if (isNull(root)) {
       return 0;
     }
@@ -38,8 +38,6 @@ public final class SumRootToLeafNums {
   }
 
   private static int sumMod(Node root, int sum) {
-    // Time Complexity: O(n)
-
     if (isNull(root)) {
       return 0;
     }
