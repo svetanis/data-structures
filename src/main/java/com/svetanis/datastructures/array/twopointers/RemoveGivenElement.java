@@ -2,6 +2,8 @@ package com.svetanis.datastructures.array.twopointers;
 
 import static com.svetanis.java.base.utils.Print.print;
 
+// 27. Remove Element
+
 // Given an array and a value, remove all the instances of that value in the array. 
 // Also return the number of elements left in the array after the operation.
 // It does not matter what is left beyond the expected length.
