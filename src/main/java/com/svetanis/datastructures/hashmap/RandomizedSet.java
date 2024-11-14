@@ -6,7 +6,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
+// 380. Insert Delete GetRandom O(1)
+
 public final class RandomizedSet {
+	// Time Complexity: O(1)
+	// Space Complexity: O(n)
 
 	private static final Random RAND = new Random();
 
