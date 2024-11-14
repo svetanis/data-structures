@@ -2,6 +2,8 @@ package com.svetanis.datastructures.tree.binary.bt.lca;
 
 import com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node;
 
+// 235. Lowest Common Ancestor of a Binary Search Tree
+
 // given a BST, find the LCA node 
 // of two given nodes in BST.
 
@@ -13,6 +15,19 @@ import com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node;
 public final class LcaInBstIterative {
 	// Time complexity: O(log n) for balanced BST,
 	// O(n) for skewed BST
+
+	public static Node lcaSimple(Node root, Node p, Node q) {
+		while (root != null) {
+			if (root.data < Math.min(p.data, q.data)) {
+				root = root.right;
+			} else if (root.data > Math.max(p.data, q.data)) {
+				root = root.left;
+			} else {
+				return root;
+			}
+		}
+		return null;
+	}
 
 	public static Node lca(Node root, Node p, Node q) {
 		while (root.data < p.data || root.data > q.data) {
