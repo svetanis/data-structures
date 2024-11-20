@@ -3,8 +3,8 @@ package com.svetanis.datastructures.linkedlist.dll.random;
 public final class Nodes {
 
   // put data always at the head of linked list
-  public Node insertAtHead(Node head, int data) {
-    Node newNode = new Node(data);
+  public Node insertAtHead(Node head, int val) {
+    Node newNode = new Node(val);
     newNode.next = head;
     head = newNode;
     return head;
@@ -45,8 +45,8 @@ public final class Nodes {
     Node curr = head;
     while (curr != null) {
       Node rand = curr.rand;
-      int randomData = (rand != null) ? rand.data : -1;
-      System.out.print(" Data = " + curr.data + ", Random data = " + randomData);
+      int randomData = (rand != null) ? rand.val : -1;
+      System.out.print(" Data = " + curr.val + ", Random data = " + randomData);
       curr = curr.next;
     }
     System.out.println();

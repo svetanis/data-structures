@@ -2,7 +2,7 @@ package com.svetanis.datastructures.linkedlist.dll.random;
 
 // 138. Copy List with Random Pointer
 
-public final class CloneWithRandomNoExtraSpace {
+public final class CloneWithRandomSubmit {
 	// Time Complexity: O(n)
 	// Space Complexity: O(1)
 
@@ -13,34 +13,37 @@ public final class CloneWithRandomNoExtraSpace {
 
 		// 1. insert copy of the node
 		// after every node in the list
-		Node curr = head;
-		while (curr != null) {
-			Node temp = curr.next;
-			curr.next = new Node(curr.val);
-			curr.next.next = temp;
-			curr = temp;
+		for (Node curr = head; curr != null;) {
+			// clone node
+			Node clone = new Node(curr.val);
+			// set clone's next to current node's next
+			clone.next = curr.next;
+			// insert cloned node after the current node
+			curr.next = clone;
+			// move to the next original node
+			curr = clone.next;
 		}
-
-		curr = head;
 
 		// 2. adjust random pointers
 		// of the newly added nodes
-		while (curr != null) {
-			if (curr.next != null) {
-				curr.next.rand = (curr.rand != null) ? curr.rand.next : curr.rand;
+		for (Node curr = head; curr != null; curr = curr.next.next) {
+			if (curr.rand != null) {
+				// set the cloned node's random to the
+				// cloned node of the original node's random
+				curr.next.rand = curr.rand.next;
 			}
-			curr = (curr.next != null) ? curr.next.next : curr.next;
 		}
 
 		// 3. separate original and copied lists
-		Node given = head;
-		Node clone = head.next;
-		Node cloneHead = clone;
-		while (given != null && clone != null) {
-			given.next = (given.next != null) ? given.next.next : given.next;
-			clone.next = (clone.next != null) ? clone.next.next : clone.next;
-			given = given.next;
-			clone = clone.next;
+		Node cloneHead = head.next;
+		for (Node curr = head; curr != null;) {
+			Node clone = curr.next;
+			// restore the original list's next pointer
+			curr.next = clone.next;
+			// set cloned node's next pointer
+			clone.next = clone.next != null ? clone.next.next : null;
+			// move to the next original node
+			curr = curr.next;
 		}
 		return cloneHead;
 	}
