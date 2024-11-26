@@ -1,4 +1,4 @@
-package com.svetanis.datastructures.tree.binary.bt;
+package com.svetanis.datastructures.tree.dp;
 
 import static com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node.newNode;
 import static java.lang.Math.max;

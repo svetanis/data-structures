@@ -1,10 +1,12 @@
-package com.svetanis.datastructures.tree.binary.bst;
+package com.svetanis.datastructures.tree.dp;
+
+// 96. Unique Binary Search Trees
 
 // given a number n count
 // structurally unique BSTs
 // that can store values 1 to n
 
-public final class AllUniqueBSTsCountRecursive {
+public final class AllUniqueBSTsCountBruteForce {
 	// Time Complexity: O(n * 2^n)
 
 	public static int count(int n) {
