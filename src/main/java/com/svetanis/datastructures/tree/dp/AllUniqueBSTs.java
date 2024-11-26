@@ -1,12 +1,13 @@
 package com.svetanis.datastructures.tree.dp;
 
-import static com.google.common.collect.Lists.newArrayList;
 import static com.svetanis.datastructures.tree.binary.model.mutable.primitive.Nodes.preOrder;
-import static com.svetanis.java.base.collect.Lists.newList;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node;
+
+// 95. Unique Binary Search Trees II
 
 // given a number n find all
 // structurally unique BSTs
@@ -18,13 +19,13 @@ public final class AllUniqueBSTs {
 
 	public static List<Node> construct(int n) {
 		if (n <= 0) {
-			return newList();
+			return new ArrayList<>();
 		}
 		return construct(1, n);
 	}
 
 	private static List<Node> construct(int start, int end) {
-		List<Node> list = newArrayList();
+		List<Node> list = new ArrayList<>();
 		// if start > end then subtree is empty
 		if (start > end) {
 			list.add(null);
@@ -35,7 +36,7 @@ public final class AllUniqueBSTs {
 			List<Node> left = construct(start, i - 1);
 			List<Node> right = construct(i + 1, end);
 			// loop through all left and right subtrees
-			// and connect them to ith root
+			// and connect them to i-th root
 			for (int j = 0; j < left.size(); j++) {
 				for (int k = 0; k < right.size(); k++) {
 					Node node = new Node(i); // make value i as root
