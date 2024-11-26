@@ -8,6 +8,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node;
 
+// 124. Binary Tree Maximum Path Sum
+
 // find the path with the max sum in a given BT
 // a path can be defined as a sequence of nodes
 // between any two nodes and doesn't necessarily
@@ -17,7 +19,7 @@ public final class MaxSumPathBetweenAnyTwoNodes {
 	// Time Complexity: O(n)
 
 	public static int maxSum(Node root) {
-		AtomicInteger max = new AtomicInteger();
+		AtomicInteger max = new AtomicInteger(Integer.MIN_VALUE);
 		maxSum(root, max);
 		return max.get();
 	}
@@ -26,7 +28,6 @@ public final class MaxSumPathBetweenAnyTwoNodes {
 	// 1. max path sum between two nodes which is stored in max
 	// 2. the max root-to-leaf path sum which is returned
 	private static int maxSum(Node root, AtomicInteger max) {
-		// base case
 		if (root == null) {
 			return 0;
 		}
