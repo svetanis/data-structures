@@ -21,8 +21,8 @@ public final class CriticalConnections {
 		return list;
 	}
 
-	private static void dfs(List<Integer>[] g, int node, int parent, int current, int[] discovery, int[] lowest,
-			List<List<Integer>> list) {
+	private static void dfs(List<Integer>[] g, int node, int parent, int current, 
+			int[] discovery, int[] lowest, List<List<Integer>> list) {
 		current++;
 		discovery[node] = lowest[node] = current;
 
