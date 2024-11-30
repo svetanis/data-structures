@@ -1,4 +1,4 @@
-package com.svetanis.datastructures.graph.dfs;
+package com.svetanis.datastructures.graph.islands;
 
 import static com.google.common.collect.Lists.newArrayList;
 
@@ -6,7 +6,7 @@ import java.util.List;
 
 public final class BlackShapes {
 
-	private static char WHITE = 'O';
+	private static final char WHITE = 'O';
 	private static int[] dx = { -1, 0, 0, 1 };
 	private static int[] dy = { 0, -1, 1, 0 };
 
