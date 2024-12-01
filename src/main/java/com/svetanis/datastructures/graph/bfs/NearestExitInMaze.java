@@ -22,19 +22,21 @@ public final class NearestExitInMaze {
 		queue.offer(src);
 		// mark as visited
 		g[x][y] = WALL;
-		int count = 0;
+		int steps = 0;
 		while (!queue.isEmpty()) {
-			Node node = queue.poll();
-			count++;
-			for (int k = 0; k < dx.length; k++) {
-				int row = node.x + dx[k];
-				int col = node.y + dy[k];
-				if (safe(g, row, col)) {
-					if (boundary(g, row, col)) {
-						return count;
+			steps++;
+			for (int count = queue.size(); count > 0; count--) {
+				Node node = queue.poll();
+				for (int k = 0; k < dx.length; k++) {
+					int row = node.x + dx[k];
+					int col = node.y + dy[k];
+					if (safe(g, row, col)) {
+						if (boundary(g, row, col)) {
+							return steps;
+						}
+						queue.offer(new Node(row, col));
+						g[row][col] = WALL;
 					}
-					queue.offer(new Node(row, col));
-					g[row][col] = WALL;
 				}
 			}
 		}
@@ -65,6 +67,7 @@ public final class NearestExitInMaze {
 		int[] e3 = { 0, 0 };
 		char[][] m3 = { { '.', '+' } };
 		System.out.println(shortestPath(m3, e3)); // -1
+
 	}
 
 	private static class Node {
