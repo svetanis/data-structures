@@ -6,7 +6,7 @@ import java.util.Queue;
 // 1306. Jump Game III
 
 public final class JumpGameIII {
-	// Time & Space Complexity: O(n).
+	// Time & Space Complexity: O(n)
 
 	public static boolean canReach(int[] a, int start) {
 		Queue<Integer> queue = new ArrayDeque<>();
