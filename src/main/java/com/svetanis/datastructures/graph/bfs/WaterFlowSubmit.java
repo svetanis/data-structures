@@ -1,18 +1,12 @@
 package com.svetanis.datastructures.graph.bfs;
 
-import static com.google.common.collect.Lists.newLinkedList;
-import static com.google.common.collect.Sets.intersection;
-import static com.google.common.collect.Sets.newHashSet;
-import static com.svetanis.java.base.collect.Lists.sort;
-import static com.svetanis.java.base.collect.Lists.transform;
-
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 import java.util.Set;
-
-import com.google.common.collect.ImmutableList;
-import com.svetanis.datastructures.graph.Cell;
-import com.svetanis.java.base.Pair;
 
 // 417. Pacific Atlantic Water Flow
 
@@ -34,17 +28,18 @@ import com.svetanis.java.base.Pair;
 // each pair denotes that rain water can 
 // flow from that cell to both oceans
 
-public final class WaterFlow {
+public final class WaterFlowSubmit {
 	// Time Complexity: O(n * m)
+	// Space Complexity: O(n * m)
 
 	private static final int[] dx = { -1, 0, 0, 1 };
 	private static final int[] dy = { 0, -1, 1, 0 };
 
-	public static ImmutableList<Pair<Integer, Integer>> shortestPath(int[][] grid) {
-		Set<Cell> pv = newHashSet(); // pacific visited set
-		Set<Cell> av = newHashSet(); // atlantic visited set
-		Queue<Cell> pq = newLinkedList(); // pacific queue
-		Queue<Cell> aq = newLinkedList(); // atlantic queue
+	public static List<List<Integer>> shortestPath(int[][] grid) {
+		Set<Integer> pv = new HashSet<>(); // pacific visited set
+		Set<Integer> av = new HashSet<>(); // atlantic visited set
+		Queue<Node> pq = new LinkedList<>(); // pacific queue
+		Queue<Node> aq = new LinkedList<>(); // atlantic queue
 		init(grid, pq, aq);
 		// do bfs for each ocean to
 		// find all cells reachable
@@ -52,37 +47,55 @@ public final class WaterFlow {
 		bfs(grid, pq, pv);
 		bfs(grid, aq, av);
 		// cells reachable from both oceans
-		Set<Cell> intersection = intersection(pv, av);
-		List<Cell> sorted = sort(intersection, n -> n.getDist());
-		return transform(sorted, n -> Pair.build(n.getX(), n.getY()));
+		Set<Integer> intersection = new HashSet<>(pv);
+		intersection.retainAll(av);
+		return path(grid, intersection);
 	}
 
-	private static void bfs(int[][] grid, Queue<Cell> queue, Set<Cell> set) {
+	private static List<List<Integer>> path(int[][] grid, Set<Integer> intersection) {
+		int height = grid.length;
+		int width = grid[0].length;
+		List<List<Integer>> list = new ArrayList<>();
+		for (int i = 0; i < height; i++) {
+			for (int j = 0; j < width; j++) {
+				int index = i * width + j;
+				if (intersection.contains(index)) {
+					list.add(Arrays.asList(i, j));
+				}
+			}
+		}
+		return list;
+
+	}
+
+	private static void bfs(int[][] grid, Queue<Node> queue, Set<Integer> set) {
+		int width = grid[0].length;
 		while (!queue.isEmpty()) {
-			Cell node = queue.poll();
-			if (!set.contains(node)) {
-				set.add(node);
+			Node node = queue.poll();
+			int dist = node.dist;
+			if (!set.contains(dist)) {
+				set.add(dist);
 				// check all 4 moves and enqueue
 				// each valid movement in the queue
 				for (int i = 0; i < dx.length; i++) {
-					int r = node.getX() + dx[i];
-					int c = node.getY() + dy[i];
-					if (valid(grid, r, c) && grid[r][c] >= grid[node.getX()][node.getY()]) {
-						int index = r * grid[0].length + c;
-						queue.add(new Cell(r, c, index));
+					int r = node.x + dx[i];
+					int c = node.y + dy[i];
+					if (valid(grid, r, c) && grid[r][c] >= grid[node.x][node.y]) {
+						int index = r * width + c;
+						queue.add(new Node(r, c, index));
 					}
 				}
 			}
 		}
 	}
 
-	private static void init(int[][] grid, Queue<Cell> pq, Queue<Cell> aq) {
+	private static void init(int[][] grid, Queue<Node> pq, Queue<Node> aq) {
 		int height = grid.length;
 		int width = grid[0].length;
 		for (int i = 0; i < height; i++) {
 			for (int j = 0; j < width; j++) {
 				int index = i * width + j;
-				Cell node = new Cell(i, j, index);
+				Node node = new Node(i, j, index);
 				// Pacific Ocean's edge
 				if (i == 0 || j == 0) {
 					pq.add(node);
@@ -108,6 +121,19 @@ public final class WaterFlow {
 				{ 2, 4, 5, 3, 1 }, //
 				{ 6, 7, 1, 4, 5 }, //
 				{ 5, 1, 1, 2, 4 } };//
+		// [[0, 4], [1, 3], [1, 4], [2, 2], [3, 0], [3, 1], [4, 0]]
 		System.out.println(shortestPath(grid));
+	}
+
+	private static class Node {
+		private int x;
+		private int y;
+		private int dist;
+
+		public Node(int x, int y, int dist) {
+			this.x = x;
+			this.y = y;
+			this.dist = dist;
+		}
 	}
 }
