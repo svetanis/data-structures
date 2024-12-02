@@ -6,6 +6,8 @@ import static com.svetanis.datastructures.linkedlist.single.Nodes.print;
 
 import com.svetanis.datastructures.linkedlist.single.Node;
 
+// 141. Linked List Cycle
+
 // given the head of a Singly LinkedList,
 // determine if the SLL has a cycle in it or not
 
