@@ -1,18 +1,19 @@
 package com.svetanis.datastructures.tree.binary.bt.dimention;
 
 import static com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node.newNode;
-import static java.lang.Math.max;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
 import com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node;
 
+// 543. Diameter of Binary Tree
+
 // Given a binary tree, find the length of its diameter. 
-// The diameter of a tree is the number of nodes on 
+// The diameter of a tree is the number of edges on 
 // the longest path between any two leaf nodes. 
 // The diameter of a tree may or may not pass through the root.
 
-public final class Diameter {
+public final class DiameterSubmit {
 	// Time complexity: O(n)
 
 	public static int diameter(Node root) {
@@ -25,14 +26,12 @@ public final class Diameter {
 		if (root == null) {
 			return 0;
 		}
-
 		int left = height(root.left, diameter);
 		int right = height(root.right, diameter);
-
-		int d = 1 + left + right;
-		int max = max(diameter.get(), d);
+		int d = left + right;
+		int max = Math.max(diameter.get(), d);
 		diameter.set(max);
-		return 1 + max(left, right);
+		return 1 + Math.max(left, right);
 	}
 
 	public static void main(String[] args) {
@@ -40,16 +39,7 @@ public final class Diameter {
 		root.left = newNode(2);
 		root.right = newNode(3);
 		root.left.left = newNode(4);
-		root.right.left = newNode(5);
-		root.right.right = newNode(6);
-		System.out.println(diameter(root));
-
-		root.left.left = null;
-		root.right.left.left = newNode(7);
-		root.right.left.right = newNode(8);
-		root.right.right.left = newNode(9);
-		root.right.left.right.left = newNode(10);
-		root.right.right.left.left = newNode(11);
-		System.out.println(diameter(root));
+		root.left.right = newNode(5);
+		System.out.println(diameter(root)); // 3
 	}
 }
