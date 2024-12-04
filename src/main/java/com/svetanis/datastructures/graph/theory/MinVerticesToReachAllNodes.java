@@ -1,4 +1,4 @@
-package com.svetanis.datastructures.graph.bfs;
+package com.svetanis.datastructures.graph.theory;
 
 import static java.util.Arrays.asList;
 

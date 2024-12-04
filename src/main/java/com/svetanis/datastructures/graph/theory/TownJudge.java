@@ -1,4 +1,4 @@
-package com.svetanis.datastructures.graph.dfs;
+package com.svetanis.datastructures.graph.theory;
 
 // 997. Find the Town Judge
 
