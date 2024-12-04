@@ -20,7 +20,7 @@ import java.util.Queue;
 // prerequisites, decide if it is possible
 // to take all the courses.
 
-public final class IsCourseScheduleBfs {
+public final class IsCourseScheduleMapBfs {
 	// Time Complexity: O(V + E)
 
 	public static boolean isValidCourseSchedule(int n, List<List<Integer>> prerequisites) {
