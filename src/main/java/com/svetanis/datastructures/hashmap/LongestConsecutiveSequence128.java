@@ -30,31 +30,10 @@ public final class LongestConsecutiveSequence128 {
 		return max;
 	}
 
-	public static int lcs2(int[] a) {
-		Set<Integer> set = new HashSet<>();
-		for (int element : a) {
-			set.add(element);
-		}
-		int max = 0;
-		for (int num : a) {
-			if (set.contains(num) && !set.contains(num - 1)) {
-				int count = 0;
-				int curr = num;
-				while (set.contains(curr)) {
-					set.remove(curr);
-					curr++;
-					count++;
-				}
-				max = Math.max(max, count);
-			}
-		}
-		return max;
-	}
-
 	public static void main(String[] args) {
 		int[] a1 = { 100, 4, 200, 1, 3, 2 };
 		int[] a2 = { 0, 3, 7, 2, 5, 8, 4, 6, 0, 1 };
-		System.out.println(lcs2(a1)); // 4
-		System.out.println(lcs2(a2)); // 9
+		System.out.println(lcs(a1)); // 4
+		System.out.println(lcs(a2)); // 9
 	}
 }
