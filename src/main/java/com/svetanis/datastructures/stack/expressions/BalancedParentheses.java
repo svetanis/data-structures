@@ -1,41 +1,59 @@
 package com.svetanis.datastructures.stack.expressions;
 
-import static com.svetanis.datastructures.stack.expressions.Expressions.endsWith;
-import static com.svetanis.datastructures.stack.expressions.Expressions.isMatch;
-import static com.svetanis.datastructures.stack.expressions.Expressions.startsWith;
+import java.util.ArrayDeque;
+import java.util.Deque;
 
-import java.util.Stack;
+// 20. Valid Parentheses
 
 public final class BalancedParentheses {
+	// Time Complexity: O(n)
+	// Space Complexity: O(n)
 
-  public static boolean isBalanced(String str) {
-    // Time Complexity: O(n)
-    // Space Complexity: O(n)
+	public static boolean isBalanced(String s) {
+		Deque<Character> dq = new ArrayDeque<>();
+		for (char c : s.toCharArray()) {
+			if (startsWith(c)) {
+				dq.push(c);
+			}
+			if (endsWith(c)) {
+				if (dq.isEmpty()) {
+					return false;
+				} else if (!isMatch(dq.pop(), c)) {
+					return false;
+				}
+			}
+		}
+		return dq.isEmpty();
+	}
 
-    Stack<Character> stack = new Stack<Character>();
-    for (char c : str.toCharArray()) {
-      if (startsWith(c)) {
-        stack.push(c);
-      }
-      if (endsWith(c)) {
-        if (stack.empty()) {
-          return false;
-        } else if (!isMatch(stack.pop(), c)) {
-          return false;
-        }
-      }
-    }
-    return stack.empty();
-  }
+	private static boolean startsWith(char c) {
+		return c == '{' || c == '[' || c == '(';
+	}
 
-  public static void main(String[] args) {
-    String str1 = "{()}[]";
-    System.out.println(isBalanced(str1));
+	private static boolean endsWith(char c) {
+		return c == '}' || c == ']' || c == ')';
+	}
 
-    String str2 = "[()]{}{[()()]()}";
-    System.out.println(isBalanced(str2));
+	private static boolean isMatch(char c1, char c2) {
+		if (c1 == '{' && c2 == '}') {
+			return true;
+		} else if (c1 == '[' && c2 == ']') {
+			return true;
+		} else if (c1 == '(' && c2 == ')') {
+			return true;
+		} else {
+			return false;
+		}
+	}
 
-    String str3 = "[(])";
-    System.out.println(isBalanced(str3));
-  }
+	public static void main(String[] args) {
+		System.out.println(isBalanced("()")); // true
+		System.out.println(isBalanced("()[]{}")); // true
+		System.out.println(isBalanced("(]")); // false
+		System.out.println(isBalanced("([])")); // true
+
+		System.out.println(isBalanced("{()}[]"));
+		System.out.println(isBalanced("[()]{}{[()()]()}"));
+		System.out.println(isBalanced("[(])"));
+	}
 }
