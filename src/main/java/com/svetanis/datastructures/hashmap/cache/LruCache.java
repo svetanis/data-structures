@@ -3,6 +3,8 @@ package com.svetanis.datastructures.hashmap.cache;
 import java.util.HashMap;
 import java.util.Map;
 
+// 146. LRU Cache
+
 // design and implement a data structure
 // for Least Recently Used (LRU) cache.
 // it should support get and put operations

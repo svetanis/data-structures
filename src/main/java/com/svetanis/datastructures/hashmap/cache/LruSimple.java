@@ -6,6 +6,8 @@ import static com.google.common.collect.Maps.newHashMap;
 import java.util.Deque;
 import java.util.Map;
 
+// 146. LRU Cache
+
 public final class LruSimple {
 
 	private int maxSize;
