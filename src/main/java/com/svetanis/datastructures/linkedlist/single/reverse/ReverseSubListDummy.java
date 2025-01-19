@@ -11,26 +11,25 @@ import com.svetanis.datastructures.linkedlist.single.Node;
 // Given the head of a LinkedList and two positions ‘p’ and ‘q’, 
 // reverse the LinkedList from position ‘p’ to ‘q’.
 
-public final class ReverseSubList {
+public final class ReverseSubListDummy {
 	// Time Complexity: O(n)
 
 	public static Node reverse(Node head, int left, int right) {
 		if (head.next == null || left == right) {
 			return head;
 		}
-
 		// 1. pointer to track the node before the reversal section
-		Node prev = null;
-		Node curr = head;
-		for (int i = 0; curr != null && i < left - 1; i++) {
-			prev = curr;
-			curr = curr.next;
+		Node dummy = new Node(0, head);
+		Node tail = dummy;
+		for (int i = 0; i < left - 1; i++) {
+			tail = tail.next;
 		}
-		Node firstTail = prev; // points to node @ left - 1
-		Node subListTail = curr;
+		Node subListTail = tail.next;
 
 		// 2. reverse the subList between left and right
-		for (int i = 0; curr != null && i < right - left + 1; i++) {
+		Node prev = null;
+		Node curr = subListTail;
+		for (int i = 0; i < right - left + 1; i++) {
 			Node next = curr.next;
 			curr.next = prev;
 			prev = curr;
@@ -38,14 +37,9 @@ public final class ReverseSubList {
 		}
 
 		// 3. reconnect the reversed section back to the list
-		Node subListHead = prev;
-		if (firstTail != null) {
-			firstTail.next = subListHead;
-		} else {
-			head = subListHead;
-		}
+		tail.next = prev;
 		subListTail.next = curr;
-		return head;
+		return dummy.next;
 	}
 
 	public static void main(String[] args) {
