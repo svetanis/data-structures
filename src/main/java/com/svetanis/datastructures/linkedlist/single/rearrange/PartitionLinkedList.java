@@ -13,18 +13,18 @@ public final class PartitionLinkedList {
   // Space Complexity: O(1)
 
   public static Node partition(Node head, int x) {
-    Node smaller = new Node(0, head);
-    Node greater = new Node(0, head);
+    Node smaller = new Node(0);
+    Node greater = new Node(0);
     Node smallerHead = smaller;
     Node greaterHead = greater;
     Node curr = head;
     while (curr != null) {
       if (curr.data < x) {
         smaller.next = curr;
-        smaller = smaller.next;
+        smaller = curr;
       } else {
         greater.next = curr;
-        greater = greater.next;
+        greater = curr;
       }
       curr = curr.next;
     }
