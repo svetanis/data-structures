@@ -12,20 +12,20 @@ import com.svetanis.datastructures.linkedlist.single.Node;
 // reverse the SLL. return the new head
 // of the reversed SLL
 
-public final class ReverseIterative {
+public final class ReverseDummy {
 	// Time Complexity: O(n)
 	// Space Complexity: O(1)
 
 	public static Node reverse(Node head) {
-		Node prev = null;
 		Node curr = head;
+		Node dummy = new Node();
 		while (curr != null) {
 			Node next = curr.next;
-			curr.next = prev;
-			prev = curr;
+			curr.next = dummy.next;
+			dummy.next = curr;
 			curr = next;
 		}
-		return prev;
+		return dummy.next;
 	}
 
 	public static void main(String[] args) {

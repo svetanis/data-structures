@@ -6,35 +6,34 @@ import static com.svetanis.datastructures.linkedlist.single.Nodes.print;
 
 import com.svetanis.datastructures.linkedlist.single.Node;
 
+// 206. Reverse Linked List
+
 public final class ReverseTailRecursive {
 
-  public static Node reverse(Node head) {
-    if (head == null) {
-      return null;
-    }
-    return reverse(head, null, head);
-  }
+	public static Node reverse(Node head) {
+		if (head == null) {
+			return null;
+		}
+		return reverse(head, null, head);
+	}
 
-  private static Node reverse(Node curr, Node prev, Node head) {
-    if (curr.next == null) {
-      head = curr;
-      // update next to prev
-      curr.next = prev;
-      return head;
-    }
+	private static Node reverse(Node curr, Node prev, Node head) {
+		if (curr.next == null) {
+			head = curr;
+			// update next to prev
+			curr.next = prev;
+			return head;
+		}
+		// save current.next node for recursive call
+		Node next = curr.next;
+		// and update next
+		curr.next = prev;
+		return reverse(next, curr, head);
+	}
 
-    // save current.next node for recursive call
-    Node next = curr.next;
-
-    // and update next
-    curr.next = prev;
-
-    return reverse(next, curr, head);
-  }
-
-  public static void main(String[] args) {
-    Node head = fromList(newArrayList(8, 7, 6, 5, 4, 2, 2, 1));
-    print(head);
-    print(reverse(head));
-  }
+	public static void main(String[] args) {
+		Node head = fromList(newArrayList(8, 7, 6, 5, 4, 2, 2, 1));
+		print(head);
+		print(reverse(head));
+	}
 }
