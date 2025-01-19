@@ -11,7 +11,7 @@ import com.svetanis.datastructures.linkedlist.single.Node;
 // rotate the SLL counter-clockwise 
 // by k nodes
 
-public final class Rotate {
+public final class RotateToTheLeft {
 
   public static Node rotate(Node head, int k) {
     // Time Complexity: O(n)
