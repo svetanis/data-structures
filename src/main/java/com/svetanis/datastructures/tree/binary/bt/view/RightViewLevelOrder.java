@@ -1,18 +1,16 @@
 package com.svetanis.datastructures.tree.binary.bt.view;
 
-import static com.google.common.collect.Lists.newArrayList;
-import static com.google.common.collect.Lists.newLinkedList;
 import static com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node.newNode;
-import static com.svetanis.datastructures.tree.binary.model.mutable.primitive.Nodes.isNotNull;
-import static com.svetanis.datastructures.tree.binary.model.mutable.primitive.Nodes.isNull;
-import static com.svetanis.java.base.collect.Lists.newList;
 import static com.svetanis.java.base.utils.Print.print;
 
+import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 
-import com.google.common.collect.ImmutableList;
 import com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node;
+
+// 199. Binary Tree Right Side View
 
 // Given a binary tree, return an array 
 // containing nodes in its right view. 
@@ -22,30 +20,29 @@ import com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node;
 // tree is seen from the right side.
 
 public final class RightViewLevelOrder {
+	// Time Complexity: O(n)
 
-	public static ImmutableList<Node> rightView(Node root) {
-		// Time Complexity: O(n)
-
-		if (isNull(root)) {
-			return newList();
+	public static List<Integer> rightView(Node root) {
+		if (root == null) {
+			return new ArrayList<>();
 		}
-		List<Node> list = newArrayList();
-		Queue<Node> queue = newLinkedList();
+		List<Integer> list = new ArrayList<>();
+		Queue<Node> queue = new LinkedList<>();
 		queue.offer(root);
 		while (!queue.isEmpty()) {
 			int size = queue.size();
-			list.add(queue.peek());
+			list.add(queue.peek().data);
 			for (int i = 0; i < size; i++) {
 				Node node = queue.poll();
-				if (isNotNull(node.right)) {
+				if (node.right != null) {
 					queue.offer(node.right);
 				}
-				if (isNotNull(node.left)) {
+				if (node.left != null) {
 					queue.offer(node.left);
 				}
 			}
 		}
-		return newList(list);
+		return list;
 	}
 
 	public static void main(String[] args) {
