@@ -1,9 +1,11 @@
 package com.svetanis.datastructures.tree.binary.bt.connect;
 
-import static com.google.common.collect.Lists.newLinkedList;
 import static com.svetanis.datastructures.tree.binary.bt.connect.Node.newNode;
 
+import java.util.LinkedList;
 import java.util.Queue;
+
+// 117. Populating Next Right Pointers in Each Node I
 
 // Given a binary tree, 
 // connect each node with 
@@ -19,7 +21,7 @@ public final class ConnectSameLevelNodes {
 		if (root == null) {
 			return;
 		}
-		Queue<Node> queue = newLinkedList();
+		Queue<Node> queue = new LinkedList<>();
 		queue.offer(root);
 		while (!queue.isEmpty()) {
 			Node prev = null;
