@@ -1,22 +1,30 @@
-package com.svetanis.datastructures.tree.binary.bt.traversal.lot;
+package com.svetanis.datastructures.tree.binary.bt.dimention;
 
 import static com.google.common.collect.Lists.newLinkedList;
 import static com.svetanis.datastructures.tree.binary.model.mutable.primitive.Nodes.isNotNull;
+import static com.svetanis.datastructures.tree.binary.model.mutable.primitive.Nodes.isNull;
 
 import java.util.Queue;
 
 import com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node;
 
-// Given a binary tree, find its maximum depth (or height).
+// 104. Maximum Depth of Binary Tree
 
-public final class MaxDepth {
+// Given a binary tree, find its maximum depth (or height).
+// Max depth is the number of nodes along 
+// the longest path from the root node to
+// the farthest leaf node
+
+public final class MaxDepthNodesQueue {
 	// Time Complexity: O(n)
 	// Space Complexity: O(n)
 
 	public static int lot(Node root) {
+		if (isNull(root)) {
+			return 0;
+		}
 		Queue<Node> queue = newLinkedList();
 		queue.offer(root);
-
 		int height = 0;
 		while (!queue.isEmpty()) {
 			int size = queue.size();
