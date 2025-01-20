@@ -7,10 +7,13 @@ import com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node;
 
 // 100. Same Tree
 
-// Two trees are identical when they have same data and arrangement of data is also same.
+// Two trees are identical when they have 
+// same data and arrangement of data is also same.
 
 public final class IdenticalBinaryTreesRecursive {
-
+	// Time Complexity: O(n)
+	// Space Complexity: O(log n)
+	
   public static boolean identical(Node root1, Node root2) {
     // 1. both empty
     if (isNull(root1) && isNull(root2)) {
