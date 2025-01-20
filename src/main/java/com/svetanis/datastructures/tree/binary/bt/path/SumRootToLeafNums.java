@@ -6,60 +6,74 @@ import static com.svetanis.datastructures.tree.binary.model.mutable.primitive.No
 
 import com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node;
 
+// 129. Sum Root to Leaf Numbers 
+
 // Given a binary tree where each node can only have a digit (0-9) value, 
 // each root-to-leaf path will represent a number. 
 // Find the total sum of all the numbers represented by all paths.
 
 public final class SumRootToLeafNums {
-  // Time Complexity: O(n)
+	// Time Complexity: O(n)
 	// Space Complexity: O(log n)
-	
-  private static final int MOD = 1003;
-  
-  public static int sum(Node root) {
-    return sum(root, 0);
-  }
 
-  private static int sum(Node root, int sum) {
-    if (isNull(root)) {
-      return 0;
-    }
-    sum = sum * 10 + root.data;
-    if (isLeaf(root)) {
-      return sum;
-    }
-    int left = sum(root.left, sum);
-    int right = sum(root.right, sum);
-    return left + right;
-  }
+	private static final int MOD = 1003;
 
-  public static int sumMod(Node root) {
-    return sumMod(root, 0);
-  }
+	public static int sum(Node root) {
+		return sum(root, 0);
+	}
 
-  private static int sumMod(Node root, int sum) {
-    if (isNull(root)) {
-      return 0;
-    }
-    sum = (sum * 10 + root.data) % MOD;
-    if (isLeaf(root)) {
-      return sum;
-    }
-    int left = sumMod(root.left, sum);
-    int right = sumMod(root.right, sum);
-    return (left + right) % MOD;
-  }
+	private static int sum(Node root, int sum) {
+		if (isNull(root)) {
+			return 0;
+		}
+		sum = sum * 10 + root.data;
+		if (isLeaf(root)) {
+			return sum;
+		}
+		int left = sum(root.left, sum);
+		int right = sum(root.right, sum);
+		return left + right;
+	}
 
-  public static void main(String[] args) {
-    Node root = newNode(6);
-    root.left = newNode(3);
-    root.right = newNode(5);
-    root.left.left = newNode(2);
-    root.right.right = newNode(4);
-    root.left.right = newNode(5);
-    root.left.right.left = newNode(7);
-    root.left.right.right = newNode(4);
-    System.out.println(sum(root));
-    System.out.println(sumMod(root));
-  }
+	public static int sumMod(Node root) {
+		return sumMod(root, 0);
+	}
+
+	private static int sumMod(Node root, int sum) {
+		if (isNull(root)) {
+			return 0;
+		}
+		sum = (sum * 10 + root.data) % MOD;
+		if (isLeaf(root)) {
+			return sum;
+		}
+		int left = sumMod(root.left, sum);
+		int right = sumMod(root.right, sum);
+		return (left + right) % MOD;
+	}
+
+	public static void main(String[] args) {
+		Node root = newNode(6);
+		root.left = newNode(3);
+		root.right = newNode(5);
+		root.left.left = newNode(2);
+		root.right.right = newNode(4);
+		root.left.right = newNode(5);
+		root.left.right.left = newNode(7);
+		root.left.right.right = newNode(4);
+		System.out.println(sum(root));
+		System.out.println(sumMod(root));
+
+		Node root2 = newNode(1);
+		root2.left = newNode(2);
+		root2.right = newNode(3);
+		System.out.println(sum(root2)); // 25
+
+		Node root3 = newNode(4);
+		root3.left = newNode(9);
+		root3.right = newNode(0);
+		root3.left.left = newNode(5);
+		root3.left.right = newNode(1);
+		System.out.println(sum(root3)); // 1026
+	}
 }
