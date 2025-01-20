@@ -7,6 +7,7 @@ import static com.svetanis.datastructures.tree.binary.model.mutable.primitive.No
 import com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node;
 
 // 222. Count Complete Binary Tree Nodes
+
 // given the root of a complete binary tree
 // return the number of the nodes in the tree
 
@@ -19,9 +20,9 @@ public final class CountCompleteBinaryTreeNodes {
 		int left = height(root.left);
 		int right = height(root.right);
 		if (left == right) {
-			return 1 << left + count(root.right);
+			return (1 << left) + count(root.right);
 		} else {
-			return 1 << right + count(root.left);
+			return (1 << right) + count(root.left);
 		}
 	}
 
@@ -41,9 +42,9 @@ public final class CountCompleteBinaryTreeNodes {
 		root.left.left = newNode(4);
 		root.left.right = newNode(5);
 		root.right.left = newNode(6);
-		System.out.println(count(root));
+		System.out.println(count(root)); // 6
 
 		Node root2 = newNode(1);
-		System.out.println(count(root2));
+		System.out.println(count(root2)); // 1
 	}
 }
