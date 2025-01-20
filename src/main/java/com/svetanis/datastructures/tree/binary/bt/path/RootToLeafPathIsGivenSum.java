@@ -4,6 +4,8 @@ import static com.svetanis.datastructures.tree.binary.model.mutable.primitive.No
 
 import com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node;
 
+// 112. Path Sum
+
 // given a BT and a number k
 // find if the tree has a path
 // from root-to-leaf such that
@@ -11,50 +13,44 @@ import com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node;
 // of that path equals k
 
 public final class RootToLeafPathIsGivenSum {
+	// Time Complexity: O(n)
+	// Space Complexity: O(log n)
 
-	public static boolean hasPath(Node node, int k) {
-		// Time complexity: O(n)
-
-		if (node == null) {
+	public static boolean hasPath(Node root, int target) {
+		if (root == null) {
 			return false;
 		}
-
-		int sum = k - node.data;
-
+		int sum = target - root.data;
 		// if we reach a leaf node and
 		// sum becomes 0 then return true
-		if (sum == 0 && isLeaf(node)) {
+		if (sum == 0 && isLeaf(root)) {
 			return true;
 		}
 		// recursively call to traverse
 		// the left and right sub-tree
-		boolean isLeft = hasPath(node.left, sum);
-		boolean isRight = hasPath(node.right, sum);
+		boolean left = hasPath(root.left, sum);
+		boolean right = hasPath(root.right, sum);
 		// return true if any of the two
 		// recursive call return true
-		return isLeft || isRight;
+		return left || right;
 	}
 
-	public static boolean hasPath2(Node node, int sum) {
-		// Time complexity: O(n)
-
-		if (node == null) {
+	public static boolean hasPath2(Node root, int sum) {
+		if (root == null) {
 			return false;
 		}
-
 		// if the current node is a leaf &
 		// its value == sum, found a path
-		if (node.data == sum && isLeaf(node)) {
+		if (root.data == sum && isLeaf(root)) {
 			return true;
 		}
-
 		// recursively call to traverse
 		// the left and right sub-tree
-		boolean isLeft = hasPath(node.left, sum - node.data);
-		boolean isRight = hasPath(node.right, sum - node.data);
+		boolean left = hasPath(root.left, sum - root.data);
+		boolean right = hasPath(root.right, sum - root.data);
 		// return true if any of the two
 		// recursive call return true
-		return isLeft || isRight;
+		return left || right;
 	}
 
 	public static void main(String[] args) {
