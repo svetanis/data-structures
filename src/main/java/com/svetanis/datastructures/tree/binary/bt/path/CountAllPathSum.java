@@ -9,6 +9,8 @@ import java.util.ListIterator;
 
 import com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node;
 
+// 437. Path Sum III
+
 // Given a binary tree and a number ‘S’, 
 // find all paths in the tree such that 
 // the sum of all the node values of each path equals ‘S’. 
@@ -16,11 +18,10 @@ import com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node;
 // but all paths must follow direction from parent to child (top to bottom).
 
 public final class CountAllPathSum {
+	// Worst Case Time Complexity (skewed tree) : O(n^2)
+	// Best Case Time Complexity (balanced tree): O(n log n)
 
 	public static int pathCount(Node root, int k) {
-		// Worst Case Time Complexity (skewed tree) : O(n^2)
-		// Best Case Time Complexity (balanced tree): O(n log n)
-
 		List<Integer> list = new LinkedList<>();
 		return pathCount(root, k, list);
 	}
