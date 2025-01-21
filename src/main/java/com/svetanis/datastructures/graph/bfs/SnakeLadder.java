@@ -1,7 +1,6 @@
 package com.svetanis.datastructures.graph.bfs;
 
-import static com.google.common.collect.Lists.newLinkedList;
-
+import java.util.LinkedList;
 import java.util.Queue;
 
 // returns min num of dice throws required to reach
@@ -12,79 +11,74 @@ import java.util.Queue;
 // at i takes to
 
 public final class SnakeLadder {
+	// Time Complexity: O(n)
+	// Space Complexity: O(n)
 
-  public static int shortestPath(int n, int[] moves) {
-    // Time Complexity: O(n)
-    // Space Complexity: O(n)
+	public static int shortestPath(int n, int[] moves) {
+		boolean[] visited = new boolean[n];
+		visited[0] = true;
+		Queue<Node> queue = new LinkedList<>();
+		queue.offer(new Node(0, 0));
+		while (!queue.isEmpty()) {
+			Node front = queue.poll();
+			int v = front.val;
+			if (v == n - 1) {
+				return front.dist;
+			}
+			for (int j = v + 1; j <= (v + 6) && j < n; j++) {
+				if (!visited[j]) {
+					visited[j] = true;
+					Node node = new Node();
+					node.dist = front.dist + 1;
+					// check if there a snake or ladder at j
+					// then tail of snake or top of ladder
+					// become the adjacent of i
+					if (moves[j] != -1) {
+						node.val = moves[j];
+					} else {
+						node.val = j;
+					}
+					queue.offer(node);
+				}
+			}
+		}
+		return -1;
+	}
 
-    boolean[] visited = new boolean[n];
-    visited[0] = true;
+	public static void main(String[] args) {
+		int n = 30;
+		int[] moves = new int[n];
+		createMoves(n, moves);
+		System.out.println(shortestPath(n, moves));
+	}
 
-    Queue<Node> queue = newLinkedList();
-    queue.offer(new Node(0, 0));
-    while (!queue.isEmpty()) {
-      Node front = queue.poll();
-      int v = front.v;
-      if (v == n - 1) {
-        return front.dist;
-      }
-      for (int j = v + 1; j <= (v + 6) && j < n; j++) {
-        if (!visited[j]) {
-          visited[j] = true;
+	private static void createMoves(int n, int[] moves) {
+		for (int i = 0; i < n; i++) {
+			moves[i] = -1;
+		}
 
-          Node node = new Node();
-          node.dist = front.dist + 1;
+		// LADDERS
+		moves[2] = 21;
+		moves[4] = 7;
+		moves[10] = 25;
+		moves[19] = 28;
 
-          // check if there a snake or ladder at j
-          // then tail of snake or top of ladder
-          // become the adjacent of i
-          if (moves[j] != -1) {
-            node.v = moves[j];
-          } else {
-            node.v = j;
-          }
-          queue.offer(node);
-        }
-      }
-    }
-    return -1;
-  }
+		// SNAKES
+		moves[26] = 0;
+		moves[20] = 8;
+		moves[16] = 3;
+		moves[18] = 6;
+	}
 
-  public static void main(String[] args) {
-    int n = 30;
-    int[] moves = new int[n];
-    createMoves(n, moves);
-    System.out.println(shortestPath(n, moves));
-  }
+	private static class Node {
+		private int val; // vertex num
+		private int dist; // distance of this vertex from src
 
-  private static void createMoves(int n, int[] moves) {
-    for (int i = 0; i < n; i++) {
-      moves[i] = -1;
-    }
+		public Node() {}
 
-    // LADDERS
-    moves[2] = 21;
-    moves[4] = 7;
-    moves[10] = 25;
-    moves[19] = 28;
-
-    // SNAKES
-    moves[26] = 0;
-    moves[20] = 8;
-    moves[16] = 3;
-    moves[18] = 6;
-  }
-
-  private static class Node {
-    private int v; // vertex num
-    private int dist; // distance of this vertex from src
-
-    public Node() {
-    }
-
-    public Node(int v, int dist) {
-      this.v = v;
-      this.dist = dist;
-    }
-  }
+		public Node(int v, int dist) {
+			this.val = v;
+			this.dist = dist;
+		}
+	}
 }
