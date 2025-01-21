@@ -18,6 +18,8 @@ import com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node;
 // its key is smaller compared to the current key
 
 public final class ValidBstInOrder {
+	// Time complexity O(n);
+	// Space complexity: O(h)
 
 	public static boolean isValidBst(Node root) {
 		Node prev = new Node(MIN_VALUE);
@@ -25,23 +27,17 @@ public final class ValidBstInOrder {
 	}
 
 	private static boolean isValidBst(Node root, Node prev) {
-		// Time complexity O(n);
-		// Space complexity: O(h)
-
 		// an empty tree is a BST
 		if (isNull(root)) {
 			return true;
 		}
-
 		// check if left subtree is BST or not
 		boolean left = isValidBst(root.left, prev);
-
 		// value of current node should be
 		// more than that of prev node
 		if (root.data <= prev.data) {
 			return false;
 		}
-
 		// update the prev node
 		prev.data = root.data;
 		// check if right subtree is BST or not

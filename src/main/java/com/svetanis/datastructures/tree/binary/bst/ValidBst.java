@@ -1,9 +1,6 @@
 package com.svetanis.datastructures.tree.binary.bst;
 
 import static com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node.newNode;
-import static com.svetanis.datastructures.tree.binary.model.mutable.primitive.Nodes.isNull;
-import static java.lang.Integer.MAX_VALUE;
-import static java.lang.Integer.MIN_VALUE;
 
 import com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node;
 
@@ -26,26 +23,23 @@ import com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node;
 // in that subtree is lesser than then the parent
 
 public final class ValidBst {
+	// Time complexity O(n);
+	// Space complexity: O(h)
 
 	public static boolean isValidBst(Node root) {
-		return isValidBst(root, MIN_VALUE, MAX_VALUE);
+		return isValidBst(root, Integer.MIN_VALUE, Integer.MAX_VALUE);
 	}
 
 	private static boolean isValidBst(Node root, int min, int max) {
-		// Time complexity O(n);
-		// Space complexity: O(h)
-
 		// an empty tree is a BST
-		if (isNull(root)) {
+		if (root == null) {
 			return true;
 		}
-
 		// false if this node violates
 		// the min/max constraint
-		if (root.data < min || root.data > max) {
+		if (root.data <= min || root.data >= max) {
 			return false;
 		}
-
 		// otherwise check the subtrees recursively,
 		// tightening the min or max constraint
 		boolean left = isValidBst(root.left, min, root.data);
