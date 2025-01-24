@@ -8,6 +8,8 @@ import static com.svetanis.datastructures.linkedlist.single.Nodes.print;
 
 import com.svetanis.datastructures.linkedlist.single.Node;
 
+// 876. Middle of the Linked List
+
 // given a head of a Singly LinkedList,
 // find the middle node of the SLL
 
