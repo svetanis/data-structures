@@ -7,20 +7,17 @@ import static org.apache.commons.lang3.ArrayUtils.toObject;
 // all zeros to the end of the array
 
 public final class MoveZerosToEnd {
+	// Time Complexity: O(n)
+	// Auxiliary Space: O(1)
 
 	public static void segregate(int[] a) {
-		// Time Complexity: O(n)
-		// Auxiliary Space: O(1)
-
 		int n = a.length;
 		int count = 0;
-
 		for (int i = 0; i < n; i++) {
 			if (a[i] != 0) {
 				a[count++] = a[i];
 			}
 		}
-
 		while (count < n) {
 			a[count++] = 0;
 		}
