@@ -12,6 +12,8 @@ import com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node;
 // Given a binary tree, write a function to get the maximum width of the given tree. 
 // Width of a tree is maximum of widths of all levels. 
 
+// excluding null nodes between the end nodes
+
 public final class MaxWidthPreOrder {
 
   // 2. Using PreOrder Traversal

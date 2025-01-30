@@ -13,10 +13,11 @@ import com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node;
 // Given a binary tree, write a function to get the max width of the given tree. 
 // Width of a tree is maximum of widths of all levels. 
 
+// excluding null nodes between the end nodes
+
 public final class MaxWidthQueue {
 
   public static int maxWidth(Node root) {
-
     if (isNull(root)) {
       return 0;
     }
@@ -32,8 +33,9 @@ public final class MaxWidthQueue {
         if (isNotNull(node.left)) {
           queue.offer(node.left);
         }
-        if (isNotNull(node.right))
-          queue.offer(node.right);
+        if (isNotNull(node.right)) {
+					queue.offer(node.right);
+				}
       }
     }
     return max;
