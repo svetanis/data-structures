@@ -19,8 +19,8 @@ public final class MergeKSortedPriorityQueue {
 	// Space Complexity: O(k)
 
 	public static Node mergeKSorted(Node[] nodes) {
-		Node head = new Node();
-		Node curr = head;
+		Node dummy = new Node();
+		Node curr = dummy;
 		Queue<Node> pq = init(nodes);
 		while (!pq.isEmpty()) {
 			Node top = pq.poll();
@@ -30,7 +30,7 @@ public final class MergeKSortedPriorityQueue {
 			curr.next = top;
 			curr = curr.next;
 		}
-		return head.next;
+		return dummy.next;
 	}
 
 	private static PriorityQueue<Node> init(Node[] nodes) {
