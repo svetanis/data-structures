@@ -12,6 +12,7 @@ import com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node;
 // including null nodes between the end nodes
 
 public final class MaxWidth662 {
+	// Time Complexity: O(n)
 
 	public static int maxWidth(Node root) {
 		if (root == null) {
