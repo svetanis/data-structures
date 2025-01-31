@@ -34,8 +34,7 @@ public final class PartitionLabel {
 	}
 
 	public static void main(String[] args) {
-		System.out.println(partitionLabels("abc"));
-		System.out.println(partitionLabels("a"));
-		System.out.println(partitionLabels("cabbba"));
+		System.out.println(partitionLabels("ababcbacadefegdehijhklij")); // 9, 7, 8
+		System.out.println(partitionLabels("eccbbbbdec")); // 10
 	}
 }
