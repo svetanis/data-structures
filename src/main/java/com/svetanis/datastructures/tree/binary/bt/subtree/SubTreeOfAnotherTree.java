@@ -5,6 +5,8 @@ import static com.svetanis.datastructures.tree.binary.model.mutable.primitive.No
 
 import com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node;
 
+// 572. Subtree of Another Tree
+
 // given two binary trees root and subRoot,
 // find if subRoot is a subtree of root.
 // a subtree of a binary tree is a tree that
@@ -25,8 +27,8 @@ public final class SubTreeOfAnotherTree {
 		if (isIdentical(root, subRoot)) {
 			return true;
 		}
-		boolean left = isIdentical(root.left, subRoot);
-		boolean right = isIdentical(subRoot.right, subRoot);
+		boolean left = isSubTree(root.left, subRoot);
+		boolean right = isSubTree(root.right, subRoot);
 		return left || right;
 	}
 
