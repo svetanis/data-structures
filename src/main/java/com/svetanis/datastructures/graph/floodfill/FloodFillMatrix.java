@@ -2,6 +2,8 @@ package com.svetanis.datastructures.graph.floodfill;
 
 import static com.svetanis.java.base.utils.Print.print;
 
+// 733. Flood Fill
+
 // In computer graphics, an uncompressed 
 // raster image is presented as a matrix of numbers. 
 // Each entry of the matrix represents the color of a pixel. 
@@ -15,9 +17,10 @@ import static com.svetanis.java.base.utils.Print.print;
 public final class FloodFillMatrix {
 	// Time Complexity: O(r * c)
 
-	public static void floodFill(int[][] image, int x, int y, int c) {
+	public static int[][] floodFill(int[][] image, int x, int y, int c) {
 		int prev = image[x][y];
 		dfs(image, x, y, prev, c);
+		return image;
 	}
 
 	public static void dfs(int[][] image, int x, int y, int prev, int c) {
@@ -26,7 +29,7 @@ public final class FloodFillMatrix {
 		if (x < 0 || x >= n || y >= m || y < 0) {
 			return;
 		}
-		if (image[x][y] != prev) {
+		if (image[x][y] != prev || image[x][y] == c) {
 			return;
 		}
 		image[x][y] = c;
@@ -68,5 +71,21 @@ public final class FloodFillMatrix {
 		};//
 		floodFill(image2, 1, 1, 9);
 		print(image2);
+
+		int[][] image3 = { //
+				{ 1, 1, 1 }, //
+				{ 1, 1, 0 }, //
+				{ 1, 0, 1 } //
+		};//
+		floodFill(image3, 1, 1, 2);
+		print(image3);
+
+		int[][] image4 = { //
+				{ 0, 0, 0 }, //
+				{ 0, 0, 0 } //
+		};//
+		floodFill(image4, 0, 0, 0);
+		print(image4);
+
 	}
 }

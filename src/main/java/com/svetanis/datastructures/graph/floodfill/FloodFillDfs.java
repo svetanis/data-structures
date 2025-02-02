@@ -31,7 +31,7 @@ public final class FloodFillDfs {
 		if (r > n - 1 || r < 0 || c > m - 1 || c < 0) {
 			return;
 		}
-		if (image.get(r).get(c) != prev) {
+		if (image.get(r).get(c) != prev || image.get(r).get(c) == c) {
 			return;
 		}
 		image.get(r).set(c, rc);
