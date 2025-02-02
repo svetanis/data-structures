@@ -1,10 +1,8 @@
 package com.svetanis.datastructures.graph.floodfill;
 
-import static com.google.common.collect.Lists.newArrayList;
 import static com.svetanis.java.base.utils.Print.print;
-import static java.util.Arrays.asList;
 
-import java.util.List;
+// 733. Flood Fill
 
 // In computer graphics, an uncompressed 
 // raster image is presented as a matrix of numbers. 
@@ -19,42 +17,45 @@ import java.util.List;
 public final class FloodFillDfs {
 	// Time Complexity: O(r * c)
 
-	public static List<List<Integer>> floodFill(int r, int c, int rc, List<List<Integer>> image) {
-		int prev = image.get(r).get(c);
-		dfs(r, c, rc, prev, image);
+	private static int[] dx = { 1, -1, 0, 0 };
+	private static int[] dy = { 0, 0, 1, -1 };
+
+	public static int[][] floodFill(int[][] image, int x, int y, int c) {
+		int prev = image[x][y];
+		dfs(image, x, y, prev, c);
 		return image;
 	}
 
-	private static void dfs(int r, int c, int rc, int prev, List<List<Integer>> image) {
-		int n = image.size();
-		int m = image.get(0).size();
-		if (r > n - 1 || r < 0 || c > m - 1 || c < 0) {
+	public static void dfs(int[][] image, int x, int y, int prev, int c) {
+		int n = image.length;
+		int m = image[0].length;
+		if (x < 0 || x >= n || y >= m || y < 0) {
 			return;
 		}
-		if (image.get(r).get(c) != prev || image.get(r).get(c) == c) {
+		if (image[x][y] != prev || image[x][y] == c) {
 			return;
 		}
-		image.get(r).set(c, rc);
-		dfs(r + 1, c, rc, prev, image);
-		dfs(r - 1, c, rc, prev, image);
-		dfs(r, c + 1, rc, prev, image);
-		dfs(r, c - 1, rc, prev, image);
+		image[x][y] = c;
+		for (int k = 0; k < dx.length; k++) {
+			dfs(image, x + dx[k], y + dy[k], prev, c);
+		}
 	}
 
 	public static void main(String[] args) {
-		List<List<Integer>> image1 = newArrayList();
-		image1.add(asList(0, 1, 3, 4, 1));
-		image1.add(asList(3, 8, 8, 3, 3));
-		image1.add(asList(6, 7, 8, 8, 3));
-		image1.add(asList(12, 2, 8, 9, 1));
-		image1.add(asList(12, 3, 1, 3, 2));
-		print(floodFill(2, 2, 9, image1));
+		int[][] image3 = { //
+				{ 1, 1, 1 }, //
+				{ 1, 1, 0 }, //
+				{ 1, 0, 1 } //
+		};//
+		floodFill(image3, 1, 1, 2);
+		print(image3);
 
-		List<List<Integer>> image2 = newArrayList();
-		image2.add(asList(0, 1, 6, 4));
-		image2.add(asList(2, 3, 3, 5));
-		image2.add(asList(3, 3, 3, 3));
-		image2.add(asList(6, 4, 3, 4));
-		print(floodFill(1, 1, 9, image2));
+		int[][] image4 = { //
+				{ 0, 0, 0 }, //
+				{ 0, 0, 0 } //
+		};//
+		floodFill(image4, 0, 0, 0);
+		print(image4);
+
 	}
 }
