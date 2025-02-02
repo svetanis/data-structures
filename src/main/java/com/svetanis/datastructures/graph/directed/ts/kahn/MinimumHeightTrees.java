@@ -1,16 +1,15 @@
 package com.svetanis.datastructures.graph.directed.ts.kahn;
 
-import static com.google.common.collect.Lists.newArrayList;
-import static com.google.common.collect.Lists.newLinkedList;
 import static com.google.common.collect.Maps.filterValues;
-import static com.google.common.collect.Maps.newHashMap;
-import static com.svetanis.java.base.collect.Lists.newList;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 
-import com.google.common.collect.ImmutableList;
+// 310. Minimum Height Trees
 
 // given an undirected graph with 
 // characteristics of a k-ary tree
@@ -27,10 +26,15 @@ import com.google.common.collect.ImmutableList;
 public final class MinimumHeightTrees {
 	// Time Complexity: O(V + E)
 
-	public static ImmutableList<Integer> mht(int v, int[][] m) {
+	public static List<Integer> mht(int v, int[][] edges) {
+		List<Integer> list = new ArrayList<>();
+		if (v == 1) {
+			list.add(0);
+			return list;
+		}
 		Map<Integer, Integer> inDegree = inDegreeInit(v);
 		Map<Integer, List<Integer>> graph = graphInit(v);
-		buildGraph(v, m, inDegree, graph);
+		buildGraph(v, edges, inDegree, graph);
 		Queue<Integer> queue = leaves(inDegree);
 		// remove leaves level by level
 		// until left with 1 or 2 nodes
@@ -50,23 +54,35 @@ public final class MinimumHeightTrees {
 				}
 			}
 		}
-		return newList(queue);
+		list.addAll(queue);
+		return list;
 	}
 
 	private static Queue<Integer> leaves(Map<Integer, Integer> map) {
-		Queue<Integer> queue = newLinkedList();
+		Queue<Integer> queue = new LinkedList<>();
 		// all leaves (all nodes with only 1 in-degree)
 		Map<Integer, Integer> filtered = filterValues(map, v -> v == 1);
 		queue.addAll(filtered.keySet());
 		return queue;
 	}
 
-	private static void buildGraph(int v, int[][] m, Map<Integer, Integer> inDegree, 
+	private static Queue<Integer> leaves2(Map<Integer, Integer> map) {
+		Queue<Integer> queue = new LinkedList<>();
+		// all leaves (all nodes with only 1 in-degree)
+		for (int key : map.keySet()) {
+			if (map.get(key) == 1) {
+				queue.add(key);
+			}
+		}
+		return queue;
+	}
+
+	private static void buildGraph(int v, int[][] edges, Map<Integer, Integer> inDegree,
 			Map<Integer, List<Integer>> map) {
 		// this is undirected graph
-		for (int i = 0; i < m.length; i++) {
-			int node1 = m[i][0];
-			int node2 = m[i][1];
+		for (int i = 0; i < edges.length; i++) {
+			int node1 = edges[i][0];
+			int node2 = edges[i][1];
 			// add a link for both nodes
 			map.get(node1).add(node2);
 			map.get(node2).add(node1);
@@ -79,7 +95,7 @@ public final class MinimumHeightTrees {
 	}
 
 	private static Map<Integer, Integer> inDegreeInit(int v) {
-		Map<Integer, Integer> map = newHashMap();
+		Map<Integer, Integer> map = new HashMap<>();
 		for (int i = 0; i < v; i++) {
 			map.put(i, 0);
 		}
@@ -87,9 +103,9 @@ public final class MinimumHeightTrees {
 	}
 
 	private static Map<Integer, List<Integer>> graphInit(int v) {
-		Map<Integer, List<Integer>> map = newHashMap();
+		Map<Integer, List<Integer>> map = new HashMap<>();
 		for (int i = 0; i < v; i++) {
-			map.put(i, newArrayList());
+			map.put(i, new ArrayList<>());
 		}
 		return map;
 	}
