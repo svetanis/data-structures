@@ -1,5 +1,7 @@
 package com.svetanis.datastructures.stack.expressions;
 
+// 921. Minimum Add to Make Parentheses Valid
+
 // given a string of parentheses
 // find min number of parentheses
 // to add to make the resulting
@@ -9,11 +11,10 @@ public final class MinNumParenthesesToBalanceExpression {
 	// Time Complexity: O(n)
 
 	public static int count(String s) {
-		int balance = 0;
 		int min = 0;
-
-		for (int i = 0; i < s.length(); i++) {
-			balance += s.charAt(i) == '(' ? 1 : -1;
+		int balance = 0;
+		for (char c : s.toCharArray()) {
+			balance += c == '(' ? 1 : -1;
 			if (balance == -1) {
 				min += 1;
 				balance += 1;
