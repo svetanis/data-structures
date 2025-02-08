@@ -1,4 +1,4 @@
-package com.svetanis.datastructures.tree.binary.bst.topk;
+package com.svetanis.datastructures.tree.binary.bst.kclosest;
 
 import static com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node.newNode;
 import static com.svetanis.datastructures.tree.binary.model.mutable.primitive.Nodes.isNotNull;
@@ -12,11 +12,10 @@ import com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node;
 // find the node with minimum absolute 
 // difference with given target K
 
-public final class ClosestToKElementIterative {
+public final class ClosestToTargetIterative {
+	// Time complexity: O(h)
 
 	public static int closestToK(Node root, int k) {
-		// Time complexity: O(h)
-
 		if (isNull(root)) {
 			return -1;
 		}

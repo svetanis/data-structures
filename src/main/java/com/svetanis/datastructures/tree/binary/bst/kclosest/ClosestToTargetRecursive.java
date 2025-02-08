@@ -1,4 +1,4 @@
-package com.svetanis.datastructures.tree.binary.bst.topk;
+package com.svetanis.datastructures.tree.binary.bst.kclosest;
 
 import static com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node.newNode;
 import static com.svetanis.datastructures.tree.binary.model.mutable.primitive.Nodes.isNull;
@@ -13,34 +13,35 @@ import com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node;
 // find the node with minimum absolute 
 // difference with given target K
 
-public final class ClosestToKElement {
-	// Time complexity: O(log n)
+public final class ClosestToTargetRecursive {
+	// Time complexity: O(h)
 
 	public static int closestToK(Node root, int k) {
 		AtomicInteger min = new AtomicInteger(MAX_VALUE);
-		return closestToK(root, k, -1, min);
+		AtomicInteger key = new AtomicInteger(-1);
+		closestToK(root, k, min, key);
+		return key.get();
 	}
 
-	public static int closestToK(Node root, int k, int key, AtomicInteger min) {
+	public static void closestToK(Node root, int k, AtomicInteger min, AtomicInteger key) {
 		if (isNull(root)) {
-			return key;
+			return;
 		}
-
 		if (root.data == k) {
-			return root.data;
+			key.set(root.data);
+			return;
 		}
 		int diff = abs(k - root.data);
 		if (min.get() > diff) {
 			min.set(diff);
-			key = root.data;
+			key.set(root.data);
 		}
 
 		if (k < root.data) {
-			key = closestToK(root.left, k, key, min);
+			closestToK(root.left, k, min, key);
 		} else {
-			key = closestToK(root.right, k, key, min);
+			closestToK(root.right, k, min, key);
 		}
-		return key;
 	}
 
 	public static void main(String[] args) {
