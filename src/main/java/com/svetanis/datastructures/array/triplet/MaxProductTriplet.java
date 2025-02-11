@@ -4,6 +4,8 @@ import static java.lang.Integer.MAX_VALUE;
 import static java.lang.Integer.MIN_VALUE;
 import static java.lang.Math.max;
 
+// 628. Maximum Product of Three Numbers
+
 // given an integer array,
 // find a max product of 
 // a triplet in array
