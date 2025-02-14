@@ -1,19 +1,16 @@
 package com.svetanis.datastructures.tree.binary.bt.traversal.lot;
 
-import static com.google.common.collect.Lists.newArrayList;
-import static com.google.common.collect.Lists.newLinkedList;
 import static com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node.newNode;
-import static com.svetanis.datastructures.tree.binary.model.mutable.primitive.Nodes.isNotNull;
-import static com.svetanis.datastructures.tree.binary.model.mutable.primitive.Nodes.isNull;
-import static com.svetanis.java.base.collect.Lists.newList;
 import static com.svetanis.java.base.utils.Print.print;
-import static java.lang.Math.max;
 
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.Deque;
 import java.util.List;
-import java.util.Queue;
 
-import com.google.common.collect.ImmutableList;
 import com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node;
+
+// 515. Find Largest Value in Each Tree Row
 
 // Find the largest value on each level of a binary tree.
 
@@ -21,31 +18,29 @@ public final class MaxValueInEachLevel {
 	// Time Complexity: O(n)
 	// Space Complexity: O(n)
 
-	public static ImmutableList<Integer> lot(Node root) {
-		if (isNull(root)) {
-			return newList();
+	public static List<Integer> lot(Node root) {
+		if (root == null) {
+			return new ArrayList<>();
 		}
-
-		Queue<Node> queue = newLinkedList();
+		Deque<Node> queue = new ArrayDeque<>();
 		queue.offer(root);
-
-		List<Integer> list = newArrayList();
+		List<Integer> list = new ArrayList<>();
 		while (!queue.isEmpty()) {
-			int max = 0;
+			int max = queue.peek().data;
 			int size = queue.size();
 			for (int i = 0; i < size; i++) {
 				Node node = queue.poll();
-				max = max(max, node.data);
-				if (isNotNull(node.left)) {
+				max = Math.max(max, node.data);
+				if (node.left != null) {
 					queue.offer(node.left);
 				}
-				if (isNotNull(node.right)) {
+				if (node.right != null) {
 					queue.offer(node.right);
 				}
 			}
 			list.add(max);
 		}
-		return newList(list);
+		return list;
 	}
 
 	public static void main(String[] args) {
