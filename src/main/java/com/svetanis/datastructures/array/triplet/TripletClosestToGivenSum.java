@@ -1,8 +1,8 @@
 package com.svetanis.datastructures.array.triplet;
 
-import static java.lang.Integer.MAX_VALUE;
-import static java.lang.Math.abs;
-import static java.util.Arrays.sort;
+import java.util.Arrays;
+
+// 16. 3Sum Closest
 
 // given an array of unsorted numbers and a target,
 // find a triplet in the array whose sum is as 
@@ -13,13 +13,13 @@ import static java.util.Arrays.sort;
 // smallest sum
 
 public final class TripletClosestToGivenSum {
+  // Time Complexity: O(n^2)
 
   public static int triplet(int[] a, int target) {
-    // time complexity: O(n^2)
-    sort(a);
+    Arrays.sort(a);
 
     int n = a.length;
-    int min = MAX_VALUE;
+    int min = Integer.MAX_VALUE;
     int result = target;
     
     for (int i = 0; i < n - 2; ++i) {
@@ -27,7 +27,7 @@ public final class TripletClosestToGivenSum {
       int right = n - 1;
       while (left < right) {
         int sum = a[i] + a[left] + a[right];
-        int diff = abs(target - sum);
+        int diff = Math.abs(target - sum);
         if (diff == 0) {
           return sum;
         }
@@ -47,16 +47,18 @@ public final class TripletClosestToGivenSum {
 
   public static void main(String[] args) {
     int[] a = { -1, 2, 1, -4 };
-    System.out.println(triplet(a, 1));
+    System.out.println(triplet(a, 1)); // 2
 
     int[] a1 = { -2, 0, 1, 2 };
     System.out.println(triplet(a1, 2));
-
     
     int[] a2 = { -3, -1, 1, 2 };
     System.out.println(triplet(a2, 1));
 
     int[] a3 = { 1, 0, 1, 1 };
     System.out.println(triplet(a3, 100));
+    
+    int[] a4 = { 0, 0, 0};
+    System.out.println(triplet(a4, 1));
   }
 }
