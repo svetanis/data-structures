@@ -1,15 +1,17 @@
 package com.svetanis.datastructures.array.triplet;
 
-import static java.util.Arrays.sort;
+import java.util.Arrays;
+
+// 259. 3Sum Smaller
 
 // given array of distinct integers and a sum value
 // find count of triplets with sum smaller than target
 
 public final class CountTripletsSumLessGivenValue {
+	// Time complexity: O(n^2)
 
 	public static int count(int[] a, int k) {
-		// Time complexity: O(n^2)
-		sort(a);
+		Arrays.sort(a);
 
 		int count = 0;
 		for (int i = 0; i < a.length; i++) {
