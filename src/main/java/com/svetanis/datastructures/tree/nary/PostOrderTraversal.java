@@ -16,7 +16,7 @@ public final class PostOrderTraversal {
 		}
 		Deque<Node> dq = new ArrayDeque<>();
 		List<Integer> list = new ArrayList<>();
-		dq.offerLast(root);
+		dq.push(root);
 		while (!dq.isEmpty()) {
 			Node curr = dq.pop();
 			list.add(curr.val);
