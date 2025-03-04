@@ -6,6 +6,8 @@ import static com.svetanis.datastructures.tree.binary.model.mutable.primitive.No
 
 import com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node;
 
+// 285. Inorder Successor in BST
+
 public final class InorderSuccessor {
 	// Time complexity: O(h), h is height of tree
 

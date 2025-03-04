@@ -4,7 +4,8 @@ import static com.svetanis.datastructures.tree.binary.bst.successor.Nodes.inOrde
 import static com.svetanis.datastructures.tree.binary.bst.successor.Nodes.insert;
 import static com.svetanis.datastructures.tree.binary.bst.successor.Nodes.isNotNull;
 import static com.svetanis.datastructures.tree.binary.bst.successor.Nodes.isNull;
-import static com.svetanis.datastructures.tree.binary.bst.successor.Nodes.min;
+
+// 510. Inorder Successor in BST II
 
 // Step. 1 : if right subtree of node is not null,
 // then succ lies in right subtree
@@ -19,45 +20,55 @@ import static com.svetanis.datastructures.tree.binary.bst.successor.Nodes.min;
 // The parent of such a node is the succ.
 
 public final class InorderSuccessorParent {
-  // Time complexity: O(h), h is height of tree
+	// Time complexity: O(h), h is height of tree
 
-  public static Node inOrderSuccessor(Node node) {
+	public static Node inOrderSuccessor(Node node) {
+		if (isNull(node)) {
+			return null;
+		}
+		if (isNull(node.parent) || isNotNull(node.right)) {
+			return min(node.right);
+		} else {
+			Node parent = node.parent;
+			while (isNotNull(parent) && parent.left != node) {
+				node = parent;
+				parent = parent.parent;
+			}
+			return parent;
+		}
+	}
 
-    if (isNull(node)) {
-      return null;
-    }
+	private static Node min(Node root) {
+		if (root == null) {
+			return null;
+		}
+		Node current = root;
+		// loop down to find the leftmost leaf
+		while (current.left != null) {
+			current = current.left;
+		}
+		return current;
+	}
 
-    if (isNull(node.parent) || isNotNull(node.right)) {
-      return min(node.right);
-    } else {
-      Node parent = node.parent;
-      while (isNotNull(parent) && parent.left != node) {
-        node = parent;
-        parent = parent.parent;
-      }
-      return parent;
-    }
-  }
+	public static void main(String[] args) {
+		// inorder successor of 8 is 10,
+		// inorder successor of 10 is 12
+		// inorder successor of 14 is 20
 
-  public static void main(String[] args) {
-    // inorder successor of 8 is 10,
-    // inorder successor of 10 is 12
-    // inorder successor of 14 is 20
+		Node root = null;
+		root = insert(root, 20);
+		root = insert(root, 8);
+		root = insert(root, 22);
+		root = insert(root, 4);
+		root = insert(root, 12);
+		root = insert(root, 10);
+		root = insert(root, 14);
 
-    Node root = null;
-    root = insert(root, 20);
-    root = insert(root, 8);
-    root = insert(root, 22);
-    root = insert(root, 4);
-    root = insert(root, 12);
-    root = insert(root, 10);
-    root = insert(root, 14);
+		Node node = root.left.right.right;
+		Node succ = inOrderSuccessor(node);
 
-    Node node = root.left.right.right;
-    Node succ = inOrderSuccessor(node);
-
-    inOrder(root);
-    System.out.println();
-    System.out.println("node: " + node + " succ: " + succ);
-  }
+		inOrder(root);
+		System.out.println();
+		System.out.println("node: " + node + " succ: " + succ);
+	}
 }
