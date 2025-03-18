@@ -1,5 +1,8 @@
 package com.svetanis.datastructures.stack.expressions;
 
+import java.util.ArrayDeque;
+import java.util.Deque;
+
 // 921. Minimum Add to Make Parentheses Valid
 
 // given a string of parentheses
@@ -21,6 +24,43 @@ public final class MinNumParenthesesToBalanceExpression {
 			}
 		}
 		return balance + min;
+	}
+
+	public static int count2(String s) {
+		int open = 0;
+		int close = 0;
+		for (char c : s.toCharArray()) {
+			if (c == '(') {
+				open++;
+			} else {
+				if (open > 0) {
+					// match the curr ')' with prev '('
+					open--;
+				} else {
+					// no matching '(' for this ')'
+					close++;
+				}
+			}
+		}
+		// total unmatched = sum of open and close
+		return open + close;
+	}
+
+	public static int count3(String s) {
+		Deque<Character> dq = new ArrayDeque<>();
+		int unmatched = 0;
+		for (char c : s.toCharArray()) {
+			if (c == '(') {
+				dq.push(c);
+			} else {
+				if (!dq.isEmpty()) {
+					dq.pop();
+				} else {
+					unmatched++;
+				}
+			}
+		}
+		return dq.size() + unmatched;
 	}
 
 	public static void main(String[] args) {
