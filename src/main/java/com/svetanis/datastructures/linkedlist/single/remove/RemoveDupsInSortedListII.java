@@ -8,7 +8,7 @@ import com.svetanis.datastructures.linkedlist.single.Node;
 
 // 82. Remove Duplicates from Sorted List II
 
-public final class RemoveDupsInSortedList {
+public final class RemoveDupsInSortedListII {
   // Time Complexity: O(n)
   // Space Complexity: O(1)
 
