@@ -8,7 +8,8 @@ import com.svetanis.datastructures.linkedlist.single.Nodes;
 // 725. Split Linked List in Parts
 
 public final class SplitInParts {
-
+	// Time Complexity: O(n + k)
+	
 	public static Node[] split(Node head, int k) {
 		int size = size(head);
 		int width = size / k;
