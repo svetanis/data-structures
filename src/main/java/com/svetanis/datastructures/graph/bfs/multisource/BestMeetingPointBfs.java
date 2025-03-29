@@ -1,4 +1,4 @@
-package com.svetanis.datastructures.graph.bfs;
+package com.svetanis.datastructures.graph.bfs.multisource;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.collect.Maps.newHashMap;

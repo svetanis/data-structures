@@ -1,4 +1,4 @@
-package com.svetanis.datastructures.graph.bfs;
+package com.svetanis.datastructures.graph.bfs.bidirectional;
 
 import java.util.ArrayList;
 import java.util.Arrays;

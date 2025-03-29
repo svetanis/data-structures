@@ -1,4 +1,4 @@
-package com.svetanis.datastructures.graph.bfs;
+package com.svetanis.datastructures.graph.bfs.bidirectional;
 
 import static com.google.common.collect.Lists.newLinkedList;
 import static com.google.common.collect.Sets.intersection;
