@@ -1,4 +1,4 @@
-package com.svetanis.datastructures.graph.bfs.wordladder;
+package com.svetanis.datastructures.graph.bfs.bidirectional;
 
 import static com.google.common.base.Optional.absent;
 import static com.google.common.base.Optional.of;

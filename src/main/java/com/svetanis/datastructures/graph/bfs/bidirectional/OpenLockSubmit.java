@@ -1,4 +1,4 @@
-package com.svetanis.datastructures.graph.bfs.wordladder;
+package com.svetanis.datastructures.graph.bfs.bidirectional;
 
 import static com.google.common.collect.Lists.newArrayList;
 
