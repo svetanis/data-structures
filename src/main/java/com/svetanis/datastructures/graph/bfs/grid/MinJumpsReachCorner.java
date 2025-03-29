@@ -1,4 +1,4 @@
-package com.svetanis.datastructures.graph.bfs;
+package com.svetanis.datastructures.graph.bfs.grid;
 
 import static com.google.common.base.Optional.absent;
 import static com.google.common.base.Optional.of;

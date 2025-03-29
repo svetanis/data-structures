@@ -1,4 +1,4 @@
-package com.svetanis.datastructures.graph.bfs;
+package com.svetanis.datastructures.graph.bfs.grid;
 
 import java.util.PriorityQueue;
 
