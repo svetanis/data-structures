@@ -11,10 +11,8 @@ public final class OperationsToMakeNetworkConnected {
 		init(n);
 		int redundant = 0;
 		for (int[] connection : connections) {
-			int x = connection[0];
-			int y = connection[1];
-			int px = find(x);
-			int py = find(y);
+			int px = find(connection[0]);
+			int py = find(connection[1]);
 			if (px != py) {
 				parent[px] = py;
 				n -= 1;
