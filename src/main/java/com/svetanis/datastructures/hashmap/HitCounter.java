@@ -10,8 +10,6 @@ import java.util.Map;
 // that occur on a resource in the last 5 minutes.
 
 public final class HitCounter {
-	// Time Complexity: O(n)
-	// Space Complexity: O(p)
 
 	private Map<Integer, Integer> map;
 
@@ -35,9 +33,12 @@ public final class HitCounter {
 
 	public static void main(String[] args) {
 		HitCounter hc = new HitCounter();
-		hc.hit(10);
-		hc.hit(10);
-		hc.hit(30);
-		System.out.println(hc.getHits(40)); // 3
+		hc.hit(1);
+		hc.hit(2);
+		hc.hit(3);
+		System.out.println(hc.getHits(4)); // 3
+		hc.hit(300);
+		System.out.println(hc.getHits(300)); // 4
+		System.out.println(hc.getHits(301)); // 3		
 	}
 }
