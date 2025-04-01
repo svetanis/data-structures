@@ -7,40 +7,47 @@ import static com.svetanis.datastructures.linkedlist.single.reverse.ReverseItera
 
 import com.svetanis.datastructures.linkedlist.single.Node;
 
+// 369. Plus One Linked List
+
 public final class AddOneIterative {
+	// Time Complexity: O(n)
 
-  public static Node addOne(Node head) {
-    head = reverse(head);
-    head = addOneUtil(head);
-    return reverse(head);
-  }
+	public static Node addOne(Node head) {
+		head = reverse(head);
+		head = addOneUtil(head);
+		return reverse(head);
+	}
 
-  private static Node addOneUtil(Node head) {
+	private static Node addOneUtil(Node head) {
 
-    Node result = head;
-    Node node = head;
-    int sum = 0;
-    int carry = 1;
+		Node result = head;
+		Node node = head;
+		int sum = 0;
+		int carry = 1;
 
-    while (head != null) {
-      sum = carry + head.data;
-      carry = (sum >= 10) ? 1 : 0;
-      sum = sum % 10;
-      head.data = sum;
-      node = head;
-      head = head.next;
-    }
+		while (head != null) {
+			sum = carry + head.data;
+			carry = (sum >= 10) ? 1 : 0;
+			sum = sum % 10;
+			head.data = sum;
+			node = head;
+			head = head.next;
+		}
 
-    if (carry > 0) {
-      node.next = new Node(carry);
-    }
-    return result;
-  }
+		if (carry > 0) {
+			node.next = new Node(carry);
+		}
+		return result;
+	}
 
-  public static void main(String[] args) {
-    Node head = fromList(newArrayList(1, 9, 9, 9));
-    print(head);
-    head = addOne(head);
-    print(head);
-  }
+	public static void main(String[] args) {
+		Node head = fromList(newArrayList(1, 9, 9, 9));
+		print(addOne(head));
+
+		Node head2 = fromList(newArrayList(1, 2, 9, 4));
+		print(addOne(head2));
+
+		Node head3 = fromList(newArrayList(1, 2, 9));
+		print(addOne(head3));
+	}
 }

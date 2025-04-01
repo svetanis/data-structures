@@ -8,26 +8,26 @@ import com.svetanis.datastructures.linkedlist.single.Node;
 
 // 369. Plus One Linked List
 
-public final class AddOneRecursive {
+public final class AddOneDummy {
 	// Time Complexity: O(n)
 
 	public static Node addOne(Node head) {
-		int carry = addWithCarry(head);
-		if (carry > 0) {
-			Node node = new Node(carry);
-			node.next = head;
-			return node;
+		Node dummy = new Node(0);
+		dummy.next = head;
+		Node node = dummy;
+		while (head != null) {
+			if (head.data != 9) {
+				node = head;
+			}
+			head = head.next;
 		}
-		return head;
-	}
-
-	private static int addWithCarry(Node head) {
-		if (head == null) {
-			return 1;
+		node.data += 1;
+		Node curr = node.next;
+		while (curr != null) {
+			curr.data = 0;
+			curr = curr.next;
 		}
-		int res = head.data + addWithCarry(head.next);
-		head.data = res % 10;
-		return res / 10;
+		return dummy.data == 1 ? dummy : dummy.next;
 	}
 
 	public static void main(String[] args) {
