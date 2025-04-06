@@ -3,9 +3,9 @@ package com.svetanis.datastructures.graph.mst;
 import java.util.Arrays;
 
 // 787. Cheapest Flights Within K Stops
-// variation of Bellman-Ford algorithm
+// Bellman-Ford algorithm
 
-public final class CheapestFlightsWithKStops {
+public final class CheapestFlightsBFA {
 	// Time Complexity: O(k * (n + m))
 	// Space Complexity: O(n)
 
@@ -37,5 +37,9 @@ public final class CheapestFlightsWithKStops {
 
 		int[][] g3 = { { 0, 1, 100 }, { 1, 2, 100 }, { 0, 2, 500 } };
 		System.out.println(cheapestFlight(3, g3, 0, 2, 0)); // 500
+		
+		int[][] g4 = { { 0, 1, 5 }, { 1, 2, 5 }, { 0, 3, 2 }, { 3, 1, 2 }, { 1, 4, 1 }, { 4, 2, 1 } };
+		System.out.println(cheapestFlight(5, g4, 0, 2, 2)); // 7
+
 	}
 }
