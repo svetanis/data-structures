@@ -1,4 +1,4 @@
-package com.svetanis.datastructures.graph.advanced;
+package com.svetanis.datastructures.graph.mst;
 
 import java.util.Arrays;
 import java.util.PriorityQueue;
