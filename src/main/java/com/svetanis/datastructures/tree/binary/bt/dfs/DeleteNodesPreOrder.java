@@ -13,7 +13,7 @@ import com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node;
 
 // 1110. Delete Nodes And Return Forest
 
-public final class DeleteNodes {
+public final class DeleteNodesPreOrder {
 	// Time Complexity: O(n)
 
 	public static List<Node> forest(Node root, int[] delete) {
@@ -26,7 +26,8 @@ public final class DeleteNodes {
 		return list;
 	}
 
-	private static Node dfs(Node root, boolean isRoot, Set<Integer> set, List<Node> list) {
+	private static Node dfs(Node root, boolean isRoot, 
+								Set<Integer> set, List<Node> list) {
 		if (isNull(root)) {
 			return null;
 		}
