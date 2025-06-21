@@ -1,6 +1,7 @@
 package com.svetanis.datastructures.tree.binary.bt.dimention;
 
 import static com.svetanis.datastructures.tree.binary.model.mutable.primitive.Nodes.isNull;
+import static java.lang.Math.max;
 
 import com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node;
 
@@ -13,20 +14,26 @@ import com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node;
 // the longest path from the root node to
 // the farthest leaf node
 
-public final class MaxDepthNodes {
+public final class MaxDepthTopDown {
 	// Time Complexity: O(n)
 	// Space Complexity: O(log n)
 
 	// the return value is the node-count of
 	// the longest subroot-to-leaf path in the
 	// current subtree after visiting a node
-	private static int maxDepth(Node root) {
+
+	public static int maxDepth(Node root) {
+		// root's height = 1
+		return dfs(root, 1);
+	}
+
+	private static int dfs(Node root, int height) {
 		if (isNull(root)) {
-			return 0;
+			return height - 1;
 		}
-		int left = maxDepth(root.left);
-		int right = maxDepth(root.right);
-		return 1 + Math.max(left, right);
+		int left = dfs(root.left, height + 1);
+		int right = dfs(root.right, height + 1);
+		return max(left, right);
 	}
 
 	public static void main(String[] args) {
