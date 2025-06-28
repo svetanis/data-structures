@@ -12,11 +12,10 @@ import com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node;
 //938. Range Sum of BST
 
 public final class SumInRangeIterative {
+	// Time Complexity: O(n)
+	// Space Complexity: O(h)
 
 	public static int sumInRange(Node root, int low, int high) {
-		// Time Complexity: O(n)
-		// Space Complexity: O(h)
-
 		if (isNull(root)) {
 			return 0;
 		}
