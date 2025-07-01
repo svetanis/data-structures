@@ -5,6 +5,8 @@ import static com.svetanis.datastructures.tree.binary.model.mutable.primitive.No
 
 import com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node;
 
+// 993. Cousins in Binary Tree
+
 // given binary tree, determine if two given
 // nodes are cousins of each other or not.
 // two nodes of binary tree are cousins of 
@@ -12,40 +14,32 @@ import com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node;
 // parents but they have same level
 
 public final class CousinsInOrder {
+  // Time Complexity: O(n)
 
   public static boolean cousins(Node root, int a, int b) {
-    // Time Complexity: O(n)
-    
     if (isNull(root)) {
       return true;
     }
-
     NodeInfo x = new NodeInfo(a, 1);
     NodeInfo y = new NodeInfo(b, 1);
-
     inorder(root, null, 1, x, y);
     return x.level == y.level && x.parent != y.parent;
   }
 
   private static void inorder(Node root, Node parent, 
                   int level, NodeInfo x, NodeInfo y) {
-
     if (isNull(root)) {
       return;
     }
-
     inorder(root.left, root, level + 1, x, y);
-
     if (root.data == x.key) {
       x.level = level;
       x.parent = parent;
     }
-
     if (root.data == y.key) {
       y.level = level;
       y.parent = parent;
     }
-
     inorder(root.right, root, level + 1, x, y);
   }
 

@@ -1,12 +1,14 @@
 package com.svetanis.datastructures.tree.binary.bt.cousins;
 
-import static com.google.common.collect.Maps.newHashMap;
 import static com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node.newNode;
 import static com.svetanis.datastructures.tree.binary.model.mutable.primitive.Nodes.isNull;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node;
+
+// 993. Cousins in Binary Tree
 
 // given binary tree, determine if two given
 // nodes are cousins of each other or not.
@@ -15,36 +17,30 @@ import com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node;
 // parents but they have same level
 
 public final class CousinsHashing {
+  // Time Complexity: O(n)
 
   public static boolean cousins(Node root, int a, int b) {
-    // Time Complexity: O(n)
-
     if (isNull(root)) {
       return true;
     }
-
-    Map<Integer, Integer> depth = newHashMap();
-    Map<Integer, Node> parent = newHashMap();
-
-    preorder(root, null, depth, parent);
+    Map<Integer, Integer> depth = new HashMap<>();
+    Map<Integer, Node> parent = new HashMap<>();
+    dfs(root, null, depth, parent);
     boolean one = depth.get(a) == depth.get(b);
     boolean two = parent.get(a) != parent.get(b);
     return one && two;
   }
 
-  private static void preorder(Node root, Node parent, 
+  private static void dfs(Node root, Node parent, 
       Map<Integer, Integer> depth, Map<Integer, Node> map) {
-
     if (isNull(root)) {
       return;
     }
-
     int height = isNull(parent) ? 0 : 1 + depth.get(parent.data);
-
     depth.put(root.data, height);
     map.put(root.data, parent);
-    preorder(root.left, root, depth, map);
-    preorder(root.right, root, depth, map);
+    dfs(root.left, root, depth, map);
+    dfs(root.right, root, depth, map);
   }
 
   public static void main(String[] args) {
