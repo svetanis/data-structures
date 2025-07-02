@@ -2,9 +2,6 @@ package com.svetanis.datastructures.tree.binary.bt.connect;
 
 import static com.svetanis.datastructures.tree.binary.bt.connect.Node.newNode;
 
-import java.util.LinkedList;
-import java.util.Queue;
-
 // 116. Populating Next Right Pointers in Each Node
 // 117. Populating Next Right Pointers in Each Node I
 
@@ -14,32 +11,28 @@ import java.util.Queue;
 // The last node of each level 
 // should point to a null node.
 
-public final class ConnectSameLevelNodes {
+public final class ConnectSameLevelNodesMemoryOptimized {
 	// Time Complexity: O(n)
-	// Space Complexity: O(n)
+	// Space Complexity: O(1)
 
 	public static Node connect(Node root) {
-		if (root == null) {
-			return null;
-		}
-		Queue<Node> queue = new LinkedList<>();
-		queue.offer(root);
-		while (!queue.isEmpty()) {
-			Node prev = null;
-			int size = queue.size();
-			for (int i = 0; i < size; i++) {
-				Node curr = queue.poll();
-				if (prev != null) {
-					prev.next = curr;
-				}
-				prev = curr;
+		Node dummy = new Node(0);
+		Node curr = root;
+		while (curr != null) {
+			Node tail = dummy;
+			while (curr != null) {
 				if (curr.left != null) {
-					queue.offer(curr.left);
+					tail.next = curr.left;
+					tail = tail.next;
 				}
 				if (curr.right != null) {
-					queue.offer(curr.right);
+					tail.next = curr.right;
+					tail = tail.next;
 				}
+				curr = curr.next;
 			}
+			curr = dummy.next;
+			dummy.next = null;
 		}
 		return root;
 	}
