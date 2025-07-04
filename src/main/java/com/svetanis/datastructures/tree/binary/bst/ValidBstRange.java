@@ -4,6 +4,8 @@ import static com.svetanis.datastructures.tree.binary.model.mutable.primitive.No
 
 import com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node;
 
+// 98. Validate Binary Search Tree
+
 // given a Binary Tree (BT)
 // determine if it is a BST or not
 
@@ -22,22 +24,23 @@ import com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node;
 // subtree to make sure none of the nodes
 // in that subtree is lesser than then the parent
 
-public final class ValidBst {
+public final class ValidBstRange {
 	// Time complexity O(n);
 	// Space complexity: O(h)
 
 	public static boolean isValidBst(Node root) {
-		return isValidBst(root, Integer.MIN_VALUE, Integer.MAX_VALUE);
+		// return isValidBst(root, Integer.MIN_VALUE, Integer.MAX_VALUE);
+		return isValidBst(root, null, null);
 	}
 
-	private static boolean isValidBst(Node root, int min, int max) {
+	private static boolean isValidBst(Node root, Integer min, Integer max) {
 		// an empty tree is a BST
 		if (root == null) {
 			return true;
 		}
 		// false if this node violates
 		// the min/max constraint
-		if (root.data <= min || root.data >= max) {
+		if (min != null && root.data <= min || max != null && root.data >= max) {
 			return false;
 		}
 		// otherwise check the subtrees recursively,
