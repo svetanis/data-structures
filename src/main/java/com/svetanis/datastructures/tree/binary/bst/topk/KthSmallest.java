@@ -13,12 +13,11 @@ import com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node;
 // find k'th smallest element in BST
 
 public final class KthSmallest {
+	// Time Complexity : O(n) or O(k + h)
+	// Aux Space Complexity: O(h)
+	// Total Space Complexity: O(n)
 
 	public static Optional<Integer> kthSmallest(Node root, int k) {
-		// Time Complexity : O(n) or O(k + h)
-		// Aux Space Complexity: O(h)
-		// Total Space Complexity: O(n)
-
 		if (isNull(root)) {
 			return absent();
 		}

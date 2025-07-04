@@ -1,14 +1,13 @@
 package com.svetanis.datastructures.tree.binary.bst.topk;
 
-import static com.google.common.base.Optional.absent;
-import static com.google.common.base.Optional.of;
 import static com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node.newNode;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
 
-import com.google.common.base.Optional;
 import com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node;
+
+// 230. K-th Smallest BST
 
 // given a BST and and integer k,
 // find k'th smallest element in BST
@@ -21,23 +20,23 @@ import com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node;
 // becomes equal to k
 
 public final class KthSmallestIterative {
+	// Time complexity: O(h + k)
 
-	public static Optional<Integer> kthSmallest(Node root, int k) {
-		// Time complexity: O(h + k)
-		
-		Deque<Node> stack = new ArrayDeque<>();
-		while (root != null || !stack.isEmpty()) {
-			while (root != null) {
-				stack.push(root);
-				root = root.left;
+	public static int kthSmallest(Node root, int k) {
+		Node curr = root;
+		Deque<Node> dq = new ArrayDeque<>();
+		while (curr != null || !dq.isEmpty()) {
+			while (curr != null) {
+				dq.push(curr);
+				curr = curr.left;
 			}
-			root = stack.pop();
+			curr = dq.pop();
 			if (--k == 0) {
-				return of(root.data);
+				return curr.data;
 			}
-			root = root.right;
+			curr = curr.right;
 		}
-		return absent();
+		return -1;
 	}
 
 	public static void main(String[] args) {
