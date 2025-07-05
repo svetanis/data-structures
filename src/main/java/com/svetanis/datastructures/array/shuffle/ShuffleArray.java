@@ -1,10 +1,11 @@
 package com.svetanis.datastructures.array.shuffle;
 
 import static com.svetanis.java.base.utils.Print.print;
-import static com.svetanis.java.base.utils.Swap.swap;
-import static java.util.Arrays.copyOf;
 
+import java.util.Arrays;
 import java.util.Random;
+
+// 384. Shuffle an Array
 
 public final class ShuffleArray {
 
@@ -14,7 +15,7 @@ public final class ShuffleArray {
 
 	public ShuffleArray(int[] a) {
 		this.a = a;
-		this.original = copyOf(a, a.length);
+		this.original = Arrays.copyOf(a, a.length);
 		this.generator = new Random();
 	}
 
@@ -22,7 +23,6 @@ public final class ShuffleArray {
 		int n = a.length;
 		int start = 0;
 		int end = n - 1;
-
 		for (int i = end; i > start; --i) {
 			// pick a random index from 0 to i
 			int rand = generator.nextInt(i + 1);
@@ -33,8 +33,14 @@ public final class ShuffleArray {
 	}
 
 	public int[] reset() {
-		a = copyOf(original, original.length);
+		a = Arrays.copyOf(original, original.length);
 		return a;
+	}
+
+	private void swap(int[] a, int i, int j) {
+		int temp = a[i];
+		a[i] = a[j];
+		a[j] = temp;
 	}
 
 	public static void main(String[] args) {
