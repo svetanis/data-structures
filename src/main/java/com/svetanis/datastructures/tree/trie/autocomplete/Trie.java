@@ -1,4 +1,4 @@
-package com.svetanis.datastructures.tree.trie.count;
+package com.svetanis.datastructures.tree.trie.autocomplete;
 
 import java.util.Map;
 

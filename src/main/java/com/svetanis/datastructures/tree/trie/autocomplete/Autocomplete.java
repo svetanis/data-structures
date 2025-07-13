@@ -1,4 +1,4 @@
-package com.svetanis.datastructures.tree.trie.count;
+package com.svetanis.datastructures.tree.trie.autocomplete;
 
 import static com.google.common.collect.Lists.newArrayList;
 
@@ -29,31 +29,17 @@ public final class Autocomplete {
 		return total;
 	}
 
-	public static int autocompleteNode(List<String> words) {
-		TrieNode trie = new TrieNode();
-		int total = 0;
-		for (String word : words) {
-			trie.insert(word);
-			total += trie.query(word);
-		}
-		return total + 1;
-	}
-
 	public static void main(String[] args) {
 		List<String> list = newArrayList("hi", "hello", "bojack", "hills", "hill");
 		System.out.println(autocomplete(list)); // 11
-		System.out.println(autocompleteNode(list)); // 11
 
 		List<String> list2 = newArrayList("a", "aa", "aaa", "aaaa", "aaaaa");
 		System.out.println(autocomplete(list2)); // 15
-		System.out.println(autocompleteNode(list2)); // 15
 
 		List<String> list3 = newArrayList("to", "be", "or", "not", "two", "bee");
 		System.out.println(autocomplete(list3)); // 9
-		System.out.println(autocompleteNode(list3)); // 9
 
 		List<String> list4 = newArrayList("aaaaa", "aaaa", "aaa", "aa", "a");
 		System.out.println(autocomplete(list4)); // 11
-		System.out.println(autocompleteNode(list4)); // 11
 	}
 }
