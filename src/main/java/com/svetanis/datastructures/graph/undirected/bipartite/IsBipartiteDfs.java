@@ -2,32 +2,29 @@ package com.svetanis.datastructures.graph.undirected.bipartite;
 
 // 785. Is Graph Bipartite?
 
-public final class IsBipartite {
+public final class IsBipartiteDfs {
 	// Time Complexity: O(V + E)
 	// Space Complexity: O(V)
 
 	public static boolean isBipartite(int[][] g) {
 		int n = g.length;
-		boolean[] visited = new boolean[n + 1];
-		int[] colors = new int[n + 1];
+		int[] colors = new int[n];
 		for (int node = 0; node < n; node++) {
-			visited[node] = true;
-			if (colors[node] == 0 && !dfs(g, node, visited, colors)) {
+			if (colors[node] == 0 && !dfs(g, colors, node, 1)) {
 				return false;
 			}
 		}
 		return true;
 	}
 
-	private static boolean dfs(int[][] g, int src, boolean[] visited, int[] colors) {
-		for (int neighbor : g[src]) {
-			if (!visited[neighbor]) {
-				visited[neighbor] = true;
-				colors[neighbor] = 1 - colors[src];
-				if (!dfs(g, neighbor, visited, colors)) {
+	private static boolean dfs(int[][] g, int[] colors, int node, int color) {
+		colors[node] = color;
+		for (int neighbor : g[node]) {
+			if (colors[neighbor] == 0) {
+				if (!dfs(g, colors, neighbor, 3 - color)) {
 					return false;
 				}
-			} else if (colors[neighbor] == colors[src]) {
+			} else if (colors[neighbor] == color) {
 				return false;
 			}
 		}
