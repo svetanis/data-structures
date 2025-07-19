@@ -1,25 +1,30 @@
 package com.svetanis.datastructures.graph.dfs;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Deque;
 import java.util.List;
 
 // 1376. Time Needed to Inform All Employees
 
-public final class TimeToInformAllEmployees {
+public final class TimeToInformAllEmployeesBfs {
 	// Time Complexity: O(N)
 	// Space Complexity: O(N)
 
 	public static int totalTime(int n, int hid, int[] manager, int[] times) {
 		List<Integer>[] graph = graph(n, manager);
-		return dfs(graph, hid, times);
-	}
-
-	private static int dfs(List<Integer>[] g, int src, int[] times) {
+		Deque<int[]> dq = new ArrayDeque<>();
+		dq.offer(new int[] { hid, 0 });
 		int max = 0;
-		for (int eid : g[src]) {
-			int curr = times[src] + dfs(g, eid, times);
-			max = Math.max(max, curr);
+		while (!dq.isEmpty()) {
+			int[] curr = dq.poll();
+			int cid = curr[0];
+			int time = curr[1];
+			max = Math.max(max, time);
+			for (int eid : graph[cid]) {
+				dq.offer(new int[] { eid, time + times[cid] });
+			}
 		}
 		return max;
 	}

@@ -6,22 +6,26 @@ import java.util.List;
 
 // 1376. Time Needed to Inform All Employees
 
-public final class TimeToInformAllEmployees {
+public final class TimeToInformAllEmployeesTopDown {
 	// Time Complexity: O(N)
 	// Space Complexity: O(N)
 
 	public static int totalTime(int n, int hid, int[] manager, int[] times) {
 		List<Integer>[] graph = graph(n, manager);
-		return dfs(graph, hid, times);
+		Integer[] dp = new Integer[n];
+		return dfs(graph, hid, times, dp);
 	}
 
-	private static int dfs(List<Integer>[] g, int src, int[] times) {
+	private static int dfs(List<Integer>[] g, int src, int[] times, Integer[] dp) {
+		if (dp[src] != null) {
+			return dp[src];
+		}
 		int max = 0;
 		for (int eid : g[src]) {
-			int curr = times[src] + dfs(g, eid, times);
+			int curr = times[src] + dfs(g, eid, times, dp);
 			max = Math.max(max, curr);
 		}
-		return max;
+		return dp[src] = max;
 	}
 
 	private static List<Integer>[] graph(int n, int[] manager) {

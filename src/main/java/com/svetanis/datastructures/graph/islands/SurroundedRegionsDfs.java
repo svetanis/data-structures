@@ -4,7 +4,7 @@ import com.svetanis.java.base.utils.Print;
 
 // 130. Surrounded Regions
 
-public final class SurroundedRegions {
+public final class SurroundedRegionsDfs {
 	// Time complexity: O(r * c)
 	// Space Complexity: O(r * c)
 
