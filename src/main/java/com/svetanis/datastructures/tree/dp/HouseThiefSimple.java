@@ -11,26 +11,29 @@ import com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node;
 // If the root is robbed, 
 // its left and right can not be robbed. 
 
-public final class HouseThief {
+public final class HouseThiefSimple {
 	// Time Complexity: O(n)
 
 	public static int maxProfit(Node root) {
 		if (root == null) {
 			return 0;
 		}
-		Profit p = profit(root);
-		return max(p.incl, p.excl);
+		int[] profit = dfs(root);
+		return max(profit[0], profit[1]);
 	}
 
-	private static Profit profit(Node node) {
+	// [0] - max profit if node is robbed
+	// [1] - max profit if node is not robbed
+	private static int[] dfs(Node node) {
 		if (node == null) {
-			return new Profit(0, 0);
+			return new int[] {0, 0};
 		}
-		Profit left = profit(node.left);
-		Profit right = profit(node.right);
-		int incl = node.data + left.excl + right.excl;
-		int excl = max(left.excl, left.incl) + max(right.excl, right.incl);
-		return new Profit(incl, excl);
+		int[] left = dfs(node.left);
+		int[] right = dfs(node.right);
+		int[] profit = new int[2];
+		profit[0] = node.data + left[1] + right[1];
+		profit[1] = max(left[0], left[1]) + max(right[0], right[1]);
+		return profit;
 	}
 
 	public static void main(String[] args) {
@@ -50,15 +53,5 @@ public final class HouseThief {
 		root2.right.right = newNode(1);
 		System.out.println(maxProfit(root2)); // 9
 
-	}
-
-	private static class Profit {
-		int incl;
-		int excl;
-
-		public Profit(int incl, int excl) {
-			this.incl = incl;
-			this.excl = excl;
-		}
 	}
 }

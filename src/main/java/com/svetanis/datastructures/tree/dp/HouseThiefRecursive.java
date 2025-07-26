@@ -1,7 +1,6 @@
 package com.svetanis.datastructures.tree.dp;
 
 import static com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node.newNode;
-import static java.lang.Math.max;
 
 import com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node;
 
@@ -11,26 +10,31 @@ import com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node;
 // If the root is robbed, 
 // its left and right can not be robbed. 
 
-public final class HouseThief {
-	// Time Complexity: O(n)
+public final class HouseThiefRecursive {
+	// Time Complexity: O(2^n)
 
 	public static int maxProfit(Node root) {
 		if (root == null) {
 			return 0;
 		}
-		Profit p = profit(root);
-		return max(p.incl, p.excl);
+		return dfs(root);
 	}
 
-	private static Profit profit(Node node) {
+	private static int dfs(Node node) {
 		if (node == null) {
-			return new Profit(0, 0);
+			return 0;
 		}
-		Profit left = profit(node.left);
-		Profit right = profit(node.right);
-		int incl = node.data + left.excl + right.excl;
-		int excl = max(left.excl, left.incl) + max(right.excl, right.incl);
-		return new Profit(incl, excl);
+		// 1. rot this house + grandchildren
+		int profit = node.data;
+		if (node.left != null) {
+			profit += dfs(node.left.left) + dfs(node.left.right);
+		}
+		if (node.right != null) {
+			profit += dfs(node.right.left) + dfs(node.right.right);
+		}
+		// 2. don't rob this house, go to his children
+		int noRobbing = dfs(node.left) + dfs(node.right);
+		return Math.max(profit, noRobbing);
 	}
 
 	public static void main(String[] args) {
@@ -49,16 +53,5 @@ public final class HouseThief {
 		root2.right = newNode(5);
 		root2.right.right = newNode(1);
 		System.out.println(maxProfit(root2)); // 9
-
-	}
-
-	private static class Profit {
-		int incl;
-		int excl;
-
-		public Profit(int incl, int excl) {
-			this.incl = incl;
-			this.excl = excl;
-		}
 	}
 }
