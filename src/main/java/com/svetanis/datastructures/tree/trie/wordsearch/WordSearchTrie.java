@@ -1,23 +1,22 @@
-package com.svetanis.datastructures.tree.trie;
+package com.svetanis.datastructures.tree.trie.wordsearch;
 
 import java.util.ArrayList;
 import java.util.List;
 
 // 212. Word Search II
-// com.svetanis.datastructures.tree.trie.WordSearchBoard
 
-public final class WordSearch212 {
+public final class WordSearchTrie {
 
   private static final int[] dx = { 0, 1, 0, -1 };
   private static final int[] dy = { 1, 0, -1, 0 };
 
   public static List<String> search(char[][] board, String[] words) {
-    int n = board.length;
-    int m = board[0].length;
+    int rows = board.length;
+    int cols = board[0].length;
     Trie trie = init(words);
     List<String> list = new ArrayList<>();
-    for (int row = 0; row < n; row++) {
-      for (int col = 0; col < m; col++) {
+    for (int row = 0; row < rows; row++) {
+      for (int col = 0; col < cols; col++) {
         dfs(board, words, row, col, trie, list);
       }
     }

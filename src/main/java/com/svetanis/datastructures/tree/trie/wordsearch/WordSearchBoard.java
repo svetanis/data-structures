@@ -1,4 +1,4 @@
-package com.svetanis.datastructures.tree.trie;
+package com.svetanis.datastructures.tree.trie.wordsearch;
 
 import static com.svetanis.java.base.collect.Lists.newList;
 
@@ -7,6 +7,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.svetanis.datastructures.tree.trie.Trie;
 import com.svetanis.java.base.utils.Print;
 
 public final class WordSearchBoard {
