@@ -1,4 +1,4 @@
-package com.svetanis.datastructures.tree.trie.autocomplete;
+package com.svetanis.datastructures.tree.trie.suggestedsystem;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -8,7 +8,7 @@ import com.svetanis.java.base.utils.Print;
 
 // 1268. Search Suggested System
 
-public final class SuggestedSystem {
+public final class SuggestedSystemTrie {
 
   public List<List<String>> suggestedProducts(String[] products, String word) {
     Arrays.sort(products);
@@ -34,11 +34,11 @@ public final class SuggestedSystem {
 
   public static void main(String[] args) {
     String[] products1 = { "mobile", "mouse", "moneypot", "monitor", "mousepad" };
-    SuggestedSystem wd = new SuggestedSystem();
+    SuggestedSystemTrie wd = new SuggestedSystemTrie();
     Print.print(wd.suggestedProducts(products1, "mouse"));
 
     String[] products2 = { "havana" };
-    SuggestedSystem wd2 = new SuggestedSystem();
+    SuggestedSystemTrie wd2 = new SuggestedSystemTrie();
     Print.print(wd2.suggestedProducts(products2, "havana"));
   }
 
