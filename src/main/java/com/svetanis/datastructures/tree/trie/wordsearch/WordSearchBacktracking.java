@@ -32,7 +32,8 @@ public final class WordSearchBacktracking {
 		return false;
 	}
 
-	private static boolean dfs(char[][] board, String word, int row, int col, int index) {
+	private static boolean dfs(char[][] board, String word, 
+			int row, int col, int index) {
 		if (index == word.length()) {
 			return true;
 		}
