@@ -1,50 +1,59 @@
 package com.svetanis.datastructures.tree.binary.bt.dfs;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 import com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node;
 
 // 863. All Nodes Distance K in Binary Tree
 
-public final class AllNodesDistanceKDfs {
+public final class AllNodesDistanceK {
 	// Time Complexity: O(n)
 	// Space Complexity: O(n)
 
 	public static List<Integer> nodesDistK(Node root, Node target, int k) {
-		Map<Node, Node> map = new HashMap<>();
-		parents(root, null, map);
-		Set<Integer> visited = new HashSet<>();
 		List<Integer> list = new ArrayList<>();
-		dfs(target, k, visited, list, map);
+		dfs(root, target, k, list);
 		return list;
 	}
 
-	private static void dfs(Node node, int k, Set<Integer> visited, List<Integer> list, Map<Node, Node> map) {
-		if (node == null || visited.contains(node.data)) {
+	private static int dfs(Node node, Node target, int k, List<Integer> list) {
+		if (node == null) {
+			return -1;
+		}
+		if (node == target) {
+			kDown(node, k, list);
+			return 1;
+		}
+		int left = dfs(node.left, target, k, list);
+		if (left != -1) {
+			if (left == k) {
+				list.add(node.data);
+			}
+			kDown(node.right, k - left - 1, list);
+			return left + 1;
+		}
+		int right = dfs(node.right, target, k, list);
+		if (right != -1) {
+			if (right == k) {
+				list.add(node.data);
+			}
+			kDown(node.left, k - right - 1, list);
+			return right + 1;
+		}
+		return -1;
+	}
+
+	private static void kDown(Node node, int dist, List<Integer> list) {
+		if (node == null || dist < 0) {
 			return;
 		}
-		visited.add(node.data);
-		if (k == 0) {
+		if (dist == 0) {
 			list.add(node.data);
 			return;
 		}
-		dfs(node.left, k - 1, visited, list, map);
-		dfs(node.right, k - 1, visited, list, map);
-		dfs(map.get(node), k - 1, visited, list, map);
-	}
-
-	private static void parents(Node root, Node parent, Map<Node, Node> map) {
-		if (root == null) {
-			return;
-		}
-		map.put(root, parent);
-		parents(root.left, root, map);
-		parents(root.right, root, map);
+		kDown(node.left, dist - 1, list);
+		kDown(node.right, dist - 1, list);
 	}
 
 	public static void main(String[] args) {
