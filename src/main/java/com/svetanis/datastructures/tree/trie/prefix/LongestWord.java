@@ -1,4 +1,4 @@
-package com.svetanis.datastructures.tree.trie;
+package com.svetanis.datastructures.tree.trie.prefix;
 
 // 720. Longest Word in Dictionary
 

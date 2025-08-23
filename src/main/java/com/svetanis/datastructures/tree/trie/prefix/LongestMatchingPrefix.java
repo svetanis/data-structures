@@ -1,4 +1,4 @@
-package com.svetanis.datastructures.tree.trie;
+package com.svetanis.datastructures.tree.trie.prefix;
 
 import static com.google.common.base.Optional.absent;
 import static com.google.common.base.Optional.of;

@@ -44,6 +44,29 @@ public final class Trie3 {
 		return true;
 	}
 
+	public void delete(String word) {
+		Node node = root;
+		dfs(node, word, 0);
+	}
+
+	private boolean dfs(Node node, String word, int index) {
+		if (index == word.length()) {
+			node.isEndOfWord = false;
+			return node.children.isEmpty();
+		}
+
+		char c = word.charAt(index);
+		Node child = node.children.get(c);
+		if (child == null) {
+			return false;
+		}
+		boolean shouldDeleteChild = dfs(child, word, index + 1);
+		if (shouldDeleteChild) {
+			node.children.remove(c);
+		}
+		return !node.isEndOfWord && node.children.isEmpty();
+	}
+
 	public static void main(String[] args) {
 		Trie3 trie = new Trie3();
 		trie.insert("apple");
