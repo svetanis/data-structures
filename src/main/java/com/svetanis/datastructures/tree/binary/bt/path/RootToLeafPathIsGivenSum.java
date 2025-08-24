@@ -20,18 +20,27 @@ public final class RootToLeafPathIsGivenSum {
 		if (root == null) {
 			return false;
 		}
+		if (isLeaf(root)) {
+			return target == root.data;
+		}
+		target -= root.data;
+		boolean left = hasPath(root.left, target);
+		boolean right = hasPath(root.right, target);
+		return left || right;
+	}
+
+	public static boolean hasPath1(Node root, int target) {
+		if (root == null) {
+			return false;
+		}
 		int sum = target - root.data;
 		// if we reach a leaf node and
 		// sum becomes 0 then return true
 		if (sum == 0 && isLeaf(root)) {
 			return true;
 		}
-		// recursively call to traverse
-		// the left and right sub-tree
 		boolean left = hasPath(root.left, sum);
 		boolean right = hasPath(root.right, sum);
-		// return true if any of the two
-		// recursive call return true
 		return left || right;
 	}
 
@@ -44,12 +53,8 @@ public final class RootToLeafPathIsGivenSum {
 		if (root.data == sum && isLeaf(root)) {
 			return true;
 		}
-		// recursively call to traverse
-		// the left and right sub-tree
 		boolean left = hasPath(root.left, sum - root.data);
 		boolean right = hasPath(root.right, sum - root.data);
-		// return true if any of the two
-		// recursive call return true
 		return left || right;
 	}
 
