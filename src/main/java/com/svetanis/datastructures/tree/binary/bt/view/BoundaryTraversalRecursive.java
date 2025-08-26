@@ -13,6 +13,8 @@ import java.util.List;
 import com.google.common.collect.ImmutableList;
 import com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node;
 
+// 545. Boundary of Binary Tree
+
 // given a BT, return an array containing
 // all the boundary nodes of the tree in  
 // an anti-clockwise direction. 
@@ -122,7 +124,7 @@ public final class BoundaryTraversalRecursive {
 		root3.right = newNode(1);
 		root3.right.left = newNode(10);
 		root3.right.right = newNode(5);
-		print(boundary(root3)); // 12, 1, 10, 5
+		print(boundary(root3)); // 12, 10, 5, 1
 		System.out.println();
 	}
 }
