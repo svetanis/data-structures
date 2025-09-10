@@ -1,4 +1,4 @@
-package com.svetanis.datastructures.tree.binary.bt.dimention;
+package com.svetanis.datastructures.tree.binary.bt.dimension;
 
 import static com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node.newNode;
 import static com.svetanis.datastructures.tree.binary.model.mutable.primitive.Nodes.height;

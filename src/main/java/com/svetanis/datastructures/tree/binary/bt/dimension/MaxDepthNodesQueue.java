@@ -1,4 +1,4 @@
-package com.svetanis.datastructures.tree.binary.bt.dimention;
+package com.svetanis.datastructures.tree.binary.bt.dimension;
 
 import static com.google.common.collect.Lists.newLinkedList;
 import static com.svetanis.datastructures.tree.binary.model.mutable.primitive.Nodes.isNotNull;
