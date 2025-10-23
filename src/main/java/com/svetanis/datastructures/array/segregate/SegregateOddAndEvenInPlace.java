@@ -3,7 +3,11 @@ package com.svetanis.datastructures.array.segregate;
 import static com.svetanis.java.base.utils.Nums.isEven;
 import static com.svetanis.java.base.utils.Nums.isOdd;
 import static com.svetanis.java.base.utils.Print.print;
-import static com.svetanis.java.base.utils.Swap.swap;
+
+import java.util.Arrays;
+import java.util.List;
+
+import com.svetanis.java.base.utils.Swap;
 
 // given an unsorted array 
 // segregate even and odd numbers
@@ -27,12 +31,43 @@ public final class SegregateOddAndEvenInPlace {
       }
 
       if (left < right) {
-        swap(a, left, right);
+        Swap.swap(a, left, right);
         left++;
         right--;
       }
     }
   }
+
+  public static List<Integer> segregate(List<Integer> list) {
+    // Time Complexity: O(n)
+
+    int left = 0;
+    int right = list.size() - 1;
+
+    while (left < right) {
+
+      while (isEven(list.get(left)) && left < right) {
+        left++;
+      }
+
+      while (isOdd(list.get(right)) && left < right) {
+        right--;
+      }
+
+      if (left < right) {
+        swap(left, right, list);
+        left++;
+        right--;
+      }
+    }
+    return list;
+  }
+  
+  private static void swap(int i, int j, List<Integer> list){
+    int temp = list.get(i);
+    list.set(i, list.get(j));
+    list.set(j, temp);
+}
 
   public static void main(String[] args) {
     //int[] a = { 12, 34, 45, 9, 8, 90, 3 };
@@ -43,5 +78,8 @@ public final class SegregateOddAndEvenInPlace {
     int[] a1 = {4, 9, 5, 2, 9, 5, 7, 10};
     segregate(a1);
     print(a1);
+
+    System.out.println(segregate(Arrays.asList(4, 9, 5, 2, 9, 5, 7, 10)));
+    
   }
 }
