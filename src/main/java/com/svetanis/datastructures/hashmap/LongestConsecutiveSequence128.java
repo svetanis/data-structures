@@ -1,5 +1,6 @@
 package com.svetanis.datastructures.hashmap;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -10,6 +11,26 @@ public final class LongestConsecutiveSequence128 {
 	// Space Complexity: O(n)
 
 	public static int lcs(int[] a) {
+		Set<Integer> set = new HashSet<>();
+		for (int element : a) {
+			set.add(element);
+		}
+		int max = 0;
+		for (int num : set) {
+			if (!set.contains(num - 1)) {
+				int count = 1;
+				int curr = num;
+				while (set.contains(curr + 1)) {
+					curr++;
+					count++;
+				}
+				max = Math.max(max, count);
+			}
+		}
+		return max;
+	}
+
+	public static int lcs2(int[] a) {
 		Set<Integer> set = new HashSet<>();
 		for (int element : a) {
 			set.add(element);
@@ -26,6 +47,27 @@ public final class LongestConsecutiveSequence128 {
 				}
 				max = Math.max(max, count);
 			}
+		}
+		return max;
+	}
+
+	public static int lcsSort(int[] a) {
+		if (a.length == 0) {
+			return 0;
+		}
+		Arrays.sort(a);
+		int len = 1;
+		int max = 1;
+		for (int i = 1; i < a.length; i++) {
+			if (a[i] == a[i - 1]) {
+				continue;
+			}
+			if (a[i] == a[i - 1] + 1) {
+				len++;
+			} else {
+				len = 1;
+			}
+			max = Math.max(max, len);
 		}
 		return max;
 	}
