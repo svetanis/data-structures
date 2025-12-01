@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 // 1485. Clone BT With Random Pointer
-// com.svetanis.datastructures.tree.binary.bt.CloneBTRandomNode
 
 public final class CloneBTRandomNode1485 {
 

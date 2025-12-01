@@ -5,10 +5,10 @@ import static com.svetanis.java.base.utils.Print.print;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
-import java.util.TreeMap;
 
 import com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node;
 
@@ -28,27 +28,30 @@ public final class VerticalOrderSubmit {
 		if (root == null) {
 			return new ArrayList<>();
 		}
-		Map<Integer, List<Integer>> map = new TreeMap<>();
+		Map<Integer, List<Integer>> map = new HashMap<>();
 		Queue<Pair> queue = new ArrayDeque<>();
 		queue.offer(new Pair(root, 0));
+		int maxDist = 0, minDist = 0;
 		while (!queue.isEmpty()) {
 			Pair pair = queue.poll();
 			int dist = pair.dist;
 			Node node = pair.node;
-			List<Integer> list = map.getOrDefault(dist, new ArrayList<>());
-			list.add(node.data);
-			map.put(dist, list);
-			// in a single line:
-			// map.computeIfAbsent(dist, k -> new ArrayList<>()).add(node.data);
+			map.computeIfAbsent(dist, k -> new ArrayList<>()).add(node.data);
 			if (node.left != null) {
 				queue.offer(new Pair(node.left, dist - 1));
 			}
 			if (node.right != null) {
 				queue.offer(new Pair(node.right, dist + 1));
 			}
+			maxDist = Math.max(maxDist, dist);
+			minDist = Math.min(minDist, dist);
 		}
 		List<List<Integer>> lists = new ArrayList<>();
-		lists.addAll(map.values());
+		for (int i = minDist; i <= maxDist; i++) {
+			if (map.containsKey(i)) {
+				lists.add(map.get(i));
+			}
+		}
 		return lists;
 	}
 
