@@ -1,18 +1,13 @@
 package com.svetanis.datastructures.graph.directed.ts.alient;
 
-import static com.google.common.base.Optional.absent;
-import static com.google.common.base.Optional.of;
-import static com.google.common.collect.Lists.newArrayList;
-import static com.google.common.collect.Lists.newLinkedList;
-import static com.google.common.collect.Maps.filterValues;
-import static com.google.common.collect.Maps.newHashMap;
-import static java.lang.Math.min;
-
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 
-import com.google.common.base.Optional;
+// 269. Alien Dictionary
 
 // there is a dictionary containing words
 // from an alien language for which we 
@@ -25,7 +20,7 @@ import com.google.common.base.Optional;
 public final class AlienDictionary {
 	// Time Complexity: O(V + E)
 
-	public static Optional<String> ado(String[] words) {
+	public static String ado(String[] words) {
 		Map<Character, Integer> inDegree = inDegreeInit(words);
 		Map<Character, List<Character>> graph = graphInit(words);
 		buildGraph(words, inDegree, graph);
@@ -47,16 +42,19 @@ public final class AlienDictionary {
 		// then there is a cyclic dependency between chars
 		// therefore it will not be possible to find the ordering
 		if (sb.length() != inDegree.size()) {
-			return absent();
+			return "";
 		}
-		return of(sb.toString());
+		return sb.toString();
 	}
 
 	private static Queue<Character> sources(Map<Character, Integer> map) {
-		Queue<Character> queue = newLinkedList();
+		Queue<Character> queue = new LinkedList<>();
 		// all vertices with 0 in-degree
-		Map<Character, Integer> filtered = filterValues(map, v -> v == 0);
-		queue.addAll(filtered.keySet());
+		for(char c : map.keySet()) {
+			if(map.get(c) == 0) {
+				queue.add(c);
+			}
+		}
 		return queue;
 	}
 
@@ -67,7 +65,7 @@ public final class AlienDictionary {
 			// from adjacent words
 			String w1 = words[i];
 			String w2 = words[i + 1];
-			for (int j = 0; j < min(w1.length(), w2.length()); j++) {
+			for (int j = 0; j < Math.min(w1.length(), w2.length()); j++) {
 				char parent = w1.charAt(j);
 				char child = w2.charAt(j);
 				// if the two chars are different
@@ -86,7 +84,7 @@ public final class AlienDictionary {
 	}
 
 	private static Map<Character, Integer> inDegreeInit(String[] words) {
-		Map<Character, Integer> map = newHashMap();
+		Map<Character, Integer> map = new HashMap<>();
 		for (String s : words) {
 			for (char c : s.toCharArray()) {
 				map.put(c, 0);
@@ -96,10 +94,10 @@ public final class AlienDictionary {
 	}
 
 	private static Map<Character, List<Character>> graphInit(String[] words) {
-		Map<Character, List<Character>> map = newHashMap();
+		Map<Character, List<Character>> map = new HashMap<>();
 		for (String word : words) {
 			for (char c : word.toCharArray()) {
-				map.put(c, newArrayList());
+				map.put(c, new ArrayList<>());
 			}
 		}
 		return map;

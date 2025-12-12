@@ -1,7 +1,5 @@
 package com.svetanis.datastructures.graph.directed.ts.alient;
 
-import static java.util.Arrays.asList;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -25,10 +23,12 @@ import java.util.Queue;
 // There may be multiple valid orders. If that's the case, return the smallest 
 // in normal lexicographical order.
 
+//269. Alien Dictionary
+
 public final class AlienOrderSubmit {
 	// Time Complexity: O(V + E)
-
-	public static String ado(List<String> words) {
+// not correct
+	public static String ado(String[] words) {
 		Map<Character, List<Character>> graph = graph(words);
 		Map<Character, Integer> inDegree = inDegree(graph);
 		StringBuilder sb = new StringBuilder();
@@ -47,7 +47,7 @@ public final class AlienOrderSubmit {
 		// if topological ordering doesn't contain all chars
 		// then there is a cyclic dependency between chars
 		// therefore it will not be possible to find the ordering
-		if (sb.length() != inDegree.size()) {
+		if (sb.length() < inDegree.size()) {
 			return "";
 		}
 		return sb.toString();
@@ -82,11 +82,11 @@ public final class AlienOrderSubmit {
 		return map;
 	}
 
-	private static Map<Character, List<Character>> graph(List<String> words) {
+	private static Map<Character, List<Character>> graph(String[] words) {
 		Map<Character, List<Character>> map = graphInit(words);
-		for (int i = 0; i < words.size() - 1; i++) {
-			String w1 = words.get(i);
-			String w2 = words.get(i + 1);
+		for (int i = 0; i < words.length - 1; i++) {
+			String w1 = words[i];
+			String w2 = words[i + 1];
 			for (int j = 0; j < Math.min(w1.length(), w2.length()); j++) {
 				char parent = w1.charAt(j);
 				char child = w2.charAt(j);
@@ -99,7 +99,7 @@ public final class AlienOrderSubmit {
 		return map;
 	}
 
-	private static Map<Character, List<Character>> graphInit(List<String> words) {
+	private static Map<Character, List<Character>> graphInit(String[] words) {
 		Map<Character, List<Character>> map = new HashMap<>();
 		for (String word : words) {
 			for (char c : word.toCharArray()) {
@@ -110,13 +110,16 @@ public final class AlienOrderSubmit {
 	}
 
 	public static void main(String[] args) {
-		System.out.println(ado(asList("wrt", "wrf", "er", "ett", "rftt"))); // wertf
-		System.out.println(ado(asList("z", "x"))); // zx
-		System.out.println(ado(asList("she", "sell", "seashell", "seashore", "seahorse", "on", "a"))); // lnrsheoa
-		System.out.println(ado(asList("stdlib", "stl", "scanf", "sscanf", "printf"))); // abdfilnrtcsp
-		System.out.println(
-				ado(asList("neat", "net", "nest", "ante", "one", "oil", "innit", "ian", "isotope", "rat", "reer", "rest"))); // lnaeoiprts
-		System.out.println(
-				ado(asList("da", "la", "na", "fa", "fei", "jia", "ha", "hai", "hang", "hua", "ta", "sha", "shi", "si", "ba"))); // ""
+		System.out.println(ado(new String[] { "wrt", "wrf", "er", "ett", "rftt" })); // wertf
+		System.out.println(ado(new String[] { "z", "x" })); // zx
+		System.out.println(ado(new String[] { "z", "x", "z" })); // ""
+		
+		
+		System.out.println(ado(new String[] { "she", "sell", "seashell", "seashore", "seahorse", "on", "a" })); // lnrsheoa
+		System.out.println(ado(new String[] { "stdlib", "stl", "scanf", "sscanf", "printf" })); // abdfilnrtcsp
+		System.out.println(ado(new String[] { "neat", "net", "nest", "ante", "one", "oil", "innit", "ian", "isotope", "rat",
+				"reer", "rest" })); // lnaeoiprts
+		System.out.println(ado(new String[] { "da", "la", "na", "fa", "fei", "jia", "ha", "hai", "hang", "hua", "ta", "sha",
+				"shi", "si", "ba" })); // ""
 	}
 }
