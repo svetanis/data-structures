@@ -2,7 +2,7 @@ package com.svetanis.datastructures.graph.bfs.grid;
 
 import java.util.ArrayDeque;
 import java.util.Arrays;
-import java.util.Queue;
+import java.util.Deque;
 
 // 505. The Maze II
 
@@ -25,21 +25,24 @@ public final class MazeII {
 			Arrays.fill(row, INF);
 		}
 		dist[srcX][srcY] = 0;
-		Queue<int[]> queue = new ArrayDeque<>();
+		Deque<int[]> queue = new ArrayDeque<>();
 		queue.offer(src);
 		while (!queue.isEmpty()) {
 			int[] position = queue.poll();
 			int x = position[0];
 			int y = position[1];
 			for (int k = 0; k < dx.length; k++) {
-				int row = x + dx[k];
-				int col = y + dy[k];
-				if (safe(g, row, col)) {
+				int row = x;
+				int col = y;
+				int count = dist[row][col];
+				while (safe(g, row + dx[k], col + dy[k])) {
+					row += dx[k];
+					col += dy[k];
+					count += 1;
+				}
+				if (count < dist[row][col]) {
+					dist[row][col] = count;
 					queue.offer(new int[] { row, col });
-					dist[row][col] = dist[x][y] + 1;
-					if (row == dstX && col == dstY) {
-						return dist[row][col];
-					}
 				}
 			}
 		}
@@ -53,9 +56,14 @@ public final class MazeII {
 	}
 
 	public static void main(String[] args) {
-		int[] src = { 0, 0 };
-		int[] dst = { 4, 4 };
-		int[][] m1 = { { 0, 0, 1, 0, 0 }, { 0, 0, 0, 0, 0 }, { 0, 1, 0, 1, 0 }, { 1, 1, 0, 1, 1 }, { 0, 0, 0, 0, 0 } };
-		System.out.println(shortestPath(m1, src, dst)); // 8
+		int[][] m2 = { { 0, 0, 1, 0, 0 }, { 0, 0, 0, 0, 0 }, { 0, 0, 0, 1, 0 }, { 1, 1, 0, 1, 1 }, { 0, 0, 0, 0, 0 } };
+		System.out.println(shortestPath(m2, new int[] { 0, 4 }, new int[] { 4, 4 })); // 12
+
+		int[][] m3 = { { 0, 0, 1, 0, 0 }, { 0, 0, 0, 0, 0 }, { 0, 0, 0, 1, 0 }, { 1, 1, 0, 1, 1 }, { 0, 0, 0, 0, 0 } };
+		System.out.println(shortestPath(m3, new int[] { 0, 4 }, new int[] { 3, 2 })); // -1
+
+		int[][] m4 = { { 0, 0, 0, 0, 0 }, { 1, 1, 0, 0, 1 }, { 0, 0, 0, 0, 0 }, { 0, 1, 0, 0, 1 }, { 0, 1, 0, 0, 0 } };
+		System.out.println(shortestPath(m4, new int[] { 4, 3 }, new int[] { 0, 1 })); // -1
+
 	}
 }
