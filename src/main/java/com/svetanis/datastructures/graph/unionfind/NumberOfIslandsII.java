@@ -32,7 +32,7 @@ public final class NumberOfIslandsII {
 			int j = position[1];
 			int index = i * n + j; // flatten 2D position to 1D
 			if (grid[i][j] == 1) {
-				count++;
+				list.add(count);
 				continue;
 			}
 			grid[i][j] = 1;
@@ -78,8 +78,11 @@ public final class NumberOfIslandsII {
 
 	public static void main(String[] args) {
 		NumberOfIslandsII mli = new NumberOfIslandsII();
-		int[][] g1 = { { 0, 0 }, { 0, 1 }, { 1, 1 }, { 2, 2 } };
-		System.out.println(mli.numOfIslands(3, 3, g1)); // 1,1,1,2
+		int[][] g0 = { { 0, 0 }, { 0, 1 }, { 1, 1 }, { 2, 2 } };
+		System.out.println(mli.numOfIslands(3, 3, g0)); // 1,1,1,2
+
+		int[][] g1 = { { 0, 0 }, { 0, 1 }, { 1, 2 }, { 2, 1 } };
+		System.out.println(mli.numOfIslands(3, 3, g1)); // 1,1,2,3
 
 		int[][] g2 = { { 0, 0 } };
 		System.out.println(mli.numOfIslands(1, 1, g2)); // 1
