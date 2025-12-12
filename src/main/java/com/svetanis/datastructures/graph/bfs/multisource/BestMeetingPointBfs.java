@@ -1,21 +1,14 @@
 package com.svetanis.datastructures.graph.bfs.multisource;
 
-import static com.google.common.collect.Lists.newArrayList;
-import static com.google.common.collect.Maps.newHashMap;
-import static com.google.common.collect.Sets.newHashSet;
-import static java.lang.Math.min;
-import static java.util.Arrays.asList;
-
 import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Deque;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Queue;
 import java.util.Set;
 
-import com.svetanis.datastructures.graph.Coordinate;
-
-// 296. Best Meeting Point
 // given an n x m 2D binary grid 
 // where each cell in the grid can
 // either contain 1 (which represents
@@ -39,6 +32,8 @@ import com.svetanis.datastructures.graph.Coordinate;
 // the optimal meeting point that minimizes
 // the total travel distance for all friends.
 
+// 296. Best Meeting Point
+
 public final class BestMeetingPointBfs {
 	// Time complexity: O(r * c)
 	// Space Complexity: O(r + c)
@@ -47,69 +42,79 @@ public final class BestMeetingPointBfs {
 	private static int[] dx = { -1, 0, 0, 1 };
 	private static int[] dy = { 0, -1, 1, 0 };
 
-	public static int bmp(List<List<Integer>> grid) {
+	private int rows;
+	private int cols;
+	private int[][] grid;
+
+	public int bmp(int[][] grid) {
 		int min = Integer.MAX_VALUE;
-		int n = grid.size();
-		int m = grid.get(0).size();
-		for (int r = 0; r < n; r++) {
-			for (int c = 0; c < m; c++) {
-				Coordinate src = new Coordinate(r, c);
-				min = min(min, bfs(src, grid));
+		this.rows = grid.length;
+		this.cols = grid[0].length;
+		this.grid = grid;
+		for (int r = 0; r < rows; r++) {
+			for (int c = 0; c < cols; c++) {
+				min = Math.min(min, bfs(new int[] { r, c }));
 			}
 		}
 		return min;
 	}
 
-	private static int bfs(Coordinate src, List<List<Integer>> grid) {
-		Set<Coordinate> set = newHashSet();
-		Queue<Coordinate> queue = new ArrayDeque<>();
-		Map<Coordinate, Integer> map = newHashMap();
+	private int bfs(int[] src) {
+		String key = src[0] + "_" + src[1];
+		Set<String> set = new HashSet<>();
+		Deque<int[]> queue = new ArrayDeque<>();
+		Map<String, Integer> map = new HashMap<>();
 		queue.add(src);
-		map.put(src, 0);
+		map.put(key, 0);
+		set.add(key);
 		int total = 0;
 		while (!queue.isEmpty()) {
-			Coordinate curr = queue.poll();
-			int dist = map.get(curr);
-			if (grid.get(curr.getRow()).get(curr.getCol()) == 1) {
+			int[] curr = queue.poll();
+			int x = curr[0], y = curr[1];
+			String currKey = x + "_" + y;
+			int dist = map.get(currKey);
+			if (grid[x][y] == 1) {
 				total += dist;
 			}
-			List<Coordinate> neighbors = neighbors(curr, grid);
-			for (Coordinate neighbor : neighbors) {
-				if (!set.contains(neighbor)) {
-					queue.add(neighbor);
-					map.put(neighbor, dist + 1);
+			List<int[]> neighbors = neighbors(curr);
+			for (int[] next : neighbors) {
+				String nextKey = next[0] + "_" + next[1];
+				if (!set.contains(nextKey)) {
+					queue.add(next);
+					map.put(nextKey, dist + 1);
 				}
-				set.add(neighbor);
+				set.add(nextKey);
 			}
 		}
 		return total;
 	}
 
-	private static List<Coordinate> neighbors(Coordinate src, List<List<Integer>> grid) {
-		List<Coordinate> list = new ArrayList<>();
+	private List<int[]> neighbors(int[] src) {
+		List<int[]> list = new ArrayList<>();
 		// considers only the neighbors as adjacent vertices
 		// and recur for all connected neighbors
 		for (int dist = 0; dist < dx.length; ++dist) {
-			int x = src.getRow() + dx[dist];
-			int y = src.getCol() + dy[dist];
-			if (valid(grid, x, y)) {
-				list.add(new Coordinate(x, y));
+			int x = src[0] + dx[dist];
+			int y = src[1] + dy[dist];
+			if (valid(x, y)) {
+				list.add(new int[] { x, y });
 			}
 		}
 		return list;
 	}
 
-	private static boolean valid(List<List<Integer>> grid, int row, int col) {
-		boolean one = row >= 0 && row < grid.size(); // row number is in range
-		boolean two = col >= 0 && col < grid.get(0).size(); // col number is in range
+	private boolean valid(int row, int col) {
+		boolean one = row >= 0 && row < rows; // row number is in range
+		boolean two = col >= 0 && col < cols; // col number is in range
 		return one && two;
 	}
 
 	public static void main(String[] args) {
-		List<List<Integer>> grid1 = newArrayList();
-		grid1.add(asList(1, 0, 0, 0, 1));
-		grid1.add(asList(0, 0, 0, 0, 0));
-		grid1.add(asList(0, 0, 1, 0, 0));
-		System.out.println(bmp(grid1)); // 6 point (0,2)
+		BestMeetingPointBfs bmp = new BestMeetingPointBfs();
+		int[][] grid = { { 1, 0, 0, 0, 1 }, { 0, 0, 0, 0, 0 }, { 0, 0, 1, 0, 0 } };
+		System.out.println(bmp.bmp(grid)); // 6 point (0,2)
+
+		int[][] grid1 = { { 1, 1 } };
+		System.out.println(bmp.bmp(grid1)); // 1
 	}
 }
