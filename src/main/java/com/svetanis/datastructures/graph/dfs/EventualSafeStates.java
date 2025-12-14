@@ -9,7 +9,7 @@ public final class EventualSafeStates {
 	// Time Complexity: O(N + E)
 	// Space Complexity: O(N)
 
-	public static List<Integer> countProvinces(int[][] grid) {
+	public static List<Integer> safeStates(int[][] grid) {
 		int n = grid.length;
 		int[] colors = new int[n];
 		List<Integer> list = new ArrayList<>();
@@ -41,8 +41,8 @@ public final class EventualSafeStates {
 
 	public static void main(String[] args) {
 		int[][] g1 = { { 1, 2 }, { 2, 3 }, { 5 }, { 0 }, { 5 }, {}, {} };
-		System.out.println(countProvinces(g1)); // 2,4,5,6
+		System.out.println(safeStates(g1)); // 2,4,5,6
 		int[][] g2 = { { 1, 2, 3, 4 }, { 1, 2 }, { 3, 4 }, { 0, 4 }, {} };
-		System.out.println(countProvinces(g2)); // 4
+		System.out.println(safeStates(g2)); // 4
 	}
 }
