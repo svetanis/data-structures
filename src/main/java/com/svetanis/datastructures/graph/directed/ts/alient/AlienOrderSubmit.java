@@ -1,10 +1,11 @@
 package com.svetanis.datastructures.graph.directed.ts.alient;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Deque;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.PriorityQueue;
 import java.util.Queue;
 
 // there is a dictionary containing words
@@ -54,7 +55,7 @@ public final class AlienOrderSubmit {
 	}
 
 	private static Queue<Character> sources(Map<Character, Integer> map) {
-		PriorityQueue<Character> queue = new PriorityQueue<>();
+		Deque<Character> queue = new ArrayDeque<>();
 		// all vertices with 0 in-degree
 		for (char c : map.keySet()) {
 			if (map.get(c) == 0) {
