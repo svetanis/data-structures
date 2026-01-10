@@ -1,15 +1,13 @@
 package com.svetanis.datastructures.tree.binary.bst.kclosest;
 
 import static com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node.newNode;
-import static com.svetanis.datastructures.tree.binary.model.mutable.primitive.Nodes.isNull;
-import static com.svetanis.java.base.collect.Lists.newList;
 import static com.svetanis.java.base.utils.Print.print;
-import static java.lang.Math.abs;
 
 import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Queue;
 
-import com.google.common.collect.ImmutableList;
 import com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node;
 
 // 272. Closest Binary Search Tree Value II 
@@ -19,24 +17,24 @@ import com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node;
 
 public final class KClosestToTargetInOrder {
 
-	public static ImmutableList<Integer> kClosest(Node root, int k, double target) {
+	public static List<Integer> kClosest(Node root, int k, double target) {
 		Queue<Integer> queue = new ArrayDeque<>();
-		kClosest(root, k, target, queue);
-		return newList(queue);
+		dfs(root, k, target, queue);
+		return new ArrayList<>(queue);
 	}
 
-	private static void kClosest(Node root, int k, double target, Queue<Integer> queue) {
-		if (isNull(root)) {
+	private static void dfs(Node root, int k, double target, Queue<Integer> queue) {
+		if (root == null) {
 			return;
 		}
-		kClosest(root.left, k, target, queue);
+		dfs(root.left, k, target, queue);
 		if (queue.size() < k) {
 			queue.offer(root.data);
-		} else if (abs(queue.peek() - target) > abs(root.data - target)) {
+		} else if (Math.abs(queue.peek() - target) > Math.abs(root.data - target)) {
 			queue.poll();
 			queue.offer(root.data);
 		}
-		kClosest(root.right, k, target, queue);
+		dfs(root.right, k, target, queue);
 	}
 
 	public static void main(String[] args) {
