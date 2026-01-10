@@ -8,6 +8,21 @@ import java.util.Map;
 public final class CountDivisibleTriplets {
 	// Time Complexity: O(n^2)
 
+	public static int countDivisibleSimple(int[] a, int d) {
+		int count = 0;
+		int n = a.length;
+		int[] counts = new int[d];
+		for (int i = 2; i < n; i++) {
+			int mod = (d - a[i] % d) % d;
+			for (int j = i - 2; j >= 0; j--) {
+				int sum = (a[i - 1] + a[j]) % d;
+				counts[sum] += 1;
+			}
+			count += counts[mod];
+		}
+		return count;
+	}
+
 	public static int countDivisible(int[] a, int d) {
 		int count = 0;
 		int n = a.length;
