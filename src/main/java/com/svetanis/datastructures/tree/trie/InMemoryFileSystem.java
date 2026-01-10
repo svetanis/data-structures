@@ -10,9 +10,11 @@ import java.util.Map;
 
 public final class InMemoryFileSystem {
 
-	private Node root = new Node();
+	private Node root ;
 
-	public InMemoryFileSystem() {}
+	public InMemoryFileSystem() {
+		this.root = new Node();
+	}
 
 	public String readContentFromFile(String path) {
 		Node node = root.search(path);
