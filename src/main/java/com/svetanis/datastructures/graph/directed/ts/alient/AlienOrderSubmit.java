@@ -8,30 +8,34 @@ import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 
-// there is a dictionary containing words
-// from an alien language for which we 
-// don't know the ordering of the letters
-// find the correct order of the letters
-// in the alien language. it is given that
-// the input is a valid dictionary and there
-// exists an ordering among its letters
-
-// You may assume all letters are in lowercase.
-// Every letter that appears in the input must also appear in the output, 
-// and your output cannot have characters not in the input.
-// If no ordering of letters makes the dictionary sorted lexicographically, 
-// return an empty string.
-// There may be multiple valid orders. If that's the case, return the smallest 
-// in normal lexicographical order.
-
-//269. Alien Dictionary
+// 269. Alien Dictionary
 
 public final class AlienOrderSubmit {
 	// Time Complexity: O(V + E)
-// not correct
-	public static String ado(String[] words) {
-		Map<Character, List<Character>> graph = graph(words);
-		Map<Character, Integer> inDegree = inDegree(graph);
+
+	private Map<Character, Integer> inDegree;
+	private Map<Character, List<Character>> graph;
+
+	public String ado(String[] words) {
+		init(words);
+		// find all edges
+		for (int i = 0; i < words.length - 1; i++) {
+			String w1 = words[i];
+			String w2 = words[i + 1];
+			if (w1.length() > w2.length() && w1.startsWith(w2)) {
+				return "";
+			}
+			for (int j = 0; j < Math.min(w1.length(), w2.length()); j++) {
+				char parent = w1.charAt(j);
+				char child = w2.charAt(j);
+				if (parent != child) {
+					graph.get(parent).add(child);
+					inDegree.put(child, inDegree.get(child) + 1);
+					break;
+				}
+			}
+		}
+
 		StringBuilder sb = new StringBuilder();
 		Queue<Character> queue = sources(inDegree);
 		while (!queue.isEmpty()) {
@@ -54,6 +58,17 @@ public final class AlienOrderSubmit {
 		return sb.toString();
 	}
 
+	private void init(String[] words) {
+		this.graph = new HashMap<>();
+		this.inDegree = new HashMap<>();
+		for (String word : words) {
+			for (char c : word.toCharArray()) {
+				graph.put(c, new ArrayList<>());
+				inDegree.put(c, 0);
+			}
+		}
+	}
+
 	private static Queue<Character> sources(Map<Character, Integer> map) {
 		Deque<Character> queue = new ArrayDeque<>();
 		// all vertices with 0 in-degree
@@ -65,62 +80,11 @@ public final class AlienOrderSubmit {
 		return queue;
 	}
 
-	private static Map<Character, Integer> inDegree(Map<Character, List<Character>> graph) {
-		Map<Character, Integer> map = inDegreeInit(graph);
-		for (char parent : graph.keySet()) {
-			for (char child : graph.get(parent)) {
-				map.put(child, map.get(child) + 1);
-			}
-		}
-		return map;
-	}
-
-	private static Map<Character, Integer> inDegreeInit(Map<Character, List<Character>> graph) {
-		Map<Character, Integer> map = new HashMap<>();
-		for (char c : graph.keySet()) {
-			map.put(c, 0);
-		}
-		return map;
-	}
-
-	private static Map<Character, List<Character>> graph(String[] words) {
-		Map<Character, List<Character>> map = graphInit(words);
-		for (int i = 0; i < words.length - 1; i++) {
-			String w1 = words[i];
-			String w2 = words[i + 1];
-			for (int j = 0; j < Math.min(w1.length(), w2.length()); j++) {
-				char parent = w1.charAt(j);
-				char child = w2.charAt(j);
-				if (parent != child) {
-					map.get(parent).add(child);
-					break;
-				}
-			}
-		}
-		return map;
-	}
-
-	private static Map<Character, List<Character>> graphInit(String[] words) {
-		Map<Character, List<Character>> map = new HashMap<>();
-		for (String word : words) {
-			for (char c : word.toCharArray()) {
-				map.put(c, new ArrayList<>());
-			}
-		}
-		return map;
-	}
-
 	public static void main(String[] args) {
-		System.out.println(ado(new String[] { "wrt", "wrf", "er", "ett", "rftt" })); // wertf
-		System.out.println(ado(new String[] { "z", "x" })); // zx
-		System.out.println(ado(new String[] { "z", "x", "z" })); // ""
-		
-		
-		System.out.println(ado(new String[] { "she", "sell", "seashell", "seashore", "seahorse", "on", "a" })); // lnrsheoa
-		System.out.println(ado(new String[] { "stdlib", "stl", "scanf", "sscanf", "printf" })); // abdfilnrtcsp
-		System.out.println(ado(new String[] { "neat", "net", "nest", "ante", "one", "oil", "innit", "ian", "isotope", "rat",
-				"reer", "rest" })); // lnaeoiprts
-		System.out.println(ado(new String[] { "da", "la", "na", "fa", "fei", "jia", "ha", "hai", "hang", "hua", "ta", "sha",
-				"shi", "si", "ba" })); // ""
+		AlienOrderSubmit ao = new AlienOrderSubmit();
+		System.out.println(ao.ado(new String[] { "wrt", "wrf", "er", "ett", "rftt" })); // wertf
+		System.out.println(ao.ado(new String[] { "z", "x" })); // zx
+		System.out.println(ao.ado(new String[] { "z", "x", "z" })); // ""
+		System.out.println(ao.ado(new String[] { "abc", "ab" })); // ""
 	}
 }
