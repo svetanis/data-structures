@@ -9,9 +9,10 @@ import java.util.Deque;
 public final class MazeII {
 	// Time & Space Complexity: O(n*m).
 
+	private static final int INF = 1 << 30;
+
 	private static final int[] dx = { -1, 0, 1, 0 };
 	private static final int[] dy = { 0, -1, 0, 1 };
-	private static final int INF = Integer.MAX_VALUE;
 
 	public static int shortestPath(int[][] g, int[] src, int[] dst) {
 		int n = g.length;
@@ -34,7 +35,7 @@ public final class MazeII {
 			for (int k = 0; k < dx.length; k++) {
 				int row = x;
 				int col = y;
-				int count = dist[row][col];
+				int count = dist[x][y];
 				while (safe(g, row + dx[k], col + dy[k])) {
 					row += dx[k];
 					col += dy[k];
