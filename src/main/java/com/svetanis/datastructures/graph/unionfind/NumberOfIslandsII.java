@@ -1,7 +1,6 @@
 package com.svetanis.datastructures.graph.unionfind;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 // 305. Number of Islands II
@@ -10,6 +9,7 @@ public final class NumberOfIslandsII {
 	// Time Complexity: O(k * n * m)
 	// Space Complexity: O(n * m)
 
+	private int[] size;
 	private int[] parent;
 
 	// horizontal + vertical moves
@@ -17,9 +17,13 @@ public final class NumberOfIslandsII {
 	private static int[] dy = { 0, -1, 1, 0 };
 
 	public List<Integer> numOfIslands(int m, int n, int[][] positions) {
-		int size = m * n;
-		parent = new int[size];
-		Arrays.fill(parent, -1);
+		int len = m * n;
+		this.parent = new int[len];
+		this.size = new int[len];
+		for (int i = 0; i < len; i++) {
+			parent[i] = i;
+			size[i] = 1;
+		}
 		return merge(m, n, positions);
 	}
 
@@ -28,25 +32,25 @@ public final class NumberOfIslandsII {
 		int[][] grid = new int[m][n];
 		List<Integer> list = new ArrayList<>();
 		for (int[] position : positions) {
-			int i = position[0];
-			int j = position[1];
-			int index = i * n + j; // flatten 2D position to 1D
-			if (grid[i][j] == 1) {
+			int row = position[0];
+			int col = position[1];
+			int index = row * n + col; // flatten 2D position to 1D
+			if (grid[row][col] == 1) {
 				list.add(count);
 				continue;
 			}
-			grid[i][j] = 1;
-			parent[index] = index;
+			grid[row][col] = 1;
 			count++;
 			for (int k = 0; k < dx.length; k++) {
-				int x = i + dx[k];
-				int y = j + dy[k];
-				int adjacent = x * n + y;
+				int x = row + dx[k];
+				int y = col + dy[k];
+				int next = x * n + y;
 				// find(index) - root of current cell
 				// find(adjacent) - root of neighbor cell
-				if (valid(grid, x, y) && find(index) != find(adjacent)) {
-					union(adjacent, index);
-					count--;
+				if (valid(grid, x, y)) {
+					if (union(index, next)) {
+						count--;
+					}
 				}
 			}
 			list.add(count);
@@ -55,8 +59,9 @@ public final class NumberOfIslandsII {
 	}
 
 	private boolean valid(int[][] grid, int x, int y) {
-		int n = grid.length;
-		boolean one = x >= 0 && x < n;
+		int m = grid.length;
+		int n = grid[0].length;
+		boolean one = x >= 0 && x < m;
 		boolean two = y >= 0 && y < n;
 		return one && two && grid[x][y] == 1;
 	}
@@ -68,12 +73,20 @@ public final class NumberOfIslandsII {
 		return parent[x];
 	}
 
-	private void union(int x, int y) {
+	private boolean union(int x, int y) {
 		int rootX = find(x);
 		int rootY = find(y);
-		if (rootX != rootY) {
-			parent[rootY] = rootX;
+		if (rootX == rootY) {
+			return false;
 		}
+		if (size[rootX] > size[rootY]) {
+			parent[rootY] = rootX;
+			size[rootX] += size[rootY];
+		} else {
+			parent[rootX] = rootY;
+			size[rootY] += size[rootX];
+		}
+		return true;
 	}
 
 	public static void main(String[] args) {
