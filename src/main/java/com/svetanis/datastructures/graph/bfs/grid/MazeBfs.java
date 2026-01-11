@@ -15,24 +15,26 @@ public final class MazeBfs {
 		int rows = g.length;
 		int cols = g[0].length;
 		boolean[][] visited = new boolean[rows][cols];
-		int x = src[0];
-		int y = src[1];
 		// mark as visited
-		visited[x][y] = true;
+		visited[src[0]][src[1]] = true;
 		Deque<int[]> queue = new ArrayDeque<>();
 		queue.offer(src);
 		while (!queue.isEmpty()) {
 			int[] position = queue.poll();
+			int x = position[0];
+			int y = position[1];
+			if (x == dst[0] && y == dst[1]) {
+				return true;
+			}
 			for (int k = 0; k < dx.length; k++) {
-				int row = position[0];
-				int col = position[1];
-				while (safe(g, row + dx[k], col + dy[k])) {
+				int row = x;
+				int col = y;
+				while (safe(g, row, col)) {
 					row += dx[k];
 					col += dy[k];
 				}
-				if (row == dst[0] && col == dst[1]) {
-					return true;
-				}
+				row -= dx[k];
+				col -= dy[k];
 				if (!visited[row][col]) {
 					visited[row][col] = true;
 					queue.offer(new int[] { row, col });
