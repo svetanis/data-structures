@@ -1,56 +1,42 @@
 package com.svetanis.datastructures.graph.bfs.multisource;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 // 296. Best Meeting Point
 
-public final class BestMeetingPoint {
+public final class BestMeetingPointSort {
 	// Time complexity: O(r * c)
 	// Space Complexity: O(r + c)
 
 	public int bmp(int[][] grid) {
-		List<Integer> rows = rows(grid);
-		List<Integer> cols = cols(grid);
-		int medianRow = rows.get(rows.size() >> 1);
-		int medianCol = cols.get(cols.size() >> 1);
-		return minDist(rows, medianRow) + minDist(cols, medianCol);
-	}
-
-	private List<Integer> rows(int[][] grid) {
 		List<Integer> rows = new ArrayList<>();
+		List<Integer> cols = new ArrayList<>();
 		for (int r = 0; r < grid.length; r++) {
 			for (int c = 0; c < grid[0].length; c++) {
 				if (grid[r][c] == 1) {
 					rows.add(r);
-				}
-			}
-		}
-		return rows;
-	}
-
-	private List<Integer> cols(int[][] grid) {
-		List<Integer> cols = new ArrayList<>();
-		for (int c = 0; c < grid[0].length; c++) {
-			for (int r = 0; r < grid.length; r++) {
-				if (grid[r][c] == 1) {
 					cols.add(c);
 				}
 			}
 		}
-		return cols;
+		Collections.sort(cols);
+		int medianRow = rows.get(rows.size() >> 1);
+		int medianCol = cols.get(cols.size() >> 1);
+		return dist(rows, medianRow) + dist(cols, medianCol);
 	}
 
-	private int minDist(List<Integer> points, int origin) {
+	private int dist(List<Integer> list, int median) {
 		int sum = 0;
-		for (int point : points) {
-			sum += Math.abs(point - origin);
+		for (int coordinate : list) {
+			sum += Math.abs(coordinate - median);
 		}
 		return sum;
 	}
 
 	public static void main(String[] args) {
-		BestMeetingPoint bmp = new BestMeetingPoint();
+		BestMeetingPointSort bmp = new BestMeetingPointSort();
 		int[][] grid = { { 1, 0, 0, 0, 1 }, { 0, 0, 0, 0, 0 }, { 0, 0, 1, 0, 0 } };
 		System.out.println(bmp.bmp(grid)); // 6 point (0,2)
 
