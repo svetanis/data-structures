@@ -6,7 +6,7 @@ import java.util.Arrays;
 // Bellman-Ford algorithm
 
 public final class CheapestFlightsBFA {
-	// Time Complexity: O(k * (n + m))
+	// Time Complexity: O(k * (V + E))
 	// Space Complexity: O(n)
 
 	private static final int INF = (int) 1e9;
@@ -37,7 +37,7 @@ public final class CheapestFlightsBFA {
 
 		int[][] g3 = { { 0, 1, 100 }, { 1, 2, 100 }, { 0, 2, 500 } };
 		System.out.println(cheapestFlight(3, g3, 0, 2, 0)); // 500
-		
+
 		int[][] g4 = { { 0, 1, 5 }, { 1, 2, 5 }, { 0, 3, 2 }, { 3, 1, 2 }, { 1, 4, 1 }, { 4, 2, 1 } };
 		System.out.println(cheapestFlight(5, g4, 0, 2, 2)); // 7
 
