@@ -9,8 +9,8 @@ import java.util.PriorityQueue;
 // 743. Network Delay Time
 // Dijkstra's Algorithm 
 
-public final class NetworkDelayTime {
-	// Time Complexity: O(E log V)
+public final class NetworkDelayTimeDijkstra {
+	// Time Complexity: O(V + E log V)
 	// Space Complexity: O(V + E)
 
 	private static final int INF = (int) 1e9;
@@ -24,16 +24,13 @@ public final class NetworkDelayTime {
 		pq.offer(new int[] { k, 0 });
 		while (!pq.isEmpty()) {
 			int[] node = pq.poll();
-			int src = node[0], currentTime = node[1];
-			if (!g.containsKey(src)) {
-				continue;
-			}
-			for (int[] neighbor : g.get(src)) {
+			int src = node[0], time = node[1];
+			for (int[] neighbor : g.getOrDefault(src, new ArrayList<>())) {
 				int next = neighbor[0];
-				int time = currentTime + neighbor[1];
-				if (time < dist.getOrDefault(next, INF)) {
-					dist.put(next, time);
-					pq.offer(new int[] { next, time });
+				int arrivalTime = time + neighbor[1];
+				if (arrivalTime < dist.getOrDefault(next, INF)) {
+					dist.put(next, arrivalTime);
+					pq.offer(new int[] { next, arrivalTime });
 				}
 			}
 		}
