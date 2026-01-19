@@ -3,7 +3,7 @@ package com.svetanis.datastructures.graph.advanced;
 import java.util.Arrays;
 
 // 1334. Find the City With the Smallest Number of Neighbors at a Threshold Distance
-// Dijkstra's Algorithm 
+// Floyd-Warshall Algorithm 
 
 public final class CityWithMinNeighborsFWA {
 	// Time Complexity: O(n^3)
