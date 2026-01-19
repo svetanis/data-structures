@@ -5,7 +5,7 @@ import java.util.Arrays;
 // 1334. Find the City With the Smallest Number of Neighbors at a Threshold Distance
 // Dijkstra's Algorithm 
 
-public final class CityWithMinNeighbors {
+public final class CityWithMinNeighborsDijkstra {
 	// Time Complexity: O(n^3)
 	// Space Complexity: O(n^2)
 
@@ -76,7 +76,7 @@ public final class CityWithMinNeighbors {
 	}
 
 	public static void main(String[] args) {
-		CityWithMinNeighbors cmn = new CityWithMinNeighbors();
+		CityWithMinNeighborsDijkstra cmn = new CityWithMinNeighborsDijkstra();
 		int[][] g1 = { { 0, 1, 3 }, { 1, 2, 1 }, { 1, 3, 4 }, { 2, 3, 1 } };
 		System.out.println(cmn.city(4, g1, 4)); // 3
 
