@@ -41,7 +41,9 @@ public final class HouseThiefTopDown {
 		}
 		// 2. don't rob this house, go to his children
 		int noRobbing = dfs(node.left, map) + dfs(node.right, map);
-		return Math.max(profit, noRobbing);
+		int max = Math.max(profit, noRobbing);
+		map.put(node, max);
+		return max;
 	}
 
 	public static void main(String[] args) {
