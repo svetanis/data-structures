@@ -1,8 +1,6 @@
 package com.svetanis.datastructures.tree.binary.bst.successor;
 
 import static com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node.newNode;
-import static com.svetanis.datastructures.tree.binary.model.mutable.primitive.Nodes.isNotNull;
-import static com.svetanis.datastructures.tree.binary.model.mutable.primitive.Nodes.isNull;
 
 import com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node;
 
@@ -13,7 +11,7 @@ public final class InorderSuccessor {
 
 	public static Node inOrderSuccessor(Node root, Node target) {
 		Node successor = null;
-		while (isNotNull(root)) {
+		while (root != null) {
 			if (root.data > target.data) {
 				successor = root;
 				root = root.left;
@@ -29,7 +27,7 @@ public final class InorderSuccessor {
 	}
 
 	private static Node dfs(Node root, Node target, Node successor) {
-		if (isNull(root)) {
+		if (root == null) {
 			return successor;
 		}
 		if (root.data > target.data) {
