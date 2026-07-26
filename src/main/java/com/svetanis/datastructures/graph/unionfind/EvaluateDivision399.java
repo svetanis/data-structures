@@ -82,5 +82,11 @@ public final class EvaluateDivision399 {
     queries.add(Arrays.asList("x", "x"));
     
     EvaluateDivision399 ed = new EvaluateDivision399();
+    System.out.println(Arrays.toString(ed.equation(equations, values, queries)));
+    // [6.0, 0.5, -1.0, 1.0, -1.0]
+    //  a/c = 2*3        b/a = 1/2
+    //  a/e = -1.0  e is not in any equation
+    //  a/a =  1.0  a divided by itself, even though a IS known
+    //  x/x = -1.0  x is unknown, so NOT 1.0 -- the case people miss
   }
 }
