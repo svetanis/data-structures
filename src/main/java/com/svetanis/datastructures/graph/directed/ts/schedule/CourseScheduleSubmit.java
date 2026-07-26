@@ -64,7 +64,11 @@ public final class CourseScheduleSubmit {
 		int[][] g1 = { { 1, 0 } };
 		Print.print(order(2, g1)); // 0,1
 
+		// a topological order is NOT unique. 1 and 2 are mutually
+		// unconstrained here, so 0,1,2,3 and 0,2,1,3 are both correct.
+		// never assert string equality on this problem -- assert the
+		// property: does any edge run backwards in the output?
 		int[][] g2 = { { 1, 0 }, { 2, 0 }, { 3, 1 }, { 3, 2 } };
-		Print.print(order(4, g2)); // 0,2,1,3
+		Print.print(order(4, g2)); // any valid order, e.g. 0,1,2,3
 	}
 }
