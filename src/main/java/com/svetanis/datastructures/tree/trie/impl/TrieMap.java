@@ -5,11 +5,11 @@ import java.util.Map;
 
 // 208. Implement Trie (Prefix Tree)
 
-public final class Trie3 {
+public final class TrieMap {
 
 	private Node root;
 
-	public Trie3() {
+	public TrieMap() {
 		this.root = new Node();
 	}
 
@@ -23,30 +23,27 @@ public final class Trie3 {
 	}
 
 	public boolean search(String word) {
-		Node node = root;
-		for (char letter : word.toCharArray()) {
-			node = node.children.get(letter);
-			if (node == null) {
-				return false;
-			}
-		}
-		return node.isEndOfWord;
+		Node node = searchPrefix(word);
+		return node != null && node.isEndOfWord;
 	}
 
 	public boolean startsWith(String prefix) {
+		return searchPrefix(prefix) != null;
+	}
+
+	private Node searchPrefix(String s) {
 		Node node = root;
-		for (char letter : prefix.toCharArray()) {
+		for (char letter : s.toCharArray()) {
 			node = node.children.get(letter);
 			if (node == null) {
-				return false;
+				return null;
 			}
 		}
-		return true;
+		return node;
 	}
 
 	public void delete(String word) {
-		Node node = root;
-		dfs(node, word, 0);
+		dfs(root, word, 0);
 	}
 
 	private boolean dfs(Node node, String word, int index) {
@@ -68,13 +65,39 @@ public final class Trie3 {
 	}
 
 	public static void main(String[] args) {
-		Trie3 trie = new Trie3();
+		searchDemo();
+		deleteDemo();
+	}
+
+	private static void searchDemo() {
+		TrieMap trie = new TrieMap();
 		trie.insert("apple");
 		System.out.println(trie.search("apple")); // true
 		System.out.println(trie.search("app")); // false
 		System.out.println(trie.startsWith("app")); // true
 		trie.insert("app");
 		System.out.println(trie.search("app")); // true
+	}
+
+	private static void deleteDemo() {
+		TrieMap trie = new TrieMap();
+		trie.insert("apple");
+		trie.insert("app");
+		trie.insert("banana");
+
+		// "app" ends inside "apple", so the prune must stop at the shared prefix
+		trie.delete("app");
+		System.out.println(trie.search("app")); // false
+		System.out.println(trie.search("apple")); // true
+		System.out.println(trie.startsWith("app")); // true
+
+		// nothing shares banana's nodes, so every one of them goes
+		trie.delete("banana");
+		System.out.println(trie.startsWith("ban")); // false
+
+		// a word that was never inserted must leave the trie untouched
+		trie.delete("apples");
+		System.out.println(trie.search("apple")); // true
 	}
 
 	private static class Node {

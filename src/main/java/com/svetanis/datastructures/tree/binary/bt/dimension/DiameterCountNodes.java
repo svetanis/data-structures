@@ -12,7 +12,7 @@ import com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node;
 // the longest path between any two leaf nodes. 
 // The diameter of a tree may or may not pass through the root.
 
-public final class Diameter {
+public final class DiameterCountNodes {
 	// Time complexity: O(n)
 
 	public static int diameter(Node root) {

@@ -11,7 +11,7 @@ import com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node;
 // the longest path between any two leaf nodes. 
 // The diameter of a tree may or may not pass through the root.
 
-public final class DiameterOptimized {
+public final class DiameterCountEdges {
 	// Time complexity: O(n)
 
 	private int maxDiameter;
@@ -34,7 +34,7 @@ public final class DiameterOptimized {
 	}
 
 	public static void main(String[] args) {
-		DiameterOptimized dop = new DiameterOptimized();
+		DiameterCountEdges dop = new DiameterCountEdges();
 		Node root = newNode(1);
 		root.left = newNode(2);
 		root.right = newNode(3);
