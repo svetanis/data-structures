@@ -13,7 +13,9 @@ import com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node;
 // find k'th smallest element in BST
 
 public final class KthSmallest {
-	// Time Complexity : O(n) or O(k + h)
+	// Time Complexity: O(n^2) worst case -- size(root.left) re-walks the
+	// subtree at EVERY level of the descent. The O(h) rank descent needs
+	// each node to CACHE its subtree size (an order-statistic tree).
 	// Aux Space Complexity: O(h)
 	// Total Space Complexity: O(n)
 

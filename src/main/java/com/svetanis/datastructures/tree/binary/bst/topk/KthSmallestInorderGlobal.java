@@ -17,7 +17,9 @@ import com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node;
 // becomes equal to k
 
 public final class KthSmallestInorderGlobal {
-	// Time Complexity: O(log n + k)
+	// Time Complexity: O(n) -- the 'return' after count == k exits ONE frame.
+	// Its callers keep traversing, so nothing stops the walk; the answer is
+	// right but every node is visited. topk/KthSmallestIterative is the real O(h + k).
 	// Space Complexity: O(log n)
 
 	private int count = 0;
