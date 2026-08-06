@@ -2,7 +2,7 @@ package com.svetanis.datastructures.stack.expressions;
 
 // 678. Valid Parenthesis String
 
-public final class ValidParentheses {
+public final class ValidParenthesisString {
 	// Time Complexity: O(n)
 	// Space Complexity: O(1)
 
