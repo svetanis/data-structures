@@ -23,7 +23,10 @@ public final class LongestSubArrLenGivenSum {
       // when subarr starts at 0
       if (sum == k) {
         max = i + 1;
-      } else if (!map.containsKey(sum)) {
+      }
+      // record this prefix even when sum == k: a later
+      // position may need it as its left boundary
+      if (!map.containsKey(sum)) {
         map.put(sum, i);
       }
 
