@@ -4,7 +4,15 @@ package com.svetanis.datastructures.graph.islands;
 
 public final class NumberOfIslandsMatrixSubmit {
 	// Time complexity: O(r * c)
-	// Space Complexity: O(r + c)
+	// Space Complexity: O(r * c) -- the boolean[r][c] visited array, and
+	// separately the recursion depth: one island can snake through every
+	// cell. LC 200 allows 300x300, i.e. 90,000 stack frames, and a fully
+	// land grid runs out of default stack long before that: 100x100 (10,000
+	// cells) throws StackOverflowError on a cold JVM, and 133x133 (17,689)
+	// is the ceiling once this method has been JIT-compiled. the threshold
+	// moves because a compiled frame is smaller than an interpreted one --
+	// there is no single number here, only an order of magnitude, and it is
+	// 5x short. NumberOfIslandsBfsSubmit has no such ceiling.
 
 	private static final char WATER = '0';
 
@@ -44,16 +52,16 @@ public final class NumberOfIslandsMatrixSubmit {
 		for (int k = 0; k < dx.length; ++k) {
 			int x = row + dx[k];
 			int y = col + dy[k];
-			if (isSafe(g, x, y, visited)) {
+			if (isLand(g, x, y) && !visited[x][y]) {
 				dfs(g, x, y, visited);
 			}
 		}
 	}
 
-	private static boolean isSafe(char[][] g, int row, int col, boolean[][] visited) {
+	private static boolean isLand(char[][] g, int row, int col) {
 		boolean one = row >= 0 && row < g.length; // row number is in range
 		boolean two = col >= 0 && col < g[0].length; // col number is in range
-		return one && two && g[row][col] != WATER && !visited[row][col];
+		return one && two && g[row][col] != WATER;
 	}
 
 	public static void main(String[] args) {

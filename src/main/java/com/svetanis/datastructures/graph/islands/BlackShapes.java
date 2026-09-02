@@ -65,14 +65,20 @@ public final class BlackShapes {
 	}
 
 	public static void main(String[] args) {
+		// white is the LETTER O, not the digit zero. Written with '0' here,
+		// every cell counts as black and the whole grid is one shape.
 		char[][] g = { //
-				{ '0', '0', '0', 'X', '0', '0', '0' }, //
-				{ '0', '0', 'X', 'X', '0', 'X', '0' }, //
-				{ '0', 'X', '0', '0', '0', 'X', '0' } };//
-		System.out.println(count(g));
+				{ 'O', 'O', 'O', 'X', 'O', 'O', 'O' }, //
+				{ 'O', 'O', 'X', 'X', 'O', 'X', 'O' }, //
+				{ 'O', 'X', 'O', 'O', 'O', 'X', 'O' } };//
+		System.out.println(count(g)); // 3
 
 		List<String> list = newArrayList("OOOXOOO", "OOXXOXO", "OXOOOXO");
 		char[][] m = toMatrix(list);
-		System.out.println(count(m));
+		System.out.println(count(m)); // 3
+
+		char[][] digits = { //
+				{ '0', '0', '0', 'X', '0', '0', '0' } };//
+		System.out.println(count(digits)); // 1 -- the digit is not white
 	}
 }

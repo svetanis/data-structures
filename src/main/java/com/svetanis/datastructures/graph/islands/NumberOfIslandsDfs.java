@@ -18,7 +18,9 @@ import java.util.List;
 
 public final class NumberOfIslandsDfs {
 	// Time complexity: O(r * c)
-	// Space Complexity: O(r + c)
+	// Space Complexity: O(r * c) -- the boolean[r][c] visited array, and
+	// separately the recursion depth: one island can snake through every
+	// cell. LC 200 allows 300x300, i.e. 90,000 stack frames.
 
 	// horizontal + vertical moves
 	private static int[] dx = { -1, 0, 0, 1 };
@@ -57,13 +59,13 @@ public final class NumberOfIslandsDfs {
 		for (int dist = 0; dist < dx.length; ++dist) {
 			int x = row + dx[dist];
 			int y = col + dy[dist];
-			if (valid(grid, x, y) && !visited[x][y]) {
+			if (isLand(grid, x, y) && !visited[x][y]) {
 				dfs(grid, x, y, visited);
 			}
 		}
 	}
 
-	private static boolean valid(List<List<Integer>> grid, int row, int col) {
+	private static boolean isLand(List<List<Integer>> grid, int row, int col) {
 		boolean one = row >= 0 && row < grid.size(); // row number is in range
 		boolean two = col >= 0 && col < grid.get(0).size(); // col number is in range
 		return one && two && grid.get(row).get(col) != 0;

@@ -13,7 +13,9 @@ package com.svetanis.datastructures.graph.islands;
 
 public final class NumberOfIslandsMatrix {
 	// Time complexity: O(r * c)
-	// Space Complexity: O(r + c)
+	// Space Complexity: O(r * c) -- the boolean[r][c] visited array, and
+	// separately the recursion depth: one island can snake through every
+	// cell, so the stack is r*c frames deep in the worst case, not r+c.
 
 	// horizontal + vertical moves
 	private static int[] dx = { -1, 0, 0, 1 };
@@ -51,16 +53,16 @@ public final class NumberOfIslandsMatrix {
 		for (int k = 0; k < dx.length; ++k) {
 			int x = row + dx[k];
 			int y = col + dy[k];
-			if (isSafe(g, x, y, visited)) {
+			if (isLand(g, x, y) && !visited[x][y]) {
 				dfs(g, x, y, visited);
 			}
 		}
 	}
 
-	private static boolean isSafe(int[][] g, int row, int col, boolean[][] visited) {
+	private static boolean isLand(int[][] g, int row, int col) {
 		boolean one = row >= 0 && row < g.length; // row number is in range
 		boolean two = col >= 0 && col < g[0].length; // col number is in range
-		return one && two && g[row][col] != 0 && !visited[row][col];
+		return one && two && g[row][col] != 0;
 	}
 
 	public static void main(String[] args) {

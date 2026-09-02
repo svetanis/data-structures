@@ -23,7 +23,10 @@ import com.svetanis.datastructures.graph.Coordinate;
 
 public final class NumberOfIslandsSubmit {
 	// Time complexity: O(r * c)
-	// Space Complexity: O(r + c)
+	// Space Complexity: O(r * c) -- the boolean[r][c] visited array. The
+	// queue itself is only O(r + c): it holds one BFS frontier, which on an
+	// all-land square peaks at about one side's worth of cells. Unlike the
+	// DFS files there is no deep stack here, so the array is the whole cost.
 
 	// horizontal + vertical moves
 	private static int[] dx = { -1, 0, 0, 1 };
@@ -63,6 +66,14 @@ public final class NumberOfIslandsSubmit {
 				if (!visited[r][c]) {
 					queue.add(neighbor);
 				}
+				// marked by the line that ADDS, not after the poll.
+				// the mark means "already spoken for, nobody else
+				// needs to queue it", and that is true the moment it
+				// goes in. marking after the poll leaves a window in
+				// which the cell is in the queue and unmarked, so
+				// every neighbour polled during it queues the cell
+				// again -- twice the queue traffic on a solid grid,
+				// with the same answer and no symptom
 				visited[r][c] = true;
 			}
 		}
@@ -75,14 +86,14 @@ public final class NumberOfIslandsSubmit {
 		for (int dist = 0; dist < dx.length; ++dist) {
 			int x = src.getRow() + dx[dist];
 			int y = src.getCol() + dy[dist];
-			if (valid(grid, x, y) && grid.get(x).get(y) != 0) {
+			if (inBounds(grid, x, y) && grid.get(x).get(y) != 0) {
 				list.add(new Coordinate(x, y));
 			}
 		}
 		return list;
 	}
 
-	private static boolean valid(List<List<Integer>> grid, int row, int col) {
+	private static boolean inBounds(List<List<Integer>> grid, int row, int col) {
 		boolean one = row >= 0 && row < grid.size(); // row number is in range
 		boolean two = col >= 0 && col < grid.get(0).size(); // col number is in range
 		return one && two;
