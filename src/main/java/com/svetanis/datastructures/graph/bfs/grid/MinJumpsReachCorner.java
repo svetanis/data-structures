@@ -3,8 +3,10 @@ package com.svetanis.datastructures.graph.bfs.grid;
 import static com.google.common.base.Optional.absent;
 import static com.google.common.base.Optional.of;
 import static com.google.common.collect.Lists.newLinkedList;
+import static com.google.common.collect.Sets.newHashSet;
 
 import java.util.Queue;
+import java.util.Set;
 
 import com.google.common.base.Optional;
 import com.svetanis.datastructures.graph.Cell;
@@ -23,30 +25,41 @@ public final class MinJumpsReachCorner {
 		int n = grid.length;
 		int m = grid[0].length;
 		Queue<Cell> queue = newLinkedList();
-		queue.add(new Cell(0, 0, 1));
+		Set<Cell> seen = newHashSet();
+		Cell start = new Cell(0, 0);
+		queue.add(start);
+		seen.add(start);
 
+		// the count starts at 1 because the source itself counts as a jump
+		// here. one drain of the queue is one level, so count is a loop
+		// variable rather than a field on the node
+		int count = 1;
 		while (!queue.isEmpty()) {
-			Cell node = queue.poll();
-			int x = node.getX();
-			int y = node.getY();
-			int count = node.getDist();
+			for (int size = queue.size(); size > 0; size--) {
+				Cell node = queue.poll();
+				int x = node.getX();
+				int y = node.getY();
 
-			if (x == n - 1 && y == m - 1) {
-				return of(count);
+				if (x == n - 1 && y == m - 1) {
+					return of(count);
+				}
+
+				// a cell holding 0 jumps nowhere, so without `seen` it
+				// would enqueue itself and the search would never end
+				int dir = grid[x][y];
+				enqueue(queue, seen, x + dir, y, n, m);
+				enqueue(queue, seen, x, y + dir, n, m);
 			}
-
-			int dir = grid[x][y];
-
-			if (valid(x + dir, y, n, m)) {
-				queue.add(new Cell(x + dir, y, count + 1));
-			}
-
-			if (valid(x, y + dir, n, m)) {
-				queue.add(new Cell(x, y + dir, count + 1));
-			}
-
+			count++;
 		}
 		return absent();
+	}
+
+	private static void enqueue(Queue<Cell> queue, Set<Cell> seen, int x, int y, int n, int m) {
+		Cell next = new Cell(x, y);
+		if (valid(x, y, n, m) && seen.add(next)) {
+			queue.add(next);
+		}
 	}
 
 	private static boolean valid(int x, int y, int n, int m) {

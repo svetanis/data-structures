@@ -30,24 +30,33 @@ public final class ShortestPathBinary {
 		}
 		Set<Cell> set = newHashSet();
 		Queue<Cell> queue = newLinkedList();
-		queue.add(new Cell(src.getX(), src.getY()));
+		Cell start = new Cell(src.getX(), src.getY());
+		queue.add(start);
+		set.add(start);
+		// one drain of the queue is one level, so every square dequeued
+		// inside the inner loop is exactly `dist` steps from the source
+		int dist = 0;
 		while (!queue.isEmpty()) {
-			Cell node = queue.poll();
-			if (node.getX() == dst.getX() && node.getY() == dst.getY()) {
-				return of(node.getDist());
-			}
-			if (!set.contains(node)) {
-				set.add(node);
+			for (int size = queue.size(); size > 0; size--) {
+				Cell node = queue.poll();
+				if (node.getX() == dst.getX() && node.getY() == dst.getY()) {
+					return of(dist);
+				}
 				// check all 4 moves and enqueue
 				// each valid movement in the queue
 				for (int i = 0; i < dx.length; i++) {
 					int r = node.getX() + dx[i];
 					int c = node.getY() + dy[i];
-					if (valid(grid, r, c)) {
-						queue.add(new Cell(r, c, node.getDist() + 1));
+					Cell next = new Cell(r, c);
+					// mark at ENQUEUE. marking at poll lets a square be
+					// queued many times, and with an unreachable
+					// destination the search never ends
+					if (valid(grid, r, c) && set.add(next)) {
+						queue.add(next);
 					}
 				}
 			}
+			dist++;
 		}
 		return absent();
 	}
@@ -72,6 +81,6 @@ public final class ShortestPathBinary {
 
 		Cell src = new Cell(0, 0);
 		Cell dst = new Cell(3, 4);
-		System.out.println(shortestPath(matrix, src, dst));
+		System.out.println(shortestPath(matrix, src, dst)); // Optional.of(11)
 	}
 }

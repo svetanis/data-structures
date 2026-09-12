@@ -9,8 +9,9 @@ public final class ShortestPathWithObstaclesElimination {
 	// Time Complexity: O(n * m * k)
 	// Space Complexity: O(n * m * k)
 
-	private static final int[] dx = { 0, 1, 0, -1 };
-	private static final int[] dy = { 1, 0, -1, 0 };
+	// read as OVERLAPPING pairs: (-1,0) (0,1) (1,0) (0,-1). Five entries
+	// give four moves, because each one is reused as the next one's second
+	// half -- the same four offsets a dx/dy pair would spell out separately
 	private static final int[] dir = { -1, 0, 1, 0, -1 };
 
 	public static int shortestPath(int[][] grid, int k) {
@@ -21,7 +22,11 @@ public final class ShortestPathWithObstaclesElimination {
 		boolean[][][] visited = new boolean[n][m][k + 1];
 		visited[0][0][0] = true;
 		while (!queue.isEmpty()) {
-			for (int size = 0; size < queue.size(); size++) {
+			// freeze the count BEFORE draining. Written as
+			// "size < queue.size()" the bound is re-read every turn and
+			// grows as children are offered, so the inner loop stops at an
+			// arbitrary point inside the next level instead of at its edge
+			for (int size = queue.size(); size > 0; size--) {
 				int[] p = queue.poll();
 				int x = p[0], y = p[1], obstacles = p[2], dist = p[3];
 				if (x == n - 1 && y == m - 1) {

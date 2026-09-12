@@ -1,5 +1,7 @@
 package com.svetanis.datastructures.graph.bfs.grid;
 
+import static java.util.Comparator.comparingInt;
+
 import java.util.PriorityQueue;
 
 // 407. Trapping Rain Water II
@@ -15,7 +17,7 @@ public final class TrappingRainWaterII {
 		int n = heights.length;
 		int m = heights[0].length;
 		boolean[][] visited = new boolean[n][m];
-		PriorityQueue<int[]> pq = new PriorityQueue<>((a, b) -> a[0] - b[0]);
+		PriorityQueue<int[]> pq = new PriorityQueue<>(comparingInt(a -> a[0]));
 		init(heights, visited, pq);
 		int total = 0;
 		while (!pq.isEmpty()) {
