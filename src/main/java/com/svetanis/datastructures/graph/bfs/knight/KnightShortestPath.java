@@ -21,23 +21,31 @@ public final class KnightShortestPath {
 		Set<Cell> set = newHashSet();
 		Queue<Cell> queue = newLinkedList();
 		queue.add(src);
+		set.add(src);
+		// one drain of the queue is one level, so every square dequeued
+		// inside the inner loop is exactly `dist` moves from the source.
+		// that is why the distance does not have to live on the node
+		int dist = 0;
 		while (!queue.isEmpty()) {
-			Cell node = queue.poll();
-			if (node.getX() == dst.getX() && node.getY() == dst.getY()) {
-				return of(node.getDist());
-			}
-			if (!set.contains(node)) {
-				set.add(node);
+			for (int size = queue.size(); size > 0; size--) {
+				Cell node = queue.poll();
+				if (node.getX() == dst.getX() && node.getY() == dst.getY()) {
+					return of(dist);
+				}
 				// check all 8 moves and enqueue
 				// each valid movement in the queue
 				for (int dir = 0; dir < dx.length; dir++) {
 					int x = node.getX() + dx[dir];
 					int y = node.getY() + dy[dir];
-					if (valid(x, y, n)) {
-						queue.add(new Cell(x, y, node.getDist() + 1));
+					Cell next = new Cell(x, y);
+					// mark at ENQUEUE: marking at poll lets the same square
+					// sit in the queue several times over
+					if (valid(x, y, n) && set.add(next)) {
+						queue.add(next);
 					}
 				}
 			}
+			dist++;
 		}
 		return absent();
 	}

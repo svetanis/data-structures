@@ -49,6 +49,12 @@ public final class OpenLock {
 
 	private static Optional<Integer> bfs(String src, String dst, Set<String> excluded,
 			BiMap<Character, Character> bimap) {
+		// every neighbour is filtered against the deadends, so the ONE
+		// combination never checked is the starting one. A jammed lock
+		// cannot be turned at all, whatever the target is
+		if (excluded.contains(src)) {
+			return absent();
+		}
 		Queue<String> queue = new ArrayDeque<>();
 		Map<String, Integer> map = newHashMap();
 		queue.add(src);
@@ -116,6 +122,11 @@ public final class OpenLock {
 		System.out.println(countSteps("9999", excluded2)); // 6
 
 		Set<String> excluded3 = newHashSet("0111", "2111", "1011", "1211", "1101", "1121", "1110", "1112");
-		System.out.println(countSteps("1111", excluded3)); // -1
+		System.out.println(countSteps("1111", excluded3)); // Optional.absent()
+
+		// the lock starts jammed. Nothing can be reached, including a
+		// target the wheels could otherwise walk to in 8 turns
+		Set<String> excluded4 = newHashSet("0000");
+		System.out.println(countSteps("8888", excluded4)); // Optional.absent()
 	}
 }

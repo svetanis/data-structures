@@ -18,12 +18,20 @@ public final class OpenLockBidirectional {
 
 	public int openLock(String dst, String[] deadends) {
 		String src = "0000";
+		// this call's deadends, not this call's plus every earlier call's
+		excluded.clear();
 		Collections.addAll(excluded, deadends);
 		if (excluded.contains(src)) {
 			return -1;
 		}
 		if (src.equals(dst)) {
 			return 0;
+		}
+		// the backward search STARTS at dst, so dst is the one combination
+		// it never filters. A jammed target can still be walked away from,
+		// and the two halves then meet on a lock that never opens
+		if (excluded.contains(dst)) {
+			return -1;
 		}
 		return bidirBfs(src, dst);
 	}
@@ -105,5 +113,18 @@ public final class OpenLockBidirectional {
 		OpenLockBidirectional olb2 = new OpenLockBidirectional();
 		String[] deadends2 = { "8887", "8889", "8878", "8898", "8788", "8988", "7888", "9888" };
 		System.out.println(olb2.openLock("8888", deadends2)); // -1
+
+		// the target itself is jammed. One turn away from the start, and
+		// still unreachable -- the backward search begins ON it, so
+		// nothing downstream ever tests it
+		System.out.println(olb2.openLock("0001", new String[] { "0001" })); // -1
+
+		// the start is jammed
+		System.out.println(olb2.openLock("8888", new String[] { "0000" })); // -1
+
+		// the SAME object, called a fifth time with no deadends at all.
+		// Without the clear(), "0001" and "0000" are still excluded from
+		// the four calls above and this answers -1 for a lock that opens
+		System.out.println(olb2.openLock("0001", new String[0])); // 1
 	}
 }

@@ -53,7 +53,10 @@ public final class WaterFlow {
 		bfs(grid, aq, av);
 		// cells reachable from both oceans
 		Set<Cell> intersection = intersection(pv, av);
-		List<Cell> sorted = sort(intersection, n -> n.getDist());
+		// row-major order: the Cell used to carry this as a `dist` field,
+		// but it is a function of the position and belongs here
+		int width = grid[0].length;
+		List<Cell> sorted = sort(intersection, n -> n.getX() * width + n.getY());
 		return transform(sorted, n -> Pair.build(n.getX(), n.getY()));
 	}
 
@@ -68,8 +71,7 @@ public final class WaterFlow {
 					int r = node.getX() + dx[i];
 					int c = node.getY() + dy[i];
 					if (valid(grid, r, c) && grid[r][c] >= grid[node.getX()][node.getY()]) {
-						int index = r * grid[0].length + c;
-						queue.add(new Cell(r, c, index));
+						queue.add(new Cell(r, c));
 					}
 				}
 			}
@@ -81,8 +83,7 @@ public final class WaterFlow {
 		int width = grid[0].length;
 		for (int i = 0; i < height; i++) {
 			for (int j = 0; j < width; j++) {
-				int index = i * width + j;
-				Cell node = new Cell(i, j, index);
+				Cell node = new Cell(i, j);
 				// Pacific Ocean's edge
 				if (i == 0 || j == 0) {
 					pq.add(node);

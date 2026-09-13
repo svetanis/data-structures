@@ -24,18 +24,21 @@ public final class KnightShortestPathPattern {
 		Queue<Cell> queue = newLinkedList();
 		queue.add(src);
 		set.add(src);
+		// one drain of the queue is one level -- see KnightShortestPath
+		int dist = 0;
 		while (!queue.isEmpty()) {
-			Cell node = queue.poll();
-			if (node.getX() == dst.getX() && node.getY() == dst.getY()) {
-				return of(node.getDist());
-			}
-			List<Cell> neighbors = neighbors(node, n);
-			for (Cell neighbor : neighbors) {
-				if (!set.contains(neighbor)) {
-					set.add(neighbor);
-					queue.add(neighbor);
+			for (int size = queue.size(); size > 0; size--) {
+				Cell node = queue.poll();
+				if (node.getX() == dst.getX() && node.getY() == dst.getY()) {
+					return of(dist);
+				}
+				for (Cell neighbor : neighbors(node, n)) {
+					if (set.add(neighbor)) {
+						queue.add(neighbor);
+					}
 				}
 			}
+			dist++;
 		}
 		return absent();
 	}
@@ -46,7 +49,7 @@ public final class KnightShortestPathPattern {
 			int x = node.getX() + dx[dir];
 			int y = node.getY() + dy[dir];
 			if (valid(x, y, n)) {
-				list.add(new Cell(x, y, node.getDist() + 1));
+				list.add(new Cell(x, y));
 			}
 		}
 		return list;

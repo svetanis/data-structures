@@ -21,13 +21,15 @@ public final class ShortestDistFromGuard {
 		while (!queue.isEmpty()) {
 			Cell node = queue.poll();
 
+			// the distance is already recorded in grid, which doubles as
+			// the visited mark -- there is nothing for the node to carry
+			int dist = grid[node.getX()][node.getY()] + 1;
 			for (int i = 0; i < dx.length; i++) {
 				int x = node.getX() + dx[i];
 				int y = node.getY() + dy[i];
 				if (valid(x, y, n, m) && safe(matrix, grid, x, y)) {
-					int dist = node.getDist() + 1;
 					grid[x][y] = dist;
-					queue.offer(new Cell(x, y, dist));
+					queue.offer(new Cell(x, y));
 				}
 			}
 		}
@@ -52,7 +54,7 @@ public final class ShortestDistFromGuard {
 		for (int i = 0; i < n; i++) {
 			for (int j = 0; j < m; j++) {
 				if (matrix[i][j] == 'G') {
-					queue.offer(new Cell(i, j, 0));
+					queue.offer(new Cell(i, j));
 				}
 			}
 		}

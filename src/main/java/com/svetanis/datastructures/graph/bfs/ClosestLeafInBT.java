@@ -3,7 +3,7 @@ package com.svetanis.datastructures.graph.bfs;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
-import java.util.HashMap;
+import java.util.IdentityHashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -17,7 +17,7 @@ public final class ClosestLeafInBT {
 	// Time Complexity: O(n)
 	// Space Complexity: O(n)
 
-	private Map<Node, List<Node>> map = new HashMap<>();
+	private Map<Node, List<Node>> map = new IdentityHashMap<>();
 
 	public int amountOfTime(Node root, int k) {
 		buildGraph(root, null);
