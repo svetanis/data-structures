@@ -61,6 +61,6 @@ public final class MinDepthSubmit {
 		root.left.left = new Node(4);
 		root.left.right = new Node(5);
 		root.right.right = new Node(6);
-		System.out.println(lot(root));
+		System.out.println(lot(root)); // 3 -- the same tree, the same answer
 	}
 }

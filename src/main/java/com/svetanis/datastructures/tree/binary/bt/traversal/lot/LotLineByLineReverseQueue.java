@@ -55,6 +55,6 @@ public final class LotLineByLineReverseQueue {
 		root.left.left = new Node(4);
 		root.left.right = new Node(5);
 		root.right.right = new Node(6);
-		printLists(lot(root));
+		printLists(lot(root)); // 4 5 6 / 2 3 / 1 -- deepest level first
 	}
 }

@@ -50,6 +50,6 @@ public final class MaxValueInEachLevel {
 		root.left.left = newNode(3);
 		root.left.right = newNode(5);
 		root.right.right = newNode(7);
-		print(lot(root));
+		print(lot(root)); // 4 9 7
 	}
 }
