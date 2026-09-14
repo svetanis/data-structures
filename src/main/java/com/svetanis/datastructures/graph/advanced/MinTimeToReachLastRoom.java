@@ -1,5 +1,7 @@
 package com.svetanis.datastructures.graph.advanced;
 
+import static java.util.Comparator.comparingInt;
+
 import java.util.Arrays;
 import java.util.PriorityQueue;
 
@@ -21,7 +23,7 @@ public final class MinTimeToReachLastRoom {
     }
     minTime[0][0] = 0;
     PriorityQueue<int[]> pq = new PriorityQueue<>(
-        (a, b) -> a[2] - b[2]);
+        comparingInt(a -> a[2]));
     pq.offer(new int[] { 0, 0, 0 });
     while (!pq.isEmpty()) {
       int[] node = pq.poll();

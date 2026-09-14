@@ -1,5 +1,7 @@
 package com.svetanis.datastructures.graph.advanced;
 
+import static java.util.Comparator.comparingInt;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -20,11 +22,18 @@ public final class NetworkDelayTimeDijkstra {
 		dist.put(k, 0);
 		Map<Integer, List<int[]>> g = graph(n, times);
 		// Priority queue: (node, time)
-		PriorityQueue<int[]> pq = new PriorityQueue<>((a, b) -> a[1] - b[1]);
+		PriorityQueue<int[]> pq = new PriorityQueue<>(comparingInt(a -> a[1]));
 		pq.offer(new int[] { k, 0 });
 		while (!pq.isEmpty()) {
 			int[] node = pq.poll();
 			int src = node[0], time = node[1];
+			// a node is re-offered every time its distance improves, so
+			// the queue holds stale copies. the first pop of a node is
+			// its final distance; skip the rest instead of re-scanning
+			// their edges. without this, more than half the pops are stale
+			if (time > dist.getOrDefault(src, INF)) {
+				continue;
+			}
 			for (int[] neighbor : g.getOrDefault(src, new ArrayList<>())) {
 				int next = neighbor[0];
 				int arrivalTime = time + neighbor[1];

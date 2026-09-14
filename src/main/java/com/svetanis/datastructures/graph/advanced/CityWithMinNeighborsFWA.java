@@ -58,8 +58,11 @@ public final class CityWithMinNeighborsFWA {
 			int from = edge[0];
 			int to = edge[1];
 			int weight = edge[2];
-			dist[from][to] = weight;
-			dist[to][from] = weight;
+			// keep the CHEAPER road, not the last one read. LC 1334 promises
+			// each pair of cities appears once, so plain assignment agrees --
+			// but a matrix has one slot per pair and silently drops the other
+			dist[from][to] = Math.min(dist[from][to], weight);
+			dist[to][from] = dist[from][to];
 		}
 	}
 
@@ -70,5 +73,11 @@ public final class CityWithMinNeighborsFWA {
 
 		int[][] g2 = { { 0, 1, 2 }, { 0, 4, 8 }, { 1, 2, 3 }, { 1, 4, 2 }, { 2, 3, 1 }, { 3, 4, 1 } };
 		System.out.println(cmn.city(5, g2, 2)); // 0
+
+		// the road 0-1 is listed twice, once cheap and once dear. LC 1334
+		// promises that never happens, and the matrix has one slot for the
+		// pair, so writing whichever came last kept the 9 and answered 0
+		int[][] g4 = { { 0, 1, 1 }, { 0, 1, 9 }, { 1, 2, 1 } };
+		System.out.println(cmn.city(3, g4, 2)); // 2
 	}
 }

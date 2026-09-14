@@ -10,7 +10,9 @@ import java.util.Map;
 // DFS Algorithm 
 
 public final class NetworkDelayTimeDFS {
-	// Time Complexity: O((V - 1)! + E logE)
+	// Time Complexity: O((V - 1)!) worst case, heavily pruned in practice
+	// by the 'if (time >= dist[node]) return;' cutoff. There is no sort
+	// in this file, so there is no E log E term.
 	// Space Complexity: O(V + E)
 
 	private static final int INF = (int) 1e9;

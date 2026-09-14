@@ -17,11 +17,18 @@ public final class CheapestFlightsBFA {
 		Arrays.fill(dist, INF);
 		dist[src] = 0;
 		for (int i = 0; i < k + 1; i++) {
+			// load-bearing: relaxing against the previous round's snapshot is
+			// what caps a path at k + 1 edges. Reading dist directly here lets
+			// one round chain several flights - g3 below returns 200, not 500.
 			System.arraycopy(dist, 0, prev, 0, n);
 			for (int[] flight : flights) {
 				int from = flight[0];
 				int to = flight[1];
 				int cost = flight[2];
+				if (prev[from] == INF) {
+					// never relax off an unreached node: INF + cost is not a distance
+					continue;
+				}
 				dist[to] = Math.min(dist[to], prev[from] + cost);
 			}
 		}

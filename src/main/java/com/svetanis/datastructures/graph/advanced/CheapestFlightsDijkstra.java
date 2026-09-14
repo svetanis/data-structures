@@ -1,5 +1,7 @@
 package com.svetanis.datastructures.graph.advanced;
 
+import static java.util.Comparator.comparingInt;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -18,10 +20,15 @@ public final class CheapestFlightsDijkstra {
 
 	public static int cheapestFlight(int n, int[][] flights, int src, int dst, int k) {
 		Map<Integer, List<int[]>> g = graph(flights);
-		int[] minCost = new int[n];
-		Arrays.fill(minCost, INF);
+		// this array holds STOPS, not cost. it is not Dijkstra's
+		// dist[]: a city is worth expanding again if it is reached
+		// in fewer stops, even at a higher cost, because the usual
+		// settle-once-by-cost rule discards the only path that can
+		// still reach dst within k. cost lives in the queue entry.
+		int[] minStops = new int[n];
+		Arrays.fill(minStops, INF);
 		// Priority Queue: city, cost, stops
-		PriorityQueue<int[]> pq = new PriorityQueue<>((a, b) -> a[1] - b[1]);
+		PriorityQueue<int[]> pq = new PriorityQueue<>(comparingInt(a -> a[1]));
 		pq.offer(new int[] { src, 0, 0 });
 
 		while (!pq.isEmpty()) {
@@ -29,10 +36,10 @@ public final class CheapestFlightsDijkstra {
 			int city = node[0];
 			int cost = node[1];
 			int stops = node[2];
-			if (stops >= minCost[city] || stops > k + 1) {
+			if (stops >= minStops[city] || stops > k + 1) {
 				continue;
 			}
-			minCost[city] = stops;
+			minStops[city] = stops;
 			if (city == dst) {
 				return cost;
 			}

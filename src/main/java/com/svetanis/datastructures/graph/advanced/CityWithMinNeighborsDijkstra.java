@@ -44,8 +44,11 @@ public final class CityWithMinNeighborsDijkstra {
 			int from = edge[0];
 			int to = edge[1];
 			int weight = edge[2];
-			graph[from][to] = weight;
-			graph[to][from] = weight;
+			// keep the CHEAPER road, not the last one read. LC 1334 promises
+			// each pair of cities appears once, so plain assignment agrees --
+			// but a matrix has one slot per pair and silently drops the other
+			graph[from][to] = Math.min(graph[from][to], weight);
+			graph[to][from] = graph[from][to];
 		}
 	}
 
@@ -60,15 +63,28 @@ public final class CityWithMinNeighborsDijkstra {
 					closest = j;
 				}
 			}
+			if (dist[closest] == INF) {
+				// the nearest unvisited city is already unreachable, so every
+				// city still left is too. going on would compute INF + INF,
+				// and two of these overflow past Integer.MAX_VALUE into a
+				// large NEGATIVE number that then reads as a very short path
+				break;
+			}
 			visited[closest] = true;
 			for (int j = 0; j < n; j++) {
+				if (graph[closest][j] == INF) {
+					// no road between these two, so there is nothing to add
+					continue;
+				}
 				int d = dist[closest] + graph[closest][j];
 				dist[j] = Math.min(dist[j], d);
 			}
 		}
 		int count = 0;
-		for (int d : dist) {
-			if (d <= threshold) {
+		for (int city = 0; city < n; city++) {
+			// a city is not its own neighbour: dist[src] is 0, which clears
+			// every threshold, so counting it adds one to every city's total
+			if (city != src && dist[city] <= threshold) {
 				count++;
 			}
 		}
@@ -82,5 +98,19 @@ public final class CityWithMinNeighborsDijkstra {
 
 		int[][] g2 = { { 0, 1, 2 }, { 0, 4, 8 }, { 1, 2, 3 }, { 1, 4, 2 }, { 2, 3, 1 }, { 3, 4, 1 } };
 		System.out.println(cmn.city(5, g2, 2)); // 0
+
+		// four cities and one road. cities 0 and 2 reach nobody, and the
+		// tie goes to the larger label, so the answer is 2. every city
+		// with no road out used to relax INF against INF, and the sum
+		// wrapped negative, so all four looked equally reachable and the
+		// first one tried won -- this printed 3
+		int[][] g3 = { { 1, 3, 4 } };
+		System.out.println(cmn.city(4, g3, 9)); // 2
+
+		// the road 0-1 is listed twice, once cheap and once dear. LC 1334
+		// promises that never happens, and the matrix has one slot for the
+		// pair, so writing whichever came last kept the 9 and answered 0
+		int[][] g4 = { { 0, 1, 1 }, { 0, 1, 9 }, { 1, 2, 1 } };
+		System.out.println(cmn.city(3, g4, 2)); // 2
 	}
 }

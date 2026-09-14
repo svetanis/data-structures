@@ -1,11 +1,13 @@
 package com.svetanis.datastructures.graph.advanced;
 
+import static java.util.Comparator.comparingInt;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.PriorityQueue;
 
-// Minimum Cost Path with Edge Reversals
+// 3650. Minimum Cost Path with Edge Reversals
 
 public final class MinCostPathWithEdgeReversals {
   // Time Complexity: O(n + m * log(m))
@@ -19,13 +21,15 @@ public final class MinCostPathWithEdgeReversals {
     boolean[] visited = new boolean[n];
     Arrays.fill(dist, Integer.MAX_VALUE);
     dist[0] = 0;
+    // entry is { node, distance }, ordered on the distance -- the same layout as every
+    // other Dijkstra in this package. the comparator index and the field order must agree
     PriorityQueue<int[]> pq = new PriorityQueue<>//
-    ((a, b) -> a[0] - b[0]);
+    (comparingInt(a -> a[1]));
     pq.offer(new int[] { 0, 0 });
     while (!pq.isEmpty()) {
       int[] curr = pq.poll();
-      int d = curr[0];
-      int x = curr[1];
+      int x = curr[0];
+      int d = curr[1];
       if (x == n - 1) {
         return d;
       }
@@ -38,7 +42,7 @@ public final class MinCostPathWithEdgeReversals {
         int w = neighbor[1];
         if (d + w < dist[y]) {
           dist[y] = d + w;
-          pq.offer(new int[] { dist[y], y });
+          pq.offer(new int[] { y, dist[y] });
         }
       }
     }

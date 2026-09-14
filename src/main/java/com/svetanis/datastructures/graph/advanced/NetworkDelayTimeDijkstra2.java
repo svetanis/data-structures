@@ -1,5 +1,7 @@
 package com.svetanis.datastructures.graph.advanced;
 
+import static java.util.Comparator.comparingInt;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -22,7 +24,7 @@ public final class NetworkDelayTimeDijkstra2 {
 		Arrays.fill(dist, INF);
 		dist[k] = 0;
 		// Priority queue: (node, time)
-		PriorityQueue<int[]> pq = new PriorityQueue<>((a, b) -> a[1] - b[1]);
+		PriorityQueue<int[]> pq = new PriorityQueue<>(comparingInt(a -> a[1]));
 		pq.offer(new int[] { k, 0 });
 		while (!pq.isEmpty()) {
 			int[] node = pq.poll();

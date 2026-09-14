@@ -21,6 +21,11 @@ public final class CheapestFlightsBFS {
 		Map<Integer, List<int[]>> g = graph(flights);
 		int[] minCost = new int[n];
 		Arrays.fill(minCost, INF);
+		// the trip from src to src costs nothing and takes no flights. only
+		// arrivals write minCost, so without this line src keeps INF and a
+		// query with dst == src answers -1. it also prunes every needless
+		// return to src, which can only cost more than starting there
+		minCost[src] = 0;
 		// Queue: city, cost
 		Deque<int[]> dq = new ArrayDeque<>();
 		dq.offer(new int[] { src, 0 });
@@ -69,6 +74,12 @@ public final class CheapestFlightsBFS {
 
 		int[][] g4 = { { 0, 1, 5 }, { 1, 2, 5 }, { 0, 3, 2 }, { 3, 1, 2 }, { 1, 4, 1 }, { 4, 2, 1 } };
 		System.out.println(cheapestFlight(5, g4, 0, 2, 2)); // 7
+
+		// already where you want to be, so the trip is free. LC 787
+		// promises src != dst, and only arrivals write minCost, so
+		// src kept its INF and this printed -1. the three siblings
+		// answer 0 here because each of them seeds the source
+		System.out.println(cheapestFlight(3, g2, 1, 1, 1)); // 0
 
 	}
 }

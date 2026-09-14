@@ -6,7 +6,9 @@ import java.util.Arrays;
 // Bellman-Ford Algorithm
 
 public final class NetworkDelayTimeBFA {
-	// Time Complexity: O(E log V)
+	// Time Complexity: O(V * E) -- Bellman-Ford relaxes every edge V-1 times.
+	// There is no heap here. O(E log V) is DIJKSTRA's bound; this file
+	// exists to be the slower algorithm that survives negative weights.
 	// Space Complexity: O(V + E)
 
 	private static final int INF = (int) 1e9;

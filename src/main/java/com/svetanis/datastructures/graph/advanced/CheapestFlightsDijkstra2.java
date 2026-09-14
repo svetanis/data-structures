@@ -1,5 +1,7 @@
 package com.svetanis.datastructures.graph.advanced;
 
+import static java.util.Comparator.comparingInt;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -17,7 +19,7 @@ public final class CheapestFlightsDijkstra2 {
 		Map<Integer, List<int[]>> g = graph(flights);
 		Map<String, Integer> minCost = new HashMap<>();
 		// Priority Queue: city, cost, stops
-		PriorityQueue<int[]> pq = new PriorityQueue<>((a, b) -> a[1] - b[1]);
+		PriorityQueue<int[]> pq = new PriorityQueue<>(comparingInt(a -> a[1]));
 		pq.offer(new int[] { src, 0, 0 });
 
 		while (!pq.isEmpty()) {

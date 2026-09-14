@@ -1,5 +1,7 @@
 package com.svetanis.datastructures.graph.advanced;
 
+import static java.util.Comparator.comparingInt;
+
 import java.util.PriorityQueue;
 
 // 778. Swim in Rising Water
@@ -17,7 +19,7 @@ public final class SwimInRisingWaterDijkstra {
 		boolean[][] visited = new boolean[n][n];
 		visited[0][0] = true;
 		// Priority Queue: row, col, time
-		PriorityQueue<int[]> dq = new PriorityQueue<>((a, b) -> a[2] - b[2]);
+		PriorityQueue<int[]> dq = new PriorityQueue<>(comparingInt(a -> a[2]));
 		dq.add(new int[] { 0, 0, grid[0][0] });
 		while (!dq.isEmpty()) {
 			int[] node = dq.poll();

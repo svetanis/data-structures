@@ -14,9 +14,8 @@ public final class SwimInRisingWater {
 	private static final int[] dy = { 0, -1, 0, 1 };
 
 	public static int swimInWater(int[][] grid) {
-		int n = grid.length;
 		int left = grid[0][0];
-		int right = n * n - 1;
+		int right = highest(grid);
 		while (left < right) {
 			int mid = left + (right - left) / 2;
 			if (canSwim(grid, mid)) {
@@ -26,6 +25,20 @@ public final class SwimInRisingWater {
 			}
 		}
 		return left;
+	}
+
+	private static int highest(int[][] grid) {
+		// the answer can never exceed the deepest cell on the board. n * n - 1
+		// is that same bound spelled from LC 778's promise that the grid holds
+		// each of 0 .. n*n-1 exactly once, and it is too small the moment a
+		// value repeats -- {{3,5},{5,5}} needs 5 and n * n - 1 caps it at 3
+		int max = grid[0][0];
+		for (int[] row : grid) {
+			for (int cell : row) {
+				max = Math.max(max, cell);
+			}
+		}
+		return max;
 	}
 
 	private static boolean canSwim(int[][] grid, int target) {
@@ -74,5 +87,12 @@ public final class SwimInRisingWater {
 		int[][] g2 = { { 0, 1, 2, 3, 4 }, { 24, 23, 22, 21, 5 }, { 12, 13, 14, 15, 16 }, { 11, 17, 18, 19, 20 },
 				{ 10, 9, 8, 7, 6 } };
 		System.out.println(swimInWater(g2)); // 16
+
+		// two cells hold 5 and the deepest is 5, but n * n - 1 is 3, so a
+		// search that stops at 3 answers 3 and calls a board unswimmable
+		// that is not. LC 778 promises every value 0 .. n*n-1 appears once,
+		// which is the only reason the old bound was ever right
+		int[][] g3 = { { 3, 5 }, { 5, 5 } };
+		System.out.println(swimInWater(g3)); // 5
 	}
 }
