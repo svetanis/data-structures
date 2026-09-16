@@ -66,17 +66,6 @@ public final class MinimumHeightTrees {
 		return queue;
 	}
 
-	private static Queue<Integer> leaves2(Map<Integer, Integer> map) {
-		Queue<Integer> queue = new LinkedList<>();
-		// all leaves (all nodes with only 1 in-degree)
-		for (int key : map.keySet()) {
-			if (map.get(key) == 1) {
-				queue.add(key);
-			}
-		}
-		return queue;
-	}
-
 	private static void buildGraph(int v, int[][] edges, Map<Integer, Integer> inDegree,
 			Map<Integer, List<Integer>> map) {
 		// this is undirected graph

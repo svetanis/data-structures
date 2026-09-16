@@ -75,8 +75,15 @@ public final class IsCyclicDGraphBfs {
 		int[][] m1 = { { 3, 2 }, { 3, 0 }, { 2, 0 }, { 2, 1 } };
 		int[][] m2 = { { 4, 2 }, { 4, 3 }, { 2, 0 }, { 2, 1 }, { 3, 1 } };
 		int[][] m3 = { { 6, 4 }, { 6, 2 }, { 5, 3 }, { 5, 4 }, { 3, 0 }, { 3, 1 }, { 3, 2 }, { 4, 1 } };
-		System.out.println(hasCycle(4, m1)); // 3, 2, 0, 1
-		System.out.println(hasCycle(5, m2)); // 4, 2, 3, 0, 1
-		System.out.println(hasCycle(7, m3)); // 5, 6, 3, 4, 0, 2, 1
+		// the three graphs above are the ones TopologicalSortingBfs sorts,
+		// and all three are acyclic. The expected values here are that
+		// method's ORDERS in the sibling file -- this one answers yes or no
+		System.out.println(hasCycle(4, m1)); // false
+		System.out.println(hasCycle(5, m2)); // false
+		System.out.println(hasCycle(7, m3)); // false
+
+		// and one that does have a cycle: 0 -> 1 -> 2 -> 0
+		int[][] m4 = { { 0, 1 }, { 1, 2 }, { 2, 0 } };
+		System.out.println(hasCycle(3, m4)); // true
 	}
 }

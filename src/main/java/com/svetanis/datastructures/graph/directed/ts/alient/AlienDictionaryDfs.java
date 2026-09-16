@@ -85,6 +85,6 @@ public final class AlienDictionaryDfs {
 
 	public static void main(String[] args) {
 		List<String> words = newArrayList("caa", "aaa", "aab");
-		print(sort(words));
+		print(sort(words)); // c a b
 	}
 }

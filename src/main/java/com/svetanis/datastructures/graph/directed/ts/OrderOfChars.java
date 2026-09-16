@@ -44,6 +44,6 @@ public final class OrderOfChars {
     String[] words = { "caa", "aaa", "aab" };
     Graph g = new Graph(3);
     createGraph(words, g);
-    print(sort(g));
+    print(sort(g)); // c a b
   }
 }

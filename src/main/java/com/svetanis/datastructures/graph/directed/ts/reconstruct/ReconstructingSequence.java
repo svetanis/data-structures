@@ -45,7 +45,11 @@ public final class ReconstructingSequence {
 			}
 			// the next element is different
 			// from the original sequence
-			if (sequence.get(list.size()) != queue.peek()) {
+			// both sides are Integer, so != would compare identity rather than
+			// value. Java caches the boxes for -128..127 only, so that spelling
+			// agrees with equals() on small inputs and silently stops agreeing
+			// above 127 -- and LC 444 allows values up to 10,000
+			if (!sequence.get(list.size()).equals(queue.peek())) {
 				return false;
 			}
 			int src = queue.poll();
@@ -116,5 +120,12 @@ public final class ReconstructingSequence {
 		System.out.println(reconstruct(s1, m0)); // true
 		System.out.println(reconstruct(s1, m1)); // false
 		System.out.println(reconstruct(s2, m2)); // true
+
+		// the first case again with every value pushed above 127, where Java
+		// stops handing out the same Integer box for the same number. The
+		// answer must not depend on how large the numbers are
+		List<Integer> s3 = newArrayList(201, 202, 203, 204);
+		int[][] m3 = { { 201, 202 }, { 202, 203 }, { 203, 204 } };
+		System.out.println(reconstruct(s3, m3)); // true
 	}
 }

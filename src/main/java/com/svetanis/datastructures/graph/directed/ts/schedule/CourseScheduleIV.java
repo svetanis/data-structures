@@ -8,14 +8,16 @@ import java.util.Queue;
 // 1462. Course Schedule IV
 
 public final class CourseScheduleIV {
+	// Time Complexity: O(n * E + Q) -- every edge merges a row of n bits, then one lookup per query
+	// Space Complexity: O(n^2) -- the reachability table
 
 	public static List<Boolean> checkIfPrerequisite(int n, int[][] prerequisites, int[][] queries){
 		int[] inDegree = new int[n];
 		boolean[][] f = new boolean[n][n];
 		List<List<Integer>> graph = graphInit(n);
 		for (int[] prerequisite : prerequisites) {
-			int course = prerequisite[1];
-			int prereq = prerequisite[0];
+			int course = prerequisite[1];        // 1462: [a, b] means a BEFORE b --
+			int prereq = prerequisite[0];        // the opposite of 207 and 210
 			graph.get(prereq).add(course);
 			inDegree[course]++;
 		}
@@ -34,6 +36,8 @@ public final class CourseScheduleIV {
 			for (int neighbor : g.get(course)) {
 				f[course][neighbor] = true;
 				for(int pre = 0; pre < n; pre++) {
+					// everything that reaches course now reaches neighbor.
+					// safe because course came off the queue, so its row is final
 					f[pre][neighbor] |= f[pre][course];
 				}
 				inDegree[neighbor]--;

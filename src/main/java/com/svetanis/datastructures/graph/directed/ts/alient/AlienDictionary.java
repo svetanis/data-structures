@@ -21,6 +21,13 @@ public final class AlienDictionary {
 	// Time Complexity: O(V + E)
 
 	public static String ado(String[] words) {
+		// "abc" listed before "ab" cannot happen in any alphabet: the shorter
+		// word is a prefix of the longer one, so it sorts first whatever the
+		// letters mean. The character loop below cannot see it, because every
+		// character it compares matches
+		if (hasInvalidPrefix(words)) {
+			return "";
+		}
 		Map<Character, Integer> inDegree = inDegreeInit(words);
 		Map<Character, List<Character>> graph = graphInit(words);
 		buildGraph(words, inDegree, graph);
@@ -45,6 +52,17 @@ public final class AlienDictionary {
 			return "";
 		}
 		return sb.toString();
+	}
+
+	private static boolean hasInvalidPrefix(String[] words) {
+		for (int i = 0; i < words.length - 1; i++) {
+			String w1 = words[i];
+			String w2 = words[i + 1];
+			if (w1.length() > w2.length() && w1.startsWith(w2)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	private static Queue<Character> sources(Map<Character, Integer> map) {
@@ -110,5 +128,10 @@ public final class AlienDictionary {
 		System.out.println(ado(s1)); // b,a,c
 		System.out.println(ado(s2)); // c,a,b
 		System.out.println(ado(s3)); // y,w,x,z
+
+		// "abc" before "ab" is impossible in every alphabet. Without the
+		// prefix guard this returns "abc", because the character loop
+		// compares only the two positions where the words agree
+		System.out.println("[" + ado(new String[] { "abc", "ab" }) + "]"); // []
 	}
 }

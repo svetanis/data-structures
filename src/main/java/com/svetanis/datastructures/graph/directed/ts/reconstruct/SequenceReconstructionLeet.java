@@ -36,11 +36,19 @@ public final class SequenceReconstructionLeet {
 				dq.offer(i);
 			}
 		}
+		int emitted = 0;
 		while (!dq.isEmpty()) {
 			if (dq.size() > 1) {
 				return false;
 			}
 			int src = dq.poll();
+			// a forced order is not enough: the order the graph forces has to
+			// BE the given sequence. {2, 1} as the only pair forces 2 then 1,
+			// which is unique but is not [1, 2] -- so the answer is false
+			if (src != sequence[emitted] - 1) {
+				return false;
+			}
+			emitted++;
 			for (int adj : graph[src]) {
 				inDegree[adj]--;
 				if (inDegree[adj] == 0) {
@@ -48,7 +56,8 @@ public final class SequenceReconstructionLeet {
 				}
 			}
 		}
-		return true;
+		// fewer than n emitted means a cycle, so no order exists at all
+		return emitted == n;
 	}
 
 	public static void main(String[] args) {
@@ -73,5 +82,20 @@ public final class SequenceReconstructionLeet {
 		list4.add(asList(5, 2, 6, 3));
 		list4.add(asList(4, 1, 5, 2));
 		System.out.println(reconstruct(s2, list4)); // true
+
+		// the pairs force 2 before 1, which is a unique order but not this
+		// sequence. Without the position check this reports true, because
+		// the queue never holds two nodes at once
+		int[] s3 = { 1, 2 };
+		List<List<Integer>> list5 = newArrayList();
+		list5.add(asList(2, 1));
+		System.out.println(reconstruct(s3, list5)); // false
+
+		// and a cycle: 1 -> 2 -> 1 leaves the queue empty from the start
+		int[] s4 = { 1, 2 };
+		List<List<Integer>> list6 = newArrayList();
+		list6.add(asList(1, 2));
+		list6.add(asList(2, 1));
+		System.out.println(reconstruct(s4, list6)); // false
 	}
 }

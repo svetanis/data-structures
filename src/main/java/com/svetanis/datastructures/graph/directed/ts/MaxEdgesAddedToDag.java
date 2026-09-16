@@ -44,6 +44,8 @@ public final class MaxEdgesAddedToDag {
     g.addEdge(4, 1);
     g.addEdge(2, 3);
     g.addEdge(3, 1);
-    print(edges(g));
+    // every pair the topological order leaves unjoined: 15 pairs on 6
+    // vertices, minus the 6 edges already here
+    print(edges(g)); // 9 pairs, starting Pair{left=4, right=5}
   }
 }

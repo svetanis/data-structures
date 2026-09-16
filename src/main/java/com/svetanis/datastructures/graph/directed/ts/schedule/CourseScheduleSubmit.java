@@ -30,7 +30,7 @@ public final class CourseScheduleSubmit {
 		Queue<Integer> queue = sources(inDegree);
 		while (!queue.isEmpty()) {
 			int course = queue.poll();
-			a[count++] = course;
+			a[count++] = course;                 // 207 has a bare count++ here
 			for (int neighbor : g.get(course)) {
 				inDegree[neighbor]--;
 				if (inDegree[neighbor] == 0) {
@@ -38,7 +38,7 @@ public final class CourseScheduleSubmit {
 				}
 			}
 		}
-		return count == g.size() ? a : new int[0];
+		return count == g.size() ? a : new int[0];   // short == a cycle, so no order exists
 	}
 
 	private static Queue<Integer> sources(int[] inDegree) {

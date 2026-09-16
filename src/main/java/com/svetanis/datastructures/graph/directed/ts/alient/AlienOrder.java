@@ -35,6 +35,13 @@ public final class AlienOrder {
 	// Time Complexity: O(V + E)
 
 	public static Optional<String> ado(List<String> words) {
+		// "abc" listed before "ab" cannot happen in any alphabet: the shorter
+		// word is a prefix of the longer one, so it sorts first whatever the
+		// letters mean. The character loop in graph() cannot see it, because
+		// every character it compares matches
+		if (hasInvalidPrefix(words)) {
+			return absent();
+		}
 		Map<Character, List<Character>> graph = graph(words);
 		Map<Character, Integer> inDegree = inDegree(graph);
 		StringBuilder sb = new StringBuilder();
@@ -57,6 +64,17 @@ public final class AlienOrder {
 			return absent();
 		}
 		return of(sb.toString());
+	}
+
+	private static boolean hasInvalidPrefix(List<String> words) {
+		for (int i = 1; i < words.size(); i++) {
+			String w1 = words.get(i - 1);
+			String w2 = words.get(i);
+			if (w1.length() > w2.length() && w1.startsWith(w2)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	private static Queue<Character> sources(Map<Character, Integer> map) {
@@ -113,13 +131,18 @@ public final class AlienOrder {
 	}
 
 	public static void main(String[] args) {
-		System.out.println(ado(asList("wrt", "wrf", "er", "ett", "rftt"))); // wertf
-		System.out.println(ado(asList("z", "x"))); // zx
-		System.out.println(ado(asList("she", "sell", "seashell", "seashore", "seahorse", "on", "a"))); // lnrsheoa
-		System.out.println(ado(asList("stdlib", "stl", "scanf", "sscanf", "printf"))); // abdfilnrtcsp
+		System.out.println(ado(asList("wrt", "wrf", "er", "ett", "rftt"))); // Optional.of(wertf)
+		System.out.println(ado(asList("z", "x"))); // Optional.of(zx)
+		System.out.println(ado(asList("she", "sell", "seashell", "seashore", "seahorse", "on", "a"))); // Optional.of(lnrsheoa)
+		System.out.println(ado(asList("stdlib", "stl", "scanf", "sscanf", "printf"))); // Optional.of(abdfilnrtcsp)
 		System.out.println(
-				ado(asList("neat", "net", "nest", "ante", "one", "oil", "innit", "ian", "isotope", "rat", "reer", "rest"))); // lnaeoiprts
+				ado(asList("neat", "net", "nest", "ante", "one", "oil", "innit", "ian", "isotope", "rat", "reer", "rest"))); // Optional.of(lnaeoiprts)
 		System.out.println(
-				ado(asList("da", "la", "na", "fa", "fei", "jia", "ha", "hai", "hang", "hua", "ta", "sha", "shi", "si", "ba"))); // ""
+				ado(asList("da", "la", "na", "fa", "fei", "jia", "ha", "hai", "hang", "hua", "ta", "sha", "shi", "si", "ba"))); // Optional.absent()
+
+		// "abc" before "ab" is impossible in every alphabet. Without the
+		// prefix guard this returns Optional.of(abc), because the character
+		// loop compares only the two positions where the words agree
+		System.out.println(ado(asList("abc", "ab"))); // Optional.absent()
 	}
 }

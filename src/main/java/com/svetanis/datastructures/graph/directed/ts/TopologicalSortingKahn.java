@@ -69,6 +69,6 @@ public final class TopologicalSortingKahn {
     g.addEdge(4, 1);
     g.addEdge(2, 3);
     g.addEdge(3, 1);
-    print(tc(g));
+    print(tc(g)); // 4 5 2 0 3 1 -- a DIFFERENT valid order to the DFS sibling's
   }
 }

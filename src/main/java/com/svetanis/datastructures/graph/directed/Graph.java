@@ -70,7 +70,7 @@ public final class Graph {
   }
 
   private boolean isValid(int i, int j) {
-    return i >= 0 && i < v && j > 0 && j < v;
+    return i >= 0 && i < v && j >= 0 && j < v;
   }
 
   public void print() {
