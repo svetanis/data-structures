@@ -10,7 +10,7 @@ import java.util.Set;
 import com.svetanis.datastructures.tree.trie.Trie;
 import com.svetanis.java.base.utils.Print;
 
-public final class WordSearchBoard {
+public final class WordSearchTrieStringCarried {
 
   public static List<String> search(char[][] grid, List<String> words) {
     int n = grid.length;

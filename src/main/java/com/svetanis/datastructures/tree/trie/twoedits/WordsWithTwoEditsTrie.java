@@ -1,9 +1,13 @@
-package com.svetanis.datastructures.tree.trie;
+package com.svetanis.datastructures.tree.trie.twoedits;
 
 import java.util.ArrayList;
 import java.util.List;
 
 // 2452. Words Within Two Edits of Dictionary
+
+// A trie of the dictionary, walked by each query: follow the query's letter
+// for free, or any other child for one of the two edits.
+// WordsWithTwoEditsBruteForce compares every pair instead.
 
 public final class WordsWithTwoEditsTrie {
 

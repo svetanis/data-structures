@@ -6,13 +6,25 @@ import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.collect.Maps.newHashMap;
 import static com.svetanis.java.base.collect.Maps.checkedPut;
 import static com.svetanis.java.base.collect.Maps.newMap;
-import static org.apache.commons.lang3.StringUtils.isBlank;
 
 import java.util.List;
 import java.util.Map;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableMap;
+import com.svetanis.datastructures.tree.trie.Node;
+import com.svetanis.datastructures.tree.trie.Trie;
+
+// Longest prefix matching.
+// Given a dictionary of words and an input string, find the longest prefix
+// of the string that is also a word in the dictionary.
+//   dictionary {are, area, base, cat, cater, children, basement}
+//   caterer  -> cater
+//   basemexy -> base
+//   child    -> <Empty>   (children is a word, but no prefix of child is)
+//
+// The walk keeps going past a word and remembers the LAST one it met.
+// Replace Words (648) is the same walk returning at the FIRST.
 
 public final class LongestMatchingPrefix {
 
@@ -25,37 +37,25 @@ public final class LongestMatchingPrefix {
     return newMap(map);
   }
 
+  // absent when no dictionary word begins input
   private static Optional<String> lmp(Node root, String input) {
-    String result = "";
-    int n = input.length();
-    int prev = 0;
     Node node = root;
-    for (int level = 0; level < n; ++level) {
-      char c = input.charAt(level);
-      Map<Character, Node> map = node.children;
-      if (map.containsKey(c)) {
-        result += c;
-        node = map.get(c);
-        if (node.leaf) {
-          prev = level + 1;
-        }
-      } else {
+    int longest = 0; // length of the longest dictionary word that begins input
+    for (int i = 0; i < input.length(); i++) {
+      node = node.children.get(input.charAt(i));
+      if (node == null) {
         break;
       }
+      if (node.endOfWord) {
+        longest = i + 1;
+      }
     }
-
-    // if the last processed char didn't match end of a word,
-    // return the previously matching prefix
-    if (!node.leaf) {
-      return of(result.substring(0, prev));
-    } else {
-      return isBlank(result) ? absent() : of(result);
-    }
+    return longest == 0 ? absent() : of(input.substring(0, longest));
   }
 
   public static void main(String[] args) {
-    List<String> base = newArrayList("are", "area", "base", "cat", "cater", "basement");
-    List<String> list = newArrayList("caterer", "basement", "are", "arex", "basemexz", "xyz");
-    System.out.println(lmp(list, base));
+    List<String> words = newArrayList("are", "area", "base", "cat", "cater", "children", "basement");
+    List<String> list = newArrayList("caterer", "basemexy", "child");
+    System.out.println(lmp(list, words)); // caterer=cater, basemexy=base, child=absent
   }
 }

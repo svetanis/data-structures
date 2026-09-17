@@ -8,6 +8,14 @@ import java.util.List;
 
 import com.google.common.collect.ImmutableList;
 
+// Shortest unique prefix for every word.
+// For each word, the shortest prefix that no other word in the list starts with.
+//   {zebra, dog, duck, dove}                   -> z, dog, du, dov
+//   {geeksgeeks, geeksquiz, geeksforgeeks}     -> geeksg, geeksq, geeksf
+// Given: no word is a prefix of another (so no duplicates either). A word
+// that is -- dog beside dogs -- has no unique prefix, and gets no answer.
+// Answers come out in input order.
+
 public final class ShortestUniquePrefixes {
 
   public static ImmutableList<String> sup(List<String> words) {

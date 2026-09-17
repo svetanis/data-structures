@@ -51,7 +51,7 @@ public final class Trie {
       }
       node = map.get(c);
     }
-    node.leaf = true;
+    node.endOfWord = true;
   }
 
   public boolean search(String word) {
@@ -59,7 +59,7 @@ public final class Trie {
     if (isAbsent(node)) {
       return false;
     }
-    return node.get().leaf;
+    return node.get().endOfWord;
   }
 
   public Optional<Node> find(String str) {

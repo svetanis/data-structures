@@ -43,7 +43,7 @@ public class Trie {
       }
       node = map.get(c);
     }
-    node.leaf = true;
+    node.endOfWord = true;
   }
 
   public Node getRoot() {

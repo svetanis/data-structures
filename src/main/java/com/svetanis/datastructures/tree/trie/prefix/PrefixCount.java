@@ -15,35 +15,35 @@ import java.util.List;
 // In a query, you should account for all the duplicate words.
 
 public final class PrefixCount {
-	// Time Complexity: O(c)
-	// Space Complexity: O(c)
-	// c - total number of chars in the input
+  // Time Complexity: O(c)
+  // Space Complexity: O(c)
+  // c - total number of chars in the input
 
-	public static List<Integer> prefixCount(List<String> words, List<String> prefixes) {
-		TrieNode trie = build(words);
-		return count(trie, prefixes);
-	}
+  public static List<Integer> prefixCount(List<String> words, List<String> prefixes) {
+    TrieNode trie = build(words);
+    return count(trie, prefixes);
+  }
 
-	private static List<Integer> count(TrieNode trie, List<String> prefixes) {
-		List<Integer> list = new ArrayList<>();
-		for (String prefix : prefixes) {
-			list.add(trie.prefixQuery(prefix));
-		}
-		return list;
-	}
+  private static List<Integer> count(TrieNode trie, List<String> prefixes) {
+    List<Integer> list = new ArrayList<>();
+    for (String prefix : prefixes) {
+      list.add(trie.prefixQuery(prefix));
+    }
+    return list;
+  }
 
-	private static TrieNode build(List<String> words) {
-		TrieNode trie = new TrieNode();
-		for (String word : words) {
-			trie.insert(word);
-		}
-		return trie;
-	}
+  private static TrieNode build(List<String> words) {
+    TrieNode trie = new TrieNode();
+    for (String word : words) {
+      trie.insert(word);
+    }
+    return trie;
+  }
 
-	public static void main(String[] args) {
-		List<String> words = asList("forgo", "for", "trie", "while", "loop", "stack", "deque", "kruskal", "deck", "decks",
-				"logic", "math", "computer", "science", "compute", "scrap", "logos", "loom");
-		List<String> prefixes = asList("l", "zeb", "for", "trie", "log", "logi", "sc", "st");
-		System.out.println(prefixCount(words, prefixes)); // 4 0 2 1 2 1 2 1
-	}
+  public static void main(String[] args) {
+    List<String> words = asList("forgo", "for", "trie", "while", "loop", "stack", "deque", "kruskal", "deck", "decks",
+        "logic", "math", "computer", "science", "compute", "scrap", "logos", "loom");
+    List<String> prefixes = asList("l", "zeb", "for", "trie", "log", "logi", "sc", "st");
+    System.out.println(prefixCount(words, prefixes)); // 4 0 2 1 2 1 2 1
+  }
 }

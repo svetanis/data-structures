@@ -4,7 +4,10 @@ package com.svetanis.datastructures.tree.trie.prefix;
 
 public final class CountDistinctSubStrTrie {
   // Time Complexity: O(n^2)
-  // Space Complexity: O(n)
+  // Space Complexity: O(n^2)
+  // the trie holds one node per DISTINCT substring, which is exactly what
+  // the method returns -- 28 nodes for a 7-character string with no repeats.
+  // O(n) is the depth of one path down it, not the size of the tree
 
   private Trie root;
 

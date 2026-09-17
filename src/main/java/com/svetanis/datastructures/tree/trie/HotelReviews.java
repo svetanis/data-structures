@@ -1,7 +1,6 @@
 package com.svetanis.datastructures.tree.trie;
 
 import static com.google.common.collect.Lists.newArrayList;
-import static com.google.common.collect.Lists.transform;
 import static com.svetanis.java.base.Splitters.split;
 import static com.svetanis.java.base.collect.Lists.sort;
 import static com.svetanis.java.base.collect.Lists.transform;
@@ -38,7 +37,7 @@ public final class HotelReviews {
       }
       node = node.children.get(c);
     }
-    return node != null && node.leaf;
+    return node != null && node.endOfWord;
   }
 
   public static void main(String[] args) {

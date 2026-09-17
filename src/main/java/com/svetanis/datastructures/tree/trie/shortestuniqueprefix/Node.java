@@ -8,7 +8,9 @@ public final class Node {
   protected char key;
   protected int freq;
   protected Map<Character, Node> children;
-  protected boolean leaf;
+  // true where a word ENDS, not where the node has no children.
+  // Nodes.isLeaf(node) in tree/binary/ means the no-children thing.
+  protected boolean endOfWord;
 
   public static Node newNode() {
     return new Node('0', 0);
@@ -26,11 +28,11 @@ public final class Node {
     this.key = letter;
     this.freq = freq;
     this.children = newHashMap();
-    this.leaf = false;
+    this.endOfWord = false;
   }
 
-  public boolean isLeaf() {
-    return leaf;
+  public boolean isEndOfWord() {
+    return endOfWord;
   }
 
   @Override

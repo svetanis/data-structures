@@ -1,11 +1,14 @@
-package com.svetanis.datastructures.tree.trie;
+package com.svetanis.datastructures.tree.trie.twoedits;
 
 import java.util.ArrayList;
 import java.util.List;
 
 // 2452. Words Within Two Edits of Dictionary
 
-public final class WordsWithTwoEdits {
+// No trie: compare every query with every dictionary word, letter by letter.
+// WordsWithTwoEditsTrie walks a trie and spends the two edits on the way down.
+
+public final class WordsWithTwoEditsBruteForce {
   // Time Complexity: O(n * m * l)
   // Space Complexity: O(m)
 
