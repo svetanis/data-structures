@@ -1,4 +1,4 @@
-package com.svetanis.datastructures.graph.advanced;
+package com.svetanis.datastructures.graph.shortestpath;
 
 import static java.util.Comparator.comparingInt;
 
@@ -6,6 +6,9 @@ import java.util.Arrays;
 import java.util.PriorityQueue;
 
 // 2577. Minimum Time to Visit a Cell In a Grid
+// Dijkstra on the grid. arriving too early is not fatal:
+// step back and forth to burn time, which moves the arrival
+// by two, so the parity of the wait has to be corrected
 
 public final class MinTimeToVisitCell {
 	// Time Complexity: O(n * m log (n * m))

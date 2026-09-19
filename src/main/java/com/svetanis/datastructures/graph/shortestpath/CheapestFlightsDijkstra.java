@@ -1,4 +1,4 @@
-package com.svetanis.datastructures.graph.advanced;
+package com.svetanis.datastructures.graph.shortestpath;
 
 import static java.util.Comparator.comparingInt;
 

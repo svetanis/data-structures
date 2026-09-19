@@ -1,4 +1,4 @@
-package com.svetanis.datastructures.graph.advanced;
+package com.svetanis.datastructures.graph.shortestpath;
 
 import static java.util.Comparator.comparingInt;
 
@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.PriorityQueue;
 
 // 3650. Minimum Cost Path with Edge Reversals
+// Dijkstra with each edge added twice: forward at its
+// own cost, backward at twice the cost
 
 public final class MinCostPathWithEdgeReversals {
   // Time Complexity: O(n + m * log(m))

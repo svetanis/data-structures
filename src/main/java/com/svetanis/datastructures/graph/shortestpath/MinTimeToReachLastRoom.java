@@ -1,4 +1,4 @@
-package com.svetanis.datastructures.graph.advanced;
+package com.svetanis.datastructures.graph.shortestpath;
 
 import static java.util.Comparator.comparingInt;
 
@@ -6,6 +6,8 @@ import java.util.Arrays;
 import java.util.PriorityQueue;
 
 // 3341. Find Minimum Time to Reach Last Room I
+// Dijkstra on the grid: a room cannot be entered before
+// its own time, so the cost of a step is max(now, grid) + 1
 
 public final class MinTimeToReachLastRoom {
   // Time Complexity: O(n * m * log(n*m))

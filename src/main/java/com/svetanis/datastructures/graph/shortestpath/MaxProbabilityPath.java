@@ -1,4 +1,4 @@
-package com.svetanis.datastructures.graph.advanced;
+package com.svetanis.datastructures.graph.shortestpath;
 
 import java.util.ArrayList;
 import java.util.Arrays;

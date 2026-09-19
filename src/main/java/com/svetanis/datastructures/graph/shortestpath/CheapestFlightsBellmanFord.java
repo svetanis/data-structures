@@ -1,11 +1,11 @@
-package com.svetanis.datastructures.graph.advanced;
+package com.svetanis.datastructures.graph.shortestpath;
 
 import java.util.Arrays;
 
 // 787. Cheapest Flights Within K Stops
 // Bellman-Ford algorithm
 
-public final class CheapestFlightsBFA {
+public final class CheapestFlightsBellmanFord {
 	// Time Complexity: O(k * (V + E))
 	// Space Complexity: O(n)
 

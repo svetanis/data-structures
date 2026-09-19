@@ -1,11 +1,11 @@
-package com.svetanis.datastructures.graph.advanced;
+package com.svetanis.datastructures.graph.shortestpath;
 
 import java.util.Arrays;
 
 // 1334. Find the City With the Smallest Number of Neighbors at a Threshold Distance
 // Floyd-Warshall Algorithm 
 
-public final class CityWithMinNeighborsFWA {
+public final class CityWithMinNeighborsFloydWarshall {
 	// Time Complexity: O(n^3)
 	// Space Complexity: O(n^2)
 
@@ -67,7 +67,7 @@ public final class CityWithMinNeighborsFWA {
 	}
 
 	public static void main(String[] args) {
-		CityWithMinNeighborsFWA cmn = new CityWithMinNeighborsFWA();
+		CityWithMinNeighborsFloydWarshall cmn = new CityWithMinNeighborsFloydWarshall();
 		int[][] g1 = { { 0, 1, 3 }, { 1, 2, 1 }, { 1, 3, 4 }, { 2, 3, 1 } };
 		System.out.println(cmn.city(4, g1, 4)); // 3
 

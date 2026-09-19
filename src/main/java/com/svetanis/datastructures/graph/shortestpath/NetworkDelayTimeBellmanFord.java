@@ -1,11 +1,11 @@
-package com.svetanis.datastructures.graph.advanced;
+package com.svetanis.datastructures.graph.shortestpath;
 
 import java.util.Arrays;
 
 // 743. Network Delay Time
 // Bellman-Ford Algorithm
 
-public final class NetworkDelayTimeBFA {
+public final class NetworkDelayTimeBellmanFord {
 	// Time Complexity: O(V * E) -- Bellman-Ford relaxes every edge V-1 times.
 	// There is no heap here. O(E log V) is DIJKSTRA's bound; this file
 	// exists to be the slower algorithm that survives negative weights.
