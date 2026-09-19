@@ -23,7 +23,7 @@ public final class AllUniqueBSTsCountTopDown {
 			return 1;
 		}
 		if (map.containsKey(n)) {
-			map.get(n);
+			return map.get(n);
 		}
 		int count = 0;
 		// making i root of the tree
@@ -41,5 +41,6 @@ public final class AllUniqueBSTsCountTopDown {
 	public static void main(String[] args) {
 		System.out.println(count(3)); // 5
 		System.out.println(count(1)); // 1
+		System.out.println(count(19)); // 1767263190, instant only if the memo is read
 	}
 }

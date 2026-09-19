@@ -16,6 +16,9 @@ public final class BinaryTreeCamerasGreedy {
 	private int count = 0;
 
 	public int btc(Node root) {
+		// the count is a field, so it has to be cleared on entry:
+		// without this the same instance adds each call to the last
+		count = 0;
 		if (dfs(root) == 0) {
 			count++;
 		}

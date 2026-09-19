@@ -49,7 +49,7 @@ public final class BinaryTreeCameras {
 		System.out.println(btc(root2)); // 2
 
 		Node root3 = newNode(0);
-		System.out.println(btc(root3)); // 0
+		System.out.println(btc(root3)); // 1 -- a lone node still needs one camera
 	}
 
 	private static class Result {
