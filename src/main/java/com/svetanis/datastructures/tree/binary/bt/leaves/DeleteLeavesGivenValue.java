@@ -7,7 +7,8 @@ import com.svetanis.datastructures.tree.binary.model.mutable.primitive.Nodes;
 
 public final class DeleteLeavesGivenValue {
 	// Time Complexity: O(n)
-	// Space Complexity: O(log n)
+	// Space Complexity: O(h) -- the recursion stack. h is lg n only on a
+	// balanced tree; a skewed one makes it n
 
 	public static Node removeLeaves(Node root, int target) {
 		if (root == null) {

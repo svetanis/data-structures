@@ -42,7 +42,9 @@ public final class DiameterCountNodes {
 		root.left.left = newNode(4);
 		root.right.left = newNode(5);
 		root.right.right = newNode(6);
-		System.out.println(diameter(root));
+		// 5 nodes: 4-2-1-3-5. DiameterCountEdges would say 4 on this tree --
+		// same path, counted in edges. The file names say which is which.
+		System.out.println(diameter(root)); // 5
 
 		root.left.left = null;
 		root.right.left.left = newNode(7);
@@ -50,6 +52,6 @@ public final class DiameterCountNodes {
 		root.right.right.left = newNode(9);
 		root.right.left.right.left = newNode(10);
 		root.right.right.left.left = newNode(11);
-		System.out.println(diameter(root));
+		System.out.println(diameter(root)); // 7
 	}
 }

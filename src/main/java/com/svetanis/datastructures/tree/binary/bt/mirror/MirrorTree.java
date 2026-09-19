@@ -6,6 +6,11 @@ import static com.svetanis.datastructures.tree.binary.model.mutable.primitive.No
 
 import com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node;
 
+// 226. Invert Binary Tree
+
+// swap every node's two children, bottom-up and in place.
+// identical to InvertBinaryTreeRecursiveInPlace.java in this package.
+
 public final class MirrorTree {
 
   public static void mirror(Node root) {

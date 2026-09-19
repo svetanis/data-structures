@@ -14,7 +14,8 @@ import com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node;
 
 public final class RootToLeafPathIsGivenSum {
 	// Time Complexity: O(n)
-	// Space Complexity: O(log n)
+	// Space Complexity: O(h) -- the recursion stack. h is lg n only on a
+	// balanced tree; a skewed one makes it n
 
 	public static boolean hasPath(Node root, int target) {
 		if (root == null) {

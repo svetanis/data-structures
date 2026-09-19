@@ -1,4 +1,4 @@
-package com.svetanis.datastructures.tree.binary.bt.construction;
+package com.svetanis.datastructures.tree.binary.bst.bounds;
 
 import com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node;
 import com.svetanis.datastructures.tree.binary.model.mutable.primitive.Nodes;

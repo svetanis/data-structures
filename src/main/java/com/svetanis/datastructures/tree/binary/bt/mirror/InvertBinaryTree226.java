@@ -16,7 +16,8 @@ import com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node;
 
 public final class InvertBinaryTree226 {
 	// Time Complexity: O(n)
-	// Space Complexity: O(log n)
+	// Space Complexity: O(h) -- the recursion stack. h is lg n only on a
+	// balanced tree; a skewed one makes it n
 
 	public static Node invert(Node root) {
 		dfs(root);

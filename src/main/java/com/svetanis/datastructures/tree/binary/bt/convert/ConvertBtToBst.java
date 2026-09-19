@@ -10,6 +10,11 @@ import java.util.Set;
 
 import com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node;
 
+// turn a binary tree into a BST while KEEPING its shape: every node stays
+// where it is and only the values move. collect the values in sorted order,
+// then walk the same tree in-order writing them back -- in-order on a BST
+// is sorted, so writing a sorted sequence in-order makes one.
+
 public final class ConvertBtToBst {
 
   public static void btToBst(Node root) {

@@ -9,7 +9,8 @@ import com.svetanis.datastructures.tree.binary.model.mutable.primitive.Nodes;
 
 public final class BinaryTreePruning {
 	// Time Complexity: O(n)
-	// Space Complexity: O(log n)
+	// Space Complexity: O(h) -- the recursion stack. h is lg n only on a
+	// balanced tree; a skewed one makes it n
 
 	public static Node pruneTree(Node root) {
 		if (root == null) {

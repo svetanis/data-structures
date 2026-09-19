@@ -9,6 +9,10 @@ import com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node;
 
 // 333. Largest BST Subtree
 
+// bt/subtree/MaxSumBST.java (1373) is this file with one more field,
+// and it stays in bt/ because pages/10-dfs teaches it as the
+// returning-a-struct example beside subtree/BinaryTreeTilt.java.
+
 // Given a binary tree, find the largest subtree 
 // which is a Binary Search Tree (BST), 
 // where largest means subtree with largest number of nodes in it.

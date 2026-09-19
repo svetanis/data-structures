@@ -6,10 +6,10 @@ import static com.svetanis.datastructures.tree.binary.model.mutable.primitive.No
 
 import com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node;
 
-// Given normal BT, convert it to Left-Child Right-Subling
+// Given normal BT, convert it to Left-Child Right-Sibling
 // (LC-RS) Binary Tree
 
-public final class ConvertBtToLeftChildRightSublingTree {
+public final class ConvertBtToLeftChildRightSiblingTree {
 
   public static void convert(Node root) {
     if (isNull(root)) {

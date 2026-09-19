@@ -8,7 +8,8 @@ import com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node;
 
 public final class SumRootToLeafBinaryNums {
 	// Time Complexity: O(n)
-	// Space Complexity: O(log n)
+	// Space Complexity: O(h) -- the recursion stack. h is lg n only on a
+	// balanced tree; a skewed one makes it n
 
 	public static int sum(Node root) {
 		return sum(root, 0);

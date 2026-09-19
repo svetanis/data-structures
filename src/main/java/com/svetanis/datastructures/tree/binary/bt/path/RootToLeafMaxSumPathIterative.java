@@ -1,7 +1,6 @@
 package com.svetanis.datastructures.tree.binary.bt.path;
 
 import static com.google.common.collect.Lists.newArrayList;
-import static com.google.common.collect.Maps.newHashMap;
 import static com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node.newNode;
 import static com.svetanis.datastructures.tree.binary.model.mutable.primitive.Nodes.inOrder;
 import static com.svetanis.datastructures.tree.binary.model.mutable.primitive.Nodes.isLeaf;
@@ -11,6 +10,7 @@ import static java.lang.Integer.MIN_VALUE;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
+import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -29,7 +29,7 @@ public final class RootToLeafMaxSumPathIterative {
 		int max = MIN_VALUE;
 		Deque<Node> dq = new ArrayDeque<>();
 		dq.add(root);
-		Map<Node, Node> map = newHashMap();
+		Map<Node, Node> map = new IdentityHashMap<>();   // keys are node identity, not node value
 		map.put(root, null);
 		List<Integer> path = newArrayList();
 		while (!dq.isEmpty()) {
@@ -83,5 +83,20 @@ public final class RootToLeafMaxSumPathIterative {
 		// print Root-to-leaf path
 		System.out.println("Root-to-leaf max sum path: ");
 		System.out.println(maxSumPath(root));
+
+		// two leaves holding the same value under different parents.
+		// Node.equals compares data and both subtrees, so these two
+		// leaves are equal to each other and a HashMap keyed on Node
+		// keeps one entry for both, which loses the heavier branch.
+		//  9: 1->3->5
+		// 26: 1->20->5   <-- the answer
+		Node dup = newNode(1);
+		dup.left = newNode(3);
+		dup.right = newNode(20);
+		dup.left.left = newNode(5);
+		dup.right.left = newNode(5);
+
+		System.out.println("Two leaves of equal value, max sum path: ");
+		System.out.println(maxSumPath(dup));
 	}
 }

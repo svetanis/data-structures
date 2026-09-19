@@ -26,7 +26,11 @@ public final class CousinsHashing {
     Map<Integer, Integer> depth = new HashMap<>();
     Map<Integer, Node> parent = new HashMap<>();
     dfs(root, null, depth, parent);
-    boolean one = depth.get(a) == depth.get(b);
+    // equals for the depths: they are Integers, and a reference compare
+    // only works inside the -128..127 cache
+    boolean one = depth.get(a).equals(depth.get(b));
+    // != is CORRECT for the parents: these are Node references, and
+    // different parents means different objects
     boolean two = parent.get(a) != parent.get(b);
     return one && two;
   }

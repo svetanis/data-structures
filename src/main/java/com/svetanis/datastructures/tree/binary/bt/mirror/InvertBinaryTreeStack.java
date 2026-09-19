@@ -10,6 +10,8 @@ import java.util.Deque;
 
 import com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node;
 
+// 226. Invert Binary Tree
+
 // given a binary tree, invert it and
 // return the new value. you may invert
 // it in-place. to invert a binary tree,
@@ -19,7 +21,7 @@ import com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node;
 
 public final class InvertBinaryTreeStack {
 	// Time Complexity: O(n)
-	// Space Complexity: (n)
+	// Space Complexity: O(h) -- the stack holds one root-to-node chain
 
 	public static void invert(Node root) {
 		if (isNull(root)) {
@@ -30,11 +32,11 @@ public final class InvertBinaryTreeStack {
 		while (!stack.isEmpty()) {
 			Node node = stack.poll();
 			swap(node);
-			if (isNotNull(root.right)) {
-				stack.add(root.right);
+			if (isNotNull(node.right)) {
+				stack.add(node.right);
 			}
-			if (isNotNull(root.left)) {
-				stack.add(root.left);
+			if (isNotNull(node.left)) {
+				stack.add(node.left);
 			}
 		}
 	}

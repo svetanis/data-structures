@@ -11,8 +11,9 @@ import com.svetanis.datastructures.tree.binary.model.mutable.primitive.Nodes;
 // 114. Flatten Binary Tree to Linked List
 
 public final class FlattenBinaryTreeStack {
-	// Time Complexity: O(n)
-	// Space Complexity: O(log n)
+	// Time Complexity: O(n) -- every node is pushed once and popped once
+	// Space Complexity: O(h) -- popping a node pushes at most its two
+	// children, so the stack never holds more than one root-to-node chain
 
 	public static void flatten(Node root) {
 		if (root == null) {

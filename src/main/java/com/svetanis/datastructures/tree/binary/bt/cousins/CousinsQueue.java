@@ -70,7 +70,7 @@ public final class CousinsQueue {
 		root.right.left = newNode(6);
 		root.right.right = newNode(7);
 		root.right.left.right = newNode(8);
-		System.out.println(areCousins(root, 4, 7));
+		System.out.println(areCousins(root, 4, 7)); // true -- both on level 2, parents 2 and 3
 
 		Node root1 = newNode(1);
 		root1.left = newNode(2);
@@ -79,6 +79,6 @@ public final class CousinsQueue {
 		root1.left.right = newNode(5);
 		root1.right.left = newNode(6);
 		root1.right.right = newNode(7);
-		System.out.println(areCousins(root1, 5, 6));
+		System.out.println(areCousins(root1, 5, 6)); // true -- both on level 2, parents 2 and 3
 	}
 }

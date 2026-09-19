@@ -3,7 +3,7 @@ package com.svetanis.datastructures.tree.binary.bt.dfs;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
-import java.util.HashMap;
+import java.util.IdentityHashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -18,7 +18,7 @@ public final class AllNodesDistanceKBfs {
 	// Space Complexity: O(n)
 
 	public static List<Integer> nodesDistK(Node root, Node target, int k) {
-		Map<Node, List<Node>> map = new HashMap<>();
+		Map<Node, List<Node>> map = new IdentityHashMap<>();
 		graph(root, null, map);
 		Set<Integer> visited = new HashSet<>();
 		Deque<Node> dq = new ArrayDeque<>();

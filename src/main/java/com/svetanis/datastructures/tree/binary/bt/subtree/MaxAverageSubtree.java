@@ -6,7 +6,7 @@ import com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node;
 
 // 1120. Maximum Average Subtree
 
-public final class MaxAvrgSubTree {
+public final class MaxAverageSubtree {
 	// Time Complexity: O(n)
 	// Space Complexity: O(n)
 
@@ -36,7 +36,7 @@ public final class MaxAvrgSubTree {
 		root.left = newNode(6);
 		root.right = newNode(1);
 		root.left.left = newNode(2);
-		MaxAvrgSubTree mst = new MaxAvrgSubTree();
+		MaxAverageSubtree mst = new MaxAverageSubtree();
 		System.out.println(mst.maxAvgSubtree(root)); // 4.0
 	}
 }

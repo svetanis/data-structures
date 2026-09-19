@@ -5,6 +5,13 @@ import static com.svetanis.datastructures.tree.binary.model.mutable.primitive.No
 
 import com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node;
 
+// 958. Check Completeness of a Binary Tree
+
+// number the nodes as if the tree were packed into an array -- root 0,
+// children of i at 2i+1 and 2i+2. the tree is complete exactly when no
+// index reaches the node count. same answer as BinaryTreeCompletenessDfs.java
+// in this package, reached by counting instead of by flags.
+
 public final class CompleteBinaryTreeRecursive {
 
   public static boolean isComplete(Node root) {

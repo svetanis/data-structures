@@ -5,6 +5,10 @@ import static com.svetanis.datastructures.tree.binary.model.mutable.primitive.No
 
 import com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node;
 
+// a tree is foldable if the left subtree's STRUCTURE mirrors the right
+// subtree's. values are never compared -- that is the whole difference
+// from 101. Symmetric Tree in mirror/SymmetricBinaryTree.java.
+
 public final class FoldableBinaryTree {
 
   public static boolean foldable(Node root) {

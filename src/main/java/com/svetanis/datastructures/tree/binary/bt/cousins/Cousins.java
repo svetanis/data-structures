@@ -1,13 +1,13 @@
 package com.svetanis.datastructures.tree.binary.bt.cousins;
 
 import static com.svetanis.datastructures.tree.binary.bt.Level.level;
-import static com.svetanis.datastructures.tree.binary.bt.cousins.Sublings.sublings;
+import static com.svetanis.datastructures.tree.binary.bt.cousins.Siblings.siblings;
 import static com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node.newNode;
 
 import com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node;
 
 // 1. two nodes should be on the same level in BT
-// 2. two nodes should not be sublings that is
+// 2. two nodes should not be siblings that is
 // they should not have the same parent node
 
 public final class Cousins {
@@ -15,7 +15,7 @@ public final class Cousins {
 
 	public static boolean cousins(Node root, Node a, Node b) {
 		boolean sameLevel = level(root, a) == level(root, b);
-		return sameLevel && !sublings(root, a, b);
+		return sameLevel && !siblings(root, a, b);
 	}
 
 	public static void main(String[] args) {

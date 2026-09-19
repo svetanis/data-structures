@@ -1,4 +1,4 @@
-package com.svetanis.datastructures.tree.binary.bt.convert;
+package com.svetanis.datastructures.tree.binary.bst.inorder;
 
 import com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node;
 

@@ -14,7 +14,8 @@ import com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node;
 
 public final class SumRootToLeafNums {
 	// Time Complexity: O(n)
-	// Space Complexity: O(log n)
+	// Space Complexity: O(h) -- the recursion stack. h is lg n only on a
+	// balanced tree; a skewed one makes it n
 
 	private static final int MOD = 1003;
 

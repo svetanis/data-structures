@@ -10,7 +10,8 @@ import com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node;
 
 public final class FlipEquivalent {
 	// Time Complexity: O(n)
-	// Space Complexity: O(log n)
+	// Space Complexity: O(h) -- the recursion stack. h is lg n only on a
+	// balanced tree; a skewed one makes it n
 
 	public static boolean flipEquivalent(Node root1, Node root2) {
 		if (isNull(root1) && isNull(root2)) {

@@ -8,8 +8,11 @@ import com.svetanis.datastructures.tree.binary.model.mutable.primitive.Nodes;
 // 114. Flatten Binary Tree to Linked List
 
 public final class FlattenBinaryTreeRecursive {
-  // Time Complexity: O(n)
-  // Space Complexity: O(log n)
+  // Time Complexity: O(n^2) -- after flattening the left subtree it walks
+  // that whole flattened list again to find its tail, once per node. on a
+  // left-skewed tree that walk is n-1 steps at the root, n-2 below it, and
+  // so on: n(n-1)/2 in total
+  // Space Complexity: O(h) -- the recursion stack
 
   public static void flatten(Node root) {
     if (root == null) {

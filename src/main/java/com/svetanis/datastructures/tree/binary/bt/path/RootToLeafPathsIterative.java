@@ -1,7 +1,6 @@
 package com.svetanis.datastructures.tree.binary.bt.path;
 
 import static com.google.common.collect.Lists.newArrayList;
-import static com.google.common.collect.Maps.newHashMap;
 import static com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node.newNode;
 import static com.svetanis.datastructures.tree.binary.model.mutable.primitive.Nodes.inOrder;
 import static com.svetanis.datastructures.tree.binary.model.mutable.primitive.Nodes.isLeaf;
@@ -11,6 +10,7 @@ import static com.svetanis.java.base.utils.Print.printLists;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
+import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -27,7 +27,7 @@ public final class RootToLeafPathsIterative {
 
 		Deque<Node> dq = new ArrayDeque<>();
 		dq.add(root);
-		Map<Node, Node> map = newHashMap();
+		Map<Node, Node> map = new IdentityHashMap<>();   // keys are node identity, not node value
 		map.put(root, null);
 		List<ImmutableList<Integer>> paths = newArrayList();
 		while (!dq.isEmpty()) {
@@ -75,6 +75,22 @@ public final class RootToLeafPathsIterative {
 		// print Root-to-leaf path
 		System.out.println("Root-to-leaf paths: ");
 		printLists(paths(root));
+		System.out.println();
+
+		// two leaves holding the same value under different parents.
+		// Node.equals compares data and both subtrees, so these two
+		// leaves are equal to each other and a HashMap keyed on Node
+		// keeps one entry for both: every path then ends the same way.
+		// 1->2->5
+		// 1->3->5
+		Node dup = newNode(1);
+		dup.left = newNode(2);
+		dup.right = newNode(3);
+		dup.left.left = newNode(5);
+		dup.right.left = newNode(5);
+
+		System.out.println("Two leaves of equal value: ");
+		printLists(paths(dup));
 		System.out.println();
 	}
 }

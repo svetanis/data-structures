@@ -1,7 +1,7 @@
 package com.svetanis.datastructures.tree.binary.bt.dfs;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.IdentityHashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -16,7 +16,7 @@ public final class AllNodesDistanceKDfs {
 	// Space Complexity: O(n)
 
 	public static List<Integer> nodesDistK(Node root, Node target, int k) {
-		Map<Node, Node> map = new HashMap<>();
+		Map<Node, Node> map = new IdentityHashMap<>();
 		parents(root, null, map);
 		Set<Integer> visited = new HashSet<>();
 		List<Integer> list = new ArrayList<>();

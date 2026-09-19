@@ -55,5 +55,12 @@ public final class VerticalOrderRecursive {
 	// 0: [1, 5, 6]
 	// 1: [3, 8, 10]
 	// 2: [7, 11]
-	// 3: [9, 12]
+	// 3: [12, 9]
+
+	// column 3 comes out DEEPEST-FIRST here, and the level-order sibling
+	// prints it [9, 12]. Node 9 sits three levels down and node 12 five,
+	// but 12 is reached through the LEFT child, which this walk finishes
+	// before it looks at the right one. A walk by levels cannot get this
+	// wrong; a walk by branches has to sort by depth afterwards
+	// -- see VerticalOrderIterative
 }

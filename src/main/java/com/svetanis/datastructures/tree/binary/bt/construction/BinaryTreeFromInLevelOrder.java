@@ -15,6 +15,11 @@ import java.util.Set;
 
 import com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node;
 
+// build a binary tree from its in-order and level-order sequences.
+// the first level-order value still present in the current in-order slice
+// is that slice's root; the in-order index of that value splits the slice
+// into the two subtrees.
+
 public final class BinaryTreeFromInLevelOrder {
 
   public static Node construct(List<Integer> in, List<Integer> level) {

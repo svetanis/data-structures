@@ -6,6 +6,11 @@ import static com.svetanis.datastructures.tree.binary.model.mutable.primitive.No
 
 import com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node;
 
+// 226. Invert Binary Tree
+
+// identical to MirrorTree.java in this package, which is the same method
+// under the older name.
+
 // given a binary tree, invert it and
 // return the new value. you may invert
 // it in-place. to invert a binary tree,
@@ -15,7 +20,7 @@ import com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node;
 
 public final class InvertBinaryTreeRecursiveInPlace {
 	// Time Complexity: O(n)
-	// Space Complexity: (h)
+	// Space Complexity: O(h) -- the recursion stack, O(n) on a skewed tree
 
 	public static void invert(Node root) {
 		if (isNull(root)) {

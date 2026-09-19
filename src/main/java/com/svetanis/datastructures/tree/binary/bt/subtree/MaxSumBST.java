@@ -6,6 +6,20 @@ import com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node;
 
 // 1373. Maximum Sum BST in Binary Tree
 
+// the same post-order report as bst/bounds/LargestBstInBt.java (333),
+// with a fourth field for the subtree sum. that file uses null for
+// "no bound on this side" because 333 allows every int as a value;
+// here the values are -4e4..4e4, so INF is 26,000x outside the range
+// and can be an ordinary number.
+
+// the sum cannot overflow either: 4e4 nodes at 4e4 each is 1.6e9,
+// against Integer.MAX_VALUE of 2.1e9. that headroom is only 1.3x, so
+// a long is what to reach for if the constraints ever widen.
+
+// an empty BST scores 0, which is why maxSum starts at 0 and is only
+// ever raised -- a tree of all negative values returns 0, not its
+// largest single node.
+
 public final class MaxSumBST {
 	// Time Complexity: O(n)
 	// Space Complexity: O(n)

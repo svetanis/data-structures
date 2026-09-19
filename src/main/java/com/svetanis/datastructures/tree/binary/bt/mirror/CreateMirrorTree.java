@@ -6,6 +6,12 @@ import static com.svetanis.datastructures.tree.binary.model.mutable.primitive.No
 
 import com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node;
 
+// 226. Invert Binary Tree
+
+// the copying version: the original is left untouched and a new tree is
+// built with the children crossed over. same method as
+// InvertBinaryTreeRecursive.java in this package.
+
 public final class CreateMirrorTree {
 
   public static Node mirror(Node root) {

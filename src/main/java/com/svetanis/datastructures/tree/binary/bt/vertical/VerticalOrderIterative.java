@@ -44,9 +44,14 @@ public final class VerticalOrderIterative {
 	}
 
 	public static void main(String[] args) {
+		// -2: [4] · -1: [2] · 0: [1, 5, 6] · 1: [3, 8, 10] · 2: [7, 11]
+		// 3: [9, 12] -- and the recursive sibling prints that last column
+		// [12, 9]. Within a column the queue hands nodes over shallowest
+		// first, so this walk needs no sort and that one does
 		Node root1 = tree1();
 		print(verticalOrder(root1));
 		System.out.println();
+		// -1: [2, 7] · 0: [1, 5, 9] · 1: [3, 8] · 2: [6, 10]
 		Node root2 = tree2();
 		print(verticalOrder(root2));
 	}

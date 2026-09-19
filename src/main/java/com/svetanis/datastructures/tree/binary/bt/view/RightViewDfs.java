@@ -40,7 +40,6 @@ public final class RightViewDfs {
 		RightViewDfs rv = new RightViewDfs();
 		Node root = newNode(12);
 		root.left = newNode(10);
-		root.left.left = newNode(30);
 		root.left.left = newNode(25);
 		root.left.right = newNode(40);
 		System.out.println(rv.rightView(root)); // 12 10 40

@@ -1,4 +1,4 @@
-package com.svetanis.datastructures.tree.binary.bt.construction;
+package com.svetanis.datastructures.tree.nary;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.collect.Maps.newHashMap;
@@ -18,19 +18,25 @@ import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import com.svetanis.java.base.Pair;
 
+// build an N-ary tree from a list of (child, parent) pairs.
+// the root is the parent that never appears as a child.
+
+// NOT tree/nary/Node.java: this file's NaryNode is mutable and carries a
+// parent pointer, which is what makes the pairs assemblable in one pass.
+
 public final class NTreeFromChildParentPairs {
 
-  public static Node construct(List<Pair<Integer, Integer>> pairs) {
-    Map<Integer, Node> map = newHashMap();
-    Node root = getRoot(pairs);
+  public static NaryNode construct(List<Pair<Integer, Integer>> pairs) {
+    Map<Integer, NaryNode> map = newHashMap();
+    NaryNode root = getRoot(pairs);
     map.put(root.data, root);
     for (Pair<Integer, Integer> pair : pairs) {
       int left = pair.getLeft(); // node id
-      Node child = map.getOrDefault(left, new Node(left));
+      NaryNode child = map.getOrDefault(left, new NaryNode(left));
       map.put(left, child);
 
       int right = pair.getRight(); // parent id
-      Node parent = map.getOrDefault(right, new Node(right));
+      NaryNode parent = map.getOrDefault(right, new NaryNode(right));
       map.put(right, parent);
 
       parent.children.add(child);
@@ -41,19 +47,19 @@ public final class NTreeFromChildParentPairs {
 
   public static void main(String[] args) {
     List<Pair<Integer, Integer>> list = pairs();
-    Node root = construct(list);
+    NaryNode root = construct(list);
     print(preorder(root));
   }
 
-  public static ImmutableList<Integer> preorder(Node root) {
-    List<Node> preOrder = newArrayList();
+  public static ImmutableList<Integer> preorder(NaryNode root) {
+    List<NaryNode> preOrder = newArrayList();
     buildPreOrder(root, preOrder);
     return newList(transform(preOrder, i -> i.data));
   }
 
-  private static void buildPreOrder(Node node, List<Node> preOrder) {
+  private static void buildPreOrder(NaryNode node, List<NaryNode> preOrder) {
     preOrder.add(node);
-    for (Node child : node.children) {
+    for (NaryNode child : node.children) {
       buildPreOrder(child, preOrder);
     }
   }
@@ -66,11 +72,11 @@ public final class NTreeFromChildParentPairs {
     return newMultimap(mm);
   }
 
-  public static Node getRoot(List<Pair<Integer, Integer>> pairs) {
+  public static NaryNode getRoot(List<Pair<Integer, Integer>> pairs) {
     Multimap<Integer, Integer> mm = asMulti(pairs);
     Multimap<Integer, Integer> inverted = invertFrom(mm, ArrayListMultimap.create());
     int data = getUnique(inverted.get(-1), "root");
-    Node root = new Node(data);
+    NaryNode root = new NaryNode(data);
     return root;
   }
 
@@ -89,12 +95,12 @@ public final class NTreeFromChildParentPairs {
     return newList(list);
   }
 
-  private static class Node {
+  private static class NaryNode {
     private int data;
-    private Node parent;
-    private List<Node> children;
+    private NaryNode parent;
+    private List<NaryNode> children;
 
-    public Node(int data) {
+    public NaryNode(int data) {
       this.data = data;
       this.parent = null;
       this.children = newArrayList();

@@ -6,6 +6,8 @@ import static com.svetanis.datastructures.tree.binary.model.mutable.primitive.No
 
 import com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node;
 
+// 226. Invert Binary Tree
+
 // given a binary tree, invert it and
 // return the new value. you may invert
 // it in-place. to invert a binary tree,
@@ -15,7 +17,7 @@ import com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node;
 
 public final class InvertBinaryTreeRecursive {
 	// Time Complexity: O(n)
-	// Space Complexity: (h)
+	// Space Complexity: O(h) for the recursion, plus O(n) for the new tree
 
 	public static Node invert(Node root) {
 		if (isNull(root)) {

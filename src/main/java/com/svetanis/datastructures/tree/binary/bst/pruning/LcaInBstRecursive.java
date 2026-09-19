@@ -1,4 +1,4 @@
-package com.svetanis.datastructures.tree.binary.bt.lca;
+package com.svetanis.datastructures.tree.binary.bst.pruning;
 
 import static java.lang.Math.max;
 import static java.lang.Math.min;

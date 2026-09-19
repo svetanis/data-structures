@@ -6,7 +6,8 @@ import com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node;
 
 public final class LongestZigZagPath1372 {
   // Time Complexity: O(n)
-  // Space Complexity: O(log n)
+  // Space Complexity: O(h) -- the recursion stack. h is lg n only on a
+  // balanced tree; a skewed one makes it n
 
   public static int lzzp(Node root) {
     return dfs(root, 0, 0, 0);

@@ -10,6 +10,12 @@ import java.util.Queue;
 
 import com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node;
 
+// 958. Check Completeness of a Binary Tree
+
+// level order: once a node with a missing child has been seen, every node
+// after it must be a leaf. same algorithm as BinaryTreeCompletenessBfs.java
+// in this package.
+
 public final class CompleteBinaryTreeLot {
 
   public static boolean isComplete(Node root) {

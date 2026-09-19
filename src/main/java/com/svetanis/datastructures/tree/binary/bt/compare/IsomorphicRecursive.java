@@ -5,6 +5,11 @@ import static com.svetanis.datastructures.tree.binary.model.mutable.primitive.No
 
 import com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node;
 
+// two trees are isomorphic if one can be turned into the other by
+// swapping some nodes' left and right children. so at every node the
+// children may match straight across OR crossed over -- and it is enough
+// for either to hold.
+
 public final class IsomorphicRecursive {
 
   public static boolean isIsomorphic(Node src, Node dst) {

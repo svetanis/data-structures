@@ -10,7 +10,7 @@ import com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node;
 
 // 1676. Lowest Common Ancestor of a Binary Tree IV
 
-public final class LcaBTIV {
+public final class LcaBtIV {
 	// Time Complexity: O(n + m)
 	// Space Complexity: O(n + m)
 
@@ -43,7 +43,7 @@ public final class LcaBTIV {
 	}
 
 	public static void main(String[] args) {
-		LcaBTIV lcabt = new LcaBTIV();
+		LcaBtIV lcabt = new LcaBtIV();
 		Node left = newNode(7);
 		Node right = newNode(4);
 		Node root = newNode(3);

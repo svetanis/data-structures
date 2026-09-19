@@ -18,7 +18,13 @@ import com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node;
 
 // without pointer to parent; Bottom Up;
 // No guarantee that p or q exist in the tree.
-// If one value doesn’t exist in the tree then return -1.
+// If one value doesn’t exist in the tree then the result is absent.
+
+// NOTE the sentinel. LC 236 allows node values from -10^9 to 10^9, so -1 is a
+// legal value and cannot also mean "not found" -- a tree holding a node -1
+// would have the search report finding it everywhere. null can mean not found,
+// because no node value is ever null. That is why the int search below is gone
+// and both entry points run on the Node overload.
 
 public final class LcaBtNoParentBottomUp {
 	// Time Complexity: O(n)
@@ -28,25 +34,10 @@ public final class LcaBtNoParentBottomUp {
 		if (isNull(root) || isAbsent(root, p) || isAbsent(root, q)) {
 			return absent();
 		}
-		return of(lcaRecursive(root, p, q));
-	}
-
-	private static int lcaRecursive(Node root, int p, int q) {
-		// Time complexity: O(n)
-		if (isNull(root)) {
-			return -1;
-		}
-		if (root.data == p || root.data == q) {
-			return root.data;
-		}
-		int left = lcaRecursive(root.left, p, q);
-		int right = lcaRecursive(root.right, p, q);
-		// if p and q are on both sides
-		if (left != -1 && right != -1) {
-			return root.data;
-		}
-		// p and q are on one side
-		return left != -1 ? left : right;
+		// the search itself runs on nodes, never on ints, so nothing
+		// it returns can be mistaken for a value the tree holds
+		Node lca = lca(root, newNode(p), newNode(q));
+		return isNull(lca) ? absent() : of(lca.data);
 	}
 
 	public static Node lca(Node root, Node p, Node q) {
@@ -82,6 +73,17 @@ public final class LcaBtNoParentBottomUp {
 		System.out.println(lca(root, 5, 1));
 		System.out.println(lca(root, 6, 4));
 		System.out.println(lca(root, 4, 10));
+		System.out.println();
+
+		// -1 as a node value: the old int search answered 8 and 4 here
+		Node negative = newNode(3);
+		negative.left = newNode(5);
+		negative.right = newNode(1);
+		negative.left.left = newNode(-1);
+		negative.left.right = newNode(2);
+		negative.right.right = newNode(8);
+		System.out.println(lca(negative, -1, 8));
+		System.out.println(lca(negative, -1, 2));
 		System.out.println();
 
 		Node root2 = newNode(3);

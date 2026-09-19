@@ -8,7 +8,7 @@ import com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node;
 
 public final class EqualTreePartition2 {
 	// Time Complexity: O(n)
-	// Space Complexity: O(1)
+	// Space Complexity: O(h) -- two recursive walks, O(n) on a skewed tree
 
 	private boolean equalSplit;
 

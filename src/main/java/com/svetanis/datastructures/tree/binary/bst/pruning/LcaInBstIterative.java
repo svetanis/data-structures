@@ -1,4 +1,7 @@
-package com.svetanis.datastructures.tree.binary.bt.lca;
+package com.svetanis.datastructures.tree.binary.bst.pruning;
+
+import static java.lang.Math.max;
+import static java.lang.Math.min;
 
 import com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node;
 
@@ -30,32 +33,26 @@ public final class LcaInBstIterative {
 	}
 
 	public static Node lca(Node root, Node p, Node q) {
-		while (root.data < p.data || root.data > q.data) {
-			// LCA must be in root's right child
-			if (root.data < p.data) {
-				root = root.right;
-			}
-			// LCA must be in root's left child
-			if (root.data > q.data) {
-				root = root.left;
-			}
-		}
-		// root.data >= p.data && root.data <= q.data
-		return root; // root is LCA
+		return lca(root, p.data, q.data);
 	}
 
 	public static Node lca(Node root, int p, int q) {
-		while (root.data < p || root.data > q) {
+		// LC 235 does not say which of the two comes first, and comparing
+		// against p and q in the order they arrive walks the wrong way
+		// for every call where p > q -- off the tree, and into an NPE.
+		// lcaSimple above already took the min and the max
+		int lo = min(p, q);
+		int hi = max(p, q);
+		while (root != null && (root.data < lo || root.data > hi)) {
 			// LCA must be in root's right child
-			if (root.data < p) {
+			if (root.data < lo) {
 				root = root.right;
-			}
-			// LCA must be in root's left child
-			if (root.data > q) {
+			} else {
+				// LCA must be in root's left child
 				root = root.left;
 			}
 		}
-		// root.data >= p.data && root.data <= q.data
+		// root.data >= lo && root.data <= hi
 		return root; // root is LCA
 	}
 
@@ -71,5 +68,10 @@ public final class LcaInBstIterative {
 		root.right.right = new Node(9);
 		System.out.println(lca(root, 2, 8)); // 6
 		System.out.println(lca(root, 2, 4)); // 2
+
+		// the same two nodes handed over in the other order. comparing
+		// against p and q as given threw here
+		System.out.println(lca(root, 8, 2)); // 6
+		System.out.println(lca(root, 4, 2)); // 2
 	}
 }
