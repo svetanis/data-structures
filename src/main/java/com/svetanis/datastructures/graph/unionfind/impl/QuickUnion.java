@@ -8,9 +8,16 @@ import java.util.List;
 import com.google.common.collect.ImmutableList;
 import com.svetanis.java.base.Pair;
 
+// RUNG 2 of four. parent[i] is a LINK, not an answer: a component is
+// named by the root you reach by following the links. union becomes a
+// single write, and the whole cost moves into find.
 public final class QuickUnion {
-  // dynamic connectivity with
-  // quick-find is O(n^2)
+  // find:  O(depth), worst case O(n)
+  // union: O(depth), worst case O(n)
+  // find walks to the root, so both find and union cost the DEPTH of
+  // the tree. nothing here keeps that depth down: union(i, i+1) for
+  // i = 0..n-2 re-roots every time and builds a chain of length n-1,
+  // which is what WeightedQuickUnion.java exists to prevent
 
   private int[] parent;
   private int count; // num of components

@@ -25,13 +25,34 @@ public final class SimilarStringGroups {
 	}
 
 	private boolean isSimilar(String s1, String s2) {
-		int diff = 0;
+		// counting the differences is not enough. one swap moves exactly
+		// two positions AND crosses them, so the two places where the
+		// strings disagree must hold each other's characters. "ab" and
+		// "cd" differ in two places and no swap of "ab" produces "cd"
+		int first = -1;
+		int second = -1;
 		for (int i = 0; i < s1.length(); i++) {
-			if (s1.charAt(i) != s2.charAt(i)) {
-				diff++;
+			if (s1.charAt(i) == s2.charAt(i)) {
+				continue;
+			}
+			if (first == -1) {
+				first = i;
+			} else if (second == -1) {
+				second = i;
+			} else {
+				return false;
 			}
 		}
-		return diff <= 2;
+		if (first == -1) {
+			return true;
+		}
+		if (second == -1) {
+			// one position apart. impossible for the anagrams LC 839
+			// promises, which is why the count-only test survived there
+			return false;
+		}
+		return s1.charAt(first) == s2.charAt(second) //
+				&& s1.charAt(second) == s2.charAt(first);
 	}
 
 	private void merge(String[] a) {
@@ -70,5 +91,20 @@ public final class SimilarStringGroups {
 		SimilarStringGroups ssg2 = new SimilarStringGroups();
 		String[] a2 = { "omv", "ovm" };
 		System.out.println(ssg2.similarGroups(a2)); // 1
+
+		// one position apart, so no single swap turns either into the
+		// other. these are not anagrams, which is why LC 839 never
+		// shows them -- diff <= 2 called them similar and printed 1
+		String[] a3 = { "bb", "ba" };
+		System.out.println(new SimilarStringGroups().similarGroups(a3)); // 2
+
+		// two positions apart but not crossed -- no swap of "ab" gives
+		// "cd". counting the differing positions cannot tell this pair
+		// from "ab" and "ba", and the count-only test printed 1
+		String[] a4 = { "ab", "cd" };
+		System.out.println(new SimilarStringGroups().similarGroups(a4)); // 2
+
+		String[] a5 = { "ab", "ba" };
+		System.out.println(new SimilarStringGroups().similarGroups(a5)); // 1
 	}
 }

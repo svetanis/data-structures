@@ -21,7 +21,7 @@ public final class SameSet {
 	}
 
 	public boolean isSame(int x, int y) {
-		return dsu.find(x) == dsu.find(y);
+		return dsu.isSame(x, y);
 	}
 
 	public static void main(String[] args) {

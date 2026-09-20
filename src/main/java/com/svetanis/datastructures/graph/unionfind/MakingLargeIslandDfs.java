@@ -16,11 +16,12 @@ public final class MakingLargeIslandDfs {
 	private static int[] dy = { 0, -1, 1, 0 };
 
 	public int largestIsland(int[][] grid) {
-		int n = grid.length;
+		int rows = grid.length;
+		int cols = grid[0].length;
 		int max = 0;
 		Map<Integer, Integer> map = sizes(grid);
-		for (int row = 0; row < n; row++) {
-			for (int col = 0; col < n; col++) {
+		for (int row = 0; row < rows; row++) {
+			for (int col = 0; col < cols; col++) {
 				if (grid[row][col] == 0) {
 					Set<Integer> visited = new HashSet<>();
 					int size = 1;
@@ -39,15 +40,18 @@ public final class MakingLargeIslandDfs {
 				}
 			}
 		}
-		return max == 0 ? n * n : max;
+		// max stays 0 only when there is no water cell at all, and then
+		// the whole grid is one island
+		return max == 0 ? rows * cols : max;
 	}
 
 	private Map<Integer, Integer> sizes(int[][] grid) {
-		int n = grid.length;
+		int rows = grid.length;
+		int cols = grid[0].length;
 		Map<Integer, Integer> map = new HashMap<>();
 		int index = 2;
-		for (int row = 0; row < n; row++) {
-			for (int col = 0; col < n; col++) {
+		for (int row = 0; row < rows; row++) {
+			for (int col = 0; col < cols; col++) {
 				if (grid[row][col] == 1) {
 					int size = dfs(grid, row, col, index);
 					map.put(index, size);
@@ -86,9 +90,11 @@ public final class MakingLargeIslandDfs {
 	}
 
 	private boolean valid(int[][] grid, int x, int y) {
-		int n = grid.length;
-		boolean one = x >= 0 && x < n;
-		boolean two = y >= 0 && y < n;
+		// the row count bounds x and the COLUMN count bounds y. one
+		// length used for both is right only while the grid is square,
+		// which is what LC 827 promises and nothing else does
+		boolean one = x >= 0 && x < grid.length;
+		boolean two = y >= 0 && y < grid[0].length;
 		return one && two;
 	}
 
@@ -102,5 +108,13 @@ public final class MakingLargeIslandDfs {
 
 		int[][] g3 = { { 1, 1 }, { 1, 1 } };
 		System.out.println(mli.largestIsland(g3)); // 4
+
+		// wider than it is tall. with grid.length standing in for the
+		// column count this printed 4, and a taller-than-wide grid threw
+		int[][] g4 = { { 1, 1, 1 }, { 1, 1, 1 } };
+		System.out.println(mli.largestIsland(g4)); // 6
+
+		int[][] g5 = { { 1, 1 }, { 1, 0 }, { 1, 1 }, { 1, 1 } };
+		System.out.println(mli.largestIsland(g5)); // 8
 	}
 }

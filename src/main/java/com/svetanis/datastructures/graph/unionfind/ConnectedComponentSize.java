@@ -22,7 +22,7 @@ public final class ConnectedComponentSize {
 	}
 
 	public void merge(int x, int y) {
-		if (dsu.find(x) != dsu.find(y)) {
+		if (!dsu.isSame(x, y)) {
 			int size = count(x) + count(y);
 			dsu.union(x, y);
 			map.put(dsu.find(x), size);

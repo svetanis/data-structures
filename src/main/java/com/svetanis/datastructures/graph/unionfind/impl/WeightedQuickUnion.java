@@ -8,10 +8,18 @@ import java.util.List;
 import com.google.common.collect.ImmutableList;
 import com.svetanis.java.base.Pair;
 
+// RUNG 3 of four. the same links as QuickUnion plus one rule that keeps
+// the trees shallow: the root of the SMALLER tree goes under the root of
+// the larger, never the other way round. nothing is flattened -- that is
+// rung 4.
 public final class WeightedQuickUnion {
+  // find:  O(log n)
+  // union: O(log n)
   // depth of any node in forest built by
   // weighted quick-union for N sites
-  // is at most lg N
+  // is at most lg N -- a node's depth grows only when the tree it sits
+  // in is attached under a tree at least as large, and a tree can
+  // double in size at most lg n times
 
   private int[] parent; // parent[i] = parent of i
   private int[] size; // size[i] = number of sites

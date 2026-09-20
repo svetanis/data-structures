@@ -1,5 +1,7 @@
 package com.svetanis.datastructures.graph.unionfind;
 
+import static java.util.Comparator.comparingInt;
+
 import java.util.Arrays;
 
 // 1101. The Earliest Moment When Everyone Become Friends
@@ -12,7 +14,7 @@ public final class EarliestMomentAllAcquaintedSubmit {
 	private int[] parent;
 
 	public int earliestAcquainted(int[][] logs, int n) {
-		Arrays.sort(logs, (a, b) -> a[0] - b[0]);
+		Arrays.sort(logs, comparingInt(a -> a[0]));
 		this.rank = new int[n];
 		this.parent = new int[n];
 		for (int i = 0; i < n; i++) {

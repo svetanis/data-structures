@@ -6,7 +6,9 @@ import java.util.List;
 // 305. Number of Islands II
 
 public final class NumberOfIslandsII {
-	// Time Complexity: O(k * n * m)
+	// Time Complexity: O(m * n + k * alpha(m * n))
+	// m * n is the one-time array init; each of the k positions does
+	// at most 4 unions. O(k * n * m) is the flood-fill cost this file beats.
 	// Space Complexity: O(n * m)
 
 	private int[] size;

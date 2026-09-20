@@ -5,13 +5,12 @@ package com.svetanis.datastructures.graph.unionfind;
 public final class EquationEquality {
 	// Time Complexity: O(n)
 
-	public EquationEquality() {
-		this.parent = init();
-	}
-
 	private int[] parent;
 
 	public boolean equationsPossible(String[] equations) {
+		// per call, not in the constructor -- unions from an earlier
+		// call would otherwise still be joined for this one
+		this.parent = init();
 		merge(equations);
 		for (String equation : equations) {
 			if (equation.charAt(1) == '!') {

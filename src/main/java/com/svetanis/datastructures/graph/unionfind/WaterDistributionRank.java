@@ -1,5 +1,7 @@
 package com.svetanis.datastructures.graph.unionfind;
 
+import static java.util.Comparator.comparingInt;
+
 import java.util.Arrays;
 
 // 1168. Optimize Water Distribution in a Village
@@ -15,7 +17,7 @@ public final class WaterDistributionRank {
 		initParent(n);
 		int[][] connections = connections(n, wells, pipes);
 		// sort connections by cost
-		Arrays.sort(connections, (a, b) -> a[2] - b[2]);
+		Arrays.sort(connections, comparingInt(a -> a[2]));
 		int totalCost = 0;
 		for (int[] connection : connections) {
 			if (union(connection[0], connection[1])) {

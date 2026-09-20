@@ -29,7 +29,7 @@ public final class ReverseDisjointUnionSet {
 			list.add(cc);
 			int x = edge.get(0);
 			int y = edge.get(1);
-			if (dsu.find(x) != dsu.find(y)) {
+			if (!dsu.isSame(x, y)) {
 				dsu.union(x, y);
 				cc--;
 			}

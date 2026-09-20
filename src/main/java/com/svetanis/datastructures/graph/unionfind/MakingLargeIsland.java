@@ -17,17 +17,18 @@ public final class MakingLargeIsland {
 	private static int[] dy = { 0, -1, 1, 0 };
 
 	public int largestIsland(int[][] grid) {
-		int n = grid.length;
-		int size = n * n;
-		init(size);
+		int rows = grid.length;
+		int cols = grid[0].length;
+		init(rows * cols);
 		int max = union(grid, 1);
 		return maxSize(grid, max);
 	}
 
 	private int maxSize(int[][] grid, int max) {
-		int n = grid.length;
-		for (int i = 0; i < n; i++) {
-			for (int j = 0; j < n; j++) {
+		int rows = grid.length;
+		int cols = grid[0].length;
+		for (int i = 0; i < rows; i++) {
+			for (int j = 0; j < cols; j++) {
 				if (grid[i][j] == 1) {
 					continue;
 				}
@@ -40,7 +41,7 @@ public final class MakingLargeIsland {
 					if (!valid(grid, x, y)) {
 						continue;
 					}
-					int root = find(x * n + y);
+					int root = find(x * cols + y);
 					if (!visited.contains(root)) {
 						visited.add(root);
 						size += sizes[root];
@@ -53,9 +54,10 @@ public final class MakingLargeIsland {
 	}
 
 	private int union(int[][] grid, int max) {
-		int n = grid.length;
-		for (int i = 0; i < n; i++) {
-			for (int j = 0; j < n; j++) {
+		int rows = grid.length;
+		int cols = grid[0].length;
+		for (int i = 0; i < rows; i++) {
+			for (int j = 0; j < cols; j++) {
 				if (grid[i][j] == 0) {
 					continue;
 				}
@@ -67,9 +69,9 @@ public final class MakingLargeIsland {
 						continue;
 					}
 					// root of current cell
-					int cp = find(i * n + j);
+					int cp = find(i * cols + j);
 					// root of neighbor cell
-					int np = find(x * n + y);
+					int np = find(x * cols + y);
 					// if neighbors belong to different
 					// sets perform union operation
 					if (cp != np) {
@@ -84,9 +86,11 @@ public final class MakingLargeIsland {
 	}
 
 	private boolean valid(int[][] grid, int x, int y) {
-		int n = grid.length;
-		boolean one = x >= 0 && x < n;
-		boolean two = y >= 0 && y < n;
+		// the row count bounds x and the COLUMN count bounds y. one
+		// length used for both is right only while the grid is square,
+		// which is what LC 827 promises and nothing else does
+		boolean one = x >= 0 && x < grid.length;
+		boolean two = y >= 0 && y < grid[0].length;
 		return one && two && grid[x][y] == 1;
 	}
 
@@ -116,5 +120,13 @@ public final class MakingLargeIsland {
 
 		int[][] g3 = { { 1, 1 }, { 1, 1 } };
 		System.out.println(mli.largestIsland(g3)); // 4
+
+		// wider than it is tall. with grid.length standing in for the
+		// column count this printed 4, and a taller-than-wide grid threw
+		int[][] g4 = { { 1, 1, 1 }, { 1, 1, 1 } };
+		System.out.println(mli.largestIsland(g4)); // 6
+
+		int[][] g5 = { { 1, 1 }, { 1, 0 }, { 1, 1 }, { 1, 1 } };
+		System.out.println(mli.largestIsland(g5)); // 8
 	}
 }

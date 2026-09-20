@@ -8,10 +8,22 @@ import java.util.List;
 import com.google.common.collect.ImmutableList;
 import com.svetanis.java.base.Pair;
 
+// RUNG 4 of four, and the one to use. TWO ideas, not one:
+//   union by RANK -- the shallower tree goes underneath. rank is an
+//     upper bound on depth, not a count of nodes, which is where it
+//     differs from WeightedQuickUnion's size
+//   path compression -- find rewrites the links it walks over, so the
+//     next find on the same node is shorter. this file compresses by
+//     HALVING: parent[p] = parent[parent[p]], one extra write per step,
+//     no second pass and no recursion
+// once compression starts shortening paths, rank stops being an exact
+// depth. that is why it is only ever compared, never read as a
+// measurement.
 public final class UF {
-  // depth of any node in forest built by
-  // weighted quick-union for N sites
-  // is at most lg N
+  // find:  O(alpha(n)) amortized -- inverse Ackermann, at most 4 or 5
+  // union: O(alpha(n)) amortized -- for any n that fits in this universe
+  // NOT the lg n bound below: that bound is WeightedQuickUnion's, and it
+  // is what this file improves on by flattening the path it just walked
 
   private int[] parent; // parent link (site indexed)
   // parent[i] = parent of i

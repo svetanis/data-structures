@@ -2,6 +2,7 @@ package com.svetanis.datastructures.graph.unionfind;
 
 import static com.svetanis.java.base.collect.Lists.sort;
 import static java.util.Arrays.asList;
+import static java.util.Comparator.comparingInt;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,13 +20,13 @@ public final class EarliestMomentAllAcquainted {
 	}
 
 	public int earliestAcquainted(int n, List<List<Integer>> logs) {
-		List<List<Integer>> sorted = sort(logs, (a, b) -> a.get(0) - b.get(0));
+		List<List<Integer>> sorted = sort(logs, comparingInt(a -> a.get(0)));
 		int components = n;
 		for (List<Integer> log : sorted) {
 			int timestamp = log.get(0);
 			int x = log.get(1);
 			int y = log.get(2);
-			if (dsu.find(x) != dsu.find(y)) {
+			if (!dsu.isSame(x, y)) {
 				dsu.union(x, y);
 				components--;
 			}

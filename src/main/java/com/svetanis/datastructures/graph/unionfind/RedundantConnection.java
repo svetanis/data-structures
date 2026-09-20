@@ -6,7 +6,10 @@ import com.svetanis.java.base.utils.Print;
 
 public final class RedundantConnection {
 	// Time Complexity: O(E)
-	// Space Complexity: O(1)
+	// Space Complexity: O(n) for the parent array.
+
+	// LC 684 gives n nodes labelled 1..n and exactly n edges,
+	// so edges.length is the node count and node n needs a seat.
 
 	private int[] parent;
 
@@ -24,8 +27,8 @@ public final class RedundantConnection {
 	}
 
 	private void init(int n) {
-		this.parent = new int[1010];
-		for (int i = 0; i < n; i++) {
+		this.parent = new int[n + 2];
+		for (int i = 0; i <= n; i++) {
 			this.parent[i] = i;
 		}
 	}

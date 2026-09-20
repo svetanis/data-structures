@@ -14,25 +14,32 @@ public final class UnionByRank<T> {
 	}
 
 	public void union(T x, T y) {
-		if (!rank.containsKey(find(x))) {
-			rank.put(find(x), 0);
+		T rootX = find(x);
+		T rootY = find(y);
+		if (rootX.equals(rootY)) {
+			return;
 		}
-		if (!rank.containsKey(find(y))) {
-			rank.put(find(y), 0);
-		}
-		if (rank.get(find(x)) < rank.get(find(y))) {
-			map.put(find(x), find(y));
+		int rankX = rank.getOrDefault(rootX, 0);
+		int rankY = rank.getOrDefault(rootY, 0);
+		if (rankX < rankY) {
+			map.put(rootX, rootY);
 		} else {
-			map.put(find(y), find(x));
-			if (rank.get(find(x)) == rank.get(find(y))) {
-				rank.put(find(x), rank.get(find(x)) + 1);
+			map.put(rootY, rootX);
+			// int, not Integer: rank.get(a) == rank.get(b) compares two boxes
+			if (rankX == rankY) {
+				rank.put(rootX, rankX + 1);
 			}
 		}
 	}
 
+	public boolean isSame(T x, T y) {
+		return find(x).equals(find(y));
+	}
+
 	public T find(T x) {
 		T y = map.getOrDefault(x, x);
-		if (y != x) {
+		// equals, not != -- see the note on UnionFind
+		if (!y.equals(x)) {
 			y = find(y);
 			map.put(x, y);
 		}

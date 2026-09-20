@@ -23,7 +23,7 @@ public final class NumberOfConnectedComponents {
 		for (List<Integer> connection : connections) {
 			int x = connection.get(0);
 			int y = connection.get(1);
-			if (dsu.find(x) != dsu.find(y)) {
+			if (!dsu.isSame(x, y)) {
 				dsu.union(x, y);
 				cc--;
 			}

@@ -8,9 +8,14 @@ import java.util.List;
 import com.google.common.collect.ImmutableList;
 import com.svetanis.java.base.Pair;
 
+// RUNG 1 of four. see QuickUnion, WeightedQuickUnion and UF beside it.
+// id[i] IS the component label, so find is one array read -- and that
+// is exactly why union is expensive: to merge two components, every
+// member of one of them has to be relabelled.
 public final class QuickFind {
-  // dynamic connectivity with
-  // quick-find is O(n^2)
+  // find:  O(1)
+  // union: O(n) -- scans the whole array
+  // n unions therefore cost O(n^2), which is the reason rung 2 exists
 
   private int[] id;
   private int count; // num of components
