@@ -3,9 +3,9 @@ package com.svetanis.datastructures.graph.mst;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+
+import com.svetanis.datastructures.graph.unionfind.UnionFind;
 
 // Minimum Spanning Tree | Forests
 
@@ -21,7 +21,7 @@ public final class MstForest {
 		for (List<Integer> edge : edges) {
 			int a = edge.get(0), b = edge.get(1);
 			int weight = edge.get(2);
-			if (dsu.find(a) != dsu.find(b)) {
+			if (!dsu.isSame(a, b)) {
 				dsu.union(a, b);
 				total += weight;
 			}
@@ -42,23 +42,5 @@ public final class MstForest {
 		int[][] grid = { { 1, 2, 1 }, { 2, 4, 2 }, { 3, 5, 3 }, { 4, 4, 4 } };
 		MstForest kruskal = new MstForest();
 		System.out.println(kruskal.mst(5, grid)); // 6
-	}
-
-	private static class UnionFind<T> {
-
-		private Map<T, T> map = new HashMap<>();
-
-		public T find(T x) {
-			T y = map.getOrDefault(x, x);
-			if (y != x) {
-				y = find(y);
-				map.put(x, y);
-			}
-			return y;
-		}
-
-		public void union(T x, T y) {
-			map.put(find(x), find(y));
-		}
 	}
 }
