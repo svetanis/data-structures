@@ -5,6 +5,19 @@ import static java.util.Comparator.comparingInt;
 import java.util.Arrays;
 
 // 1135. Connecting Cities With Minimum Cost
+// The three 1135 files are a ladder, and each rung adds exactly one thing:
+//   1. ConnectCitiesMinCostEdgeCount  -- Kruskal, counting EDGES up to n - 1
+//   2. ConnectCitiesMinCost           -- the same, counting COMPONENTS down to 1
+//   3. ConnectCitiesMinCostCounting   -- rung 2 with the comparison sort replaced
+//                                        by a counting sort on the cost
+// All three return the same answer on every input. Rung 1 is the one to write.
+//
+// RUNG 2: counts components DOWN to 1 rather than edges UP to n - 1. The two are
+// the same fact from opposite ends, since a spanning tree has exactly one component
+// and exactly n - 1 edges, and neither stops earlier than the other. What it costs
+// is a special case: with n == 1 there is no union to make, so the count never
+// reaches 1 by merging and the method would fall through to -1. Rung 1 needs no
+// such case -- count and n - 1 are both 0.
 
 public final class ConnectCitiesMinCost {
 	// Time Complexity: O(m log m)

@@ -1,62 +1,37 @@
 package com.svetanis.datastructures.graph.unionfind;
 
 // 323. Number of Connected Components in an Undirected Graph
+// Every node starts as its own component, and each edge that joins two DIFFERENT
+// components destroys one. So the count needs no pass over the parent array and no
+// field on the structure -- it is what union's boolean already tells you.
+// NumberOfConnectedComponents323Dfs solves it by walking instead.
+// Paste DisjointSet above it for a submission -- one editor box takes both classes.
 
 public final class NumberOfConnectedComponents323 {
-  // Time Complexity: O(N + E)
-  // Space Complexity: O(n)
+	// Time Complexity: O(n + e)
+	// Space Complexity: O(n)
 
-  private int[] parent;
+	public int countComponents(int n, int[][] edges) {
+		DisjointSet ds = new DisjointSet(n);
+		int components = n;
+		for (int[] edge : edges) {
+			// true means they were apart; the two components just became one
+			if (ds.union(edge[0], edge[1])) {
+				components -= 1;
+			}
+		}
+		return components;
+	}
 
-  public int countComponents(int n, int[][] edges) {
-    init(n);
-    merge(edges);
-    return count(n);
-  }
+	public static void main(String[] args) {
+		NumberOfConnectedComponents323 cc = new NumberOfConnectedComponents323();
+		int[][] edges = { { 0, 1 }, { 1, 2 }, { 3, 4 } };
+		System.out.println(cc.countComponents(5, edges)); // 2
 
-  // count components by counting nodes
-  // that are their own parents
-  private int count(int n) {
-    int count = 0;
-    for (int i = 0; i < n; i++) {
-      if (i == find(i)) {
-        count++;
-      }
-    }
-    return count;
-  }
+		// an edge inside a component changes nothing: union returns false
+		int[][] cycle = { { 0, 1 }, { 1, 2 }, { 0, 2 } };
+		System.out.println(cc.countComponents(3, cycle)); // 1
 
-  private void merge(int[][] edges) {
-    for (int[] edge : edges) {
-      int v1 = edge[0];
-      int v2 = edge[1];
-      union(v1, v2);
-    }
-  }
-
-  private void init(int n) {
-    this.parent = new int[n];
-    for (int i = 0; i < n; i++) {
-      this.parent[i] = i;
-    }
-  }
-
-  private int find(int node) {
-    if (parent[node] != node) {
-      parent[node] = find(parent[node]);
-    }
-    return parent[node];
-  }
-
-  private void union(int node1, int node2) {
-    int root1 = find(node1);
-    int root2 = find(node2);
-    parent[root1] = root2;
-  }
-
-  public static void main(String[] args) {
-    int[][] edges = { { 0, 1 }, { 1, 2 }, { 3, 4 } };
-    NumberOfConnectedComponents323 cc = new NumberOfConnectedComponents323();
-    System.out.println(cc.countComponents(5, edges)); // 2
-  }
+		System.out.println(cc.countComponents(4, new int[0][2])); // 4 -- no edges
+	}
 }
