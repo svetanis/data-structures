@@ -43,6 +43,6 @@ public final class CyclicGraphDfs {
     g.addEdge(2, 0);
     g.addEdge(2, 3);
     g.addEdge(3, 3);
-    System.out.println(isCyclic(g));
+    System.out.println(isCyclic(g)); // true -- 3 -> 3 is a cycle on its own
   }
 }

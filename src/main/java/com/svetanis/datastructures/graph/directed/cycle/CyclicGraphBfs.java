@@ -51,6 +51,6 @@ public final class CyclicGraphBfs {
     g.addEdge(2, 0);
     g.addEdge(3, 4);
     g.addEdge(4, 5);
-    System.out.println(isCyclic(g));
+    System.out.println(isCyclic(g)); // true -- 0 -> 1 -> 2 -> 0
   }
 }
