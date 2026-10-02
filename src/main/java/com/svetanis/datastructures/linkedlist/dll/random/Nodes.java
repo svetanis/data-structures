@@ -1,5 +1,10 @@
 package com.svetanis.datastructures.linkedlist.dll.random;
 
+// Helpers for lists of this package's Node: insertAtHead, size, reverse (along next only;
+// random pointers are not touched), print, and printRand, which prints each node with the
+// value its random pointer aims at, -1 for none. insertAtHead and size are not static, so
+// they need a Nodes object. LeetCode builds its input lists itself.
+
 public final class Nodes {
 
   // put data always at the head of linked list
@@ -44,7 +49,7 @@ public final class Nodes {
   public static void printRand(Node head) {
     Node curr = head;
     while (curr != null) {
-      Node rand = curr.rand;
+      Node rand = curr.random;
       int randomData = (rand != null) ? rand.val : -1;
       System.out.print(" Data = " + curr.val + ", Random data = " + randomData);
       curr = curr.next;

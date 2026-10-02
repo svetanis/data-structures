@@ -1,5 +1,10 @@
 package com.svetanis.datastructures.linkedlist.single.flatten;
 
+// Helpers that build and print lists of this package's Node for the main methods here:
+// push puts a new node on top of a column (joined by down), fromArray builds a row (joined
+// by next), and printDown and printNext print along each direction. LeetCode builds its
+// input lists itself, so solutions do not call these.
+
 public final class Nodes {
 
   public static Node push(Node head, int data) {
@@ -22,7 +27,7 @@ public final class Nodes {
         curr.next = new Node();
         curr = curr.next;
       }
-      curr.data = a[i];
+      curr.val = a[i];
       curr.next = null;
       curr.down = null;
     }

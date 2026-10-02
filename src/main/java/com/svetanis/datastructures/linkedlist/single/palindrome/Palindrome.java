@@ -3,26 +3,44 @@ package com.svetanis.datastructures.linkedlist.single.palindrome;
 import static com.google.common.collect.Lists.newArrayList;
 import static com.svetanis.datastructures.linkedlist.single.Nodes.fromList;
 
-import com.svetanis.datastructures.linkedlist.single.Node;
+import com.svetanis.datastructures.linkedlist.single.ListNode;
 
 // 234. Palindrome Linked List
-
-// given the head of a Singly LinkedList
-// check if the SLL is a palindrom or not
+//
+// Given the head of a singly linked list, check whether it is a palindrome.
+// Return true when the values read the same from the back as from the front (0 1 2 1 0).
+// The list is the same when the method returns as when it was called.
+//
+// The back half can only be walked forward, so find the middle node with two pointers
+// (fast moves two nodes for each one that slow moves; slow stops on the middle node, or on
+// the first node of the back half when the length is even), reverse the list from there on,
+// and walk the front and the reversed back half together comparing values. The node before
+// the middle still points at the middle, so reversing the back half a second time puts the
+// list back exactly as it was.
 
 public final class Palindrome {
-	// Time Complexity: O(n)
+	// Time Complexity: O(n), a few passes over half the list each
+	// Space Complexity: O(1), the back half is reversed in place and then restored
 
-	public static boolean isPalindrome(Node head) {
+	public static boolean isPalindrome(ListNode head) {
 		if (head == null || head.next == null) {
 			return true;
 		}
-		Node mid = middle(head);
-		Node reversed = reverse(mid);
-		Node curr1 = head;
-		Node curr2 = reversed;
+		ListNode mid = middle(head);
+		ListNode reversed = reverse(mid);
+		boolean result = compare(head, reversed);
+		// put the second half back the way it was found. the signature
+		// promises a boolean and says nothing about mutating the input --
+		// "your solution modified my list" is LC 234's standard follow-up
+		reverse(reversed);
+		return result;
+	}
+
+	private static boolean compare(ListNode head, ListNode reversed) {
+		ListNode curr1 = head;
+		ListNode curr2 = reversed;
 		while (curr2 != null) {
-			if (curr1.data != curr2.data) {
+			if (curr1.val != curr2.val) {
 				return false;
 			}
 			curr1 = curr1.next;
@@ -31,12 +49,12 @@ public final class Palindrome {
 		return true;
 	}
 
-	public static Node middle(Node head) {
+	public static ListNode middle(ListNode head) {
 		if (head == null) {
 			return null;
 		}
-		Node slow = head;
-		Node fast = head;
+		ListNode slow = head;
+		ListNode fast = head;
 		while (fast != null && fast.next != null) {
 			slow = slow.next;
 			fast = fast.next.next;
@@ -44,11 +62,11 @@ public final class Palindrome {
 		return slow;
 	}
 
-	public static Node reverse(Node head) {
-		Node prev = null;
-		Node curr = head;
+	public static ListNode reverse(ListNode head) {
+		ListNode prev = null;
+		ListNode curr = head;
 		while (curr != null) {
-			Node next = curr.next;
+			ListNode next = curr.next;
 			curr.next = prev;
 			prev = curr;
 			curr = next;
@@ -58,10 +76,10 @@ public final class Palindrome {
 
 	public static void main(String[] args) {
 		// 0->1->2->1->0
-		Node head = fromList(newArrayList(0, 1, 2, 1, 0));
-		System.out.println(isPalindrome(head));
+		ListNode head = fromList(newArrayList(0, 1, 2, 1, 0));
+		System.out.println(isPalindrome(head)); // true
 
-		Node head1 = fromList(newArrayList(0, 1, 3, 0));
-		System.out.println(isPalindrome(head1));
+		ListNode head1 = fromList(newArrayList(0, 1, 3, 0));
+		System.out.println(isPalindrome(head1)); // false
 	}
 }

@@ -3,17 +3,37 @@ package com.svetanis.datastructures.linkedlist.single.rearrange;
 import static com.svetanis.datastructures.linkedlist.single.Nodes.insertAtHead;
 import static com.svetanis.datastructures.linkedlist.single.Nodes.print;
 
-import com.svetanis.datastructures.linkedlist.single.Node;
-import com.svetanis.java.base.Pair;
+import com.svetanis.datastructures.linkedlist.single.ListNode;
+
+// Alternating split of a linked list
+//
+// Split one list into two, counting positions from 0: the nodes at positions 0, 2, 4, ... go
+// to the first list and the nodes at positions 1, 3, 5, ... to the second, each keeping its
+// order. Returns both heads; a list of 0 or 1 nodes gives an empty (null) second list, and the
+// empty list gives two empty lists.
+//
+// Two chains grow side by side: even sits on the last node given to the first list, odd on the
+// last node given to the second. curr is the next node not yet given out; it goes to even, and
+// the node after it to odd. At the end both chains are ended with null, because the last node
+// of each may still point into the other. LC 328 (Odd Even Linked List) builds the same two
+// chains and then joins them; this keeps them apart.
 
 public final class SplitAlternate {
+  // Time Complexity: O(n), one pass
+  // Space Complexity: O(1), the existing nodes are relinked
 
-  public static Pair<Node, Node> split(Node head) {
-    Node even = head;
-    Node odd = head.next;
-    Node curr = head.next.next;
-    Node h1 = even;
-    Node h2 = odd;
+  // the two heads; either may be null when the list is too short to fill it
+  public record Halves(ListNode first, ListNode second) {}
+
+  public static Halves split(ListNode head) {
+    if (head == null || head.next == null) {
+      return new Halves(head, null); // 0 or 1 node: nothing goes to the second list
+    }
+    ListNode even = head;
+    ListNode odd = head.next;
+    ListNode curr = head.next.next; // the first node not yet given to either list
+    ListNode h1 = even;
+    ListNode h2 = odd;
 
     while (curr != null) {
       even.next = curr;
@@ -26,13 +46,13 @@ public final class SplitAlternate {
         curr = curr.next;
       }
     }
-    even.next = null;
+    even.next = null; // end both lists: the last node of each may still point into the other
     odd.next = null;
-    return Pair.build(h1, h2);
+    return new Halves(h1, h2);
   }
 
   public static void main(String[] args) {
-    Node head = null;
+    ListNode head = null;
     head = insertAtHead(head, 61);
     head = insertAtHead(head, 10);
     head = insertAtHead(head, 4);
@@ -40,13 +60,14 @@ public final class SplitAlternate {
     head = insertAtHead(head, 25);
     head = insertAtHead(head, 55);
 
-    print(head);
+    print(head); // 55 25 15 4 10 61
 
-    Pair<Node, Node> pair = split(head);
-    Node head1 = pair.getLeft();
-    Node head2 = pair.getRight();
+    Halves halves = split(head);
+    print(halves.first()); // 55 15 10
+    print(halves.second()); // 25 4 61
 
-    print(head1);
-    print(head2);
+    Halves one = split(new ListNode(7));
+    print(one.first()); // 7
+    print(one.second()); // []
   }
 }

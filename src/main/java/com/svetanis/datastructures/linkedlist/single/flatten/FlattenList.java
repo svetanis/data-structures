@@ -3,6 +3,17 @@ package com.svetanis.datastructures.linkedlist.single.flatten;
 import static com.svetanis.datastructures.linkedlist.single.flatten.Nodes.printDown;
 import static com.svetanis.datastructures.linkedlist.single.flatten.Nodes.push;
 
+// Flattening a Linked List
+//
+// The top row is a list joined by next pointers. Each node of it also starts a column: a
+// list joined by down pointers, sorted from smallest to largest. Return one list, joined by
+// down pointers, that holds every node of every column in sorted order.
+//
+// Merge from the right. flatten first turns everything after the first column into one
+// sorted down list, then merges the first column into it, as in Merge Two Sorted Lists
+// (LC 21): of the two front nodes, the smaller one goes first and the rest is merged behind
+// it, along down pointers.
+//
 // 5 -> 10 -> 19 -> 28
 // |     |     |     |
 // 7    20    22    35
@@ -14,6 +25,8 @@ import static com.svetanis.datastructures.linkedlist.single.flatten.Nodes.push;
 // 5->7->8->10->19->20->22->28->30->35->40->45->50
 
 public final class FlattenList {
+  // Time Complexity: O(N * k), N nodes in all and k columns: each of the k merges can walk the whole merged list
+  // Space Complexity: O(N), merge calls itself once for every node it places
 
   public static Node flatten(Node root) {
 
@@ -22,7 +35,7 @@ public final class FlattenList {
       return root;
     }
 
-    root.next = flatten(root.next);
+    root.next = flatten(root.next); // every column to the right, as one sorted down list
     // merge this list with
     // the list on next side
     return merge(root, root.next);
@@ -45,7 +58,7 @@ public final class FlattenList {
     // head nodes of both lists and
     // put the smaller one in result
     Node merged = null;
-    if (node1.data < node2.data) {
+    if (node1.val < node2.val) {
       merged = node1;
       merged.down = merge(node1.down, node2);
     } else {
@@ -72,6 +85,6 @@ public final class FlattenList {
     root.next.next.next = push(root.next.next.next, 28);
 
     root = flatten(root);
-    printDown(root);
+    printDown(root); // 5 7 8 10 19 20 22 28 30 35 40 45 50
   }
 }

@@ -1,49 +1,54 @@
 package com.svetanis.datastructures.linkedlist.dll.random;
 
 // 138. Copy List with Random Pointer
+//
+// Each node has a next pointer and a random pointer to any node in the list, or null.
+// Return a deep copy: new nodes only, with every pointer aimed at the matching new node.
+//
+// No map: each copy is put right after its original, A -> A' -> B -> B' -> ..., so the copy
+// of any node X is X.next. That sets every random pointer in one pass, and a third pass
+// separates the two lists again.
 
 public final class CloneWithRandomNoExtraSpace {
-	// Time Complexity: O(n)
-	// Space Complexity: O(1)
+	// Time Complexity: O(n), three passes
+	// Space Complexity: O(1) besides the copy itself
 
 	public static Node clone(Node head) {
 		if (head == null) {
 			return null;
 		}
 
-		// 1. insert copy of the node
-		// after every node in the list
+		// 1. insert a copy of each node right after it
 		Node curr = head;
 		while (curr != null) {
-			Node temp = curr.next;
-			curr.next = new Node(curr.val);
-			curr.next.next = temp;
-			curr = temp;
+			Node next = curr.next; // SAVE the next original
+			curr.next = new Node(curr.val); // INSERT the copy right after its original
+			curr.next.next = next;
+			curr = next; // the next original, two boxes on now
 		}
 
+		// 2. set each copy's random: the copy of curr.random is curr.random.next
 		curr = head;
-
-		// 2. adjust random pointers
-		// of the newly added nodes
 		while (curr != null) {
-			if (curr.next != null) {
-				curr.next.rand = (curr.rand != null) ? curr.rand.next : curr.rand;
-			}
-			curr = (curr.next != null) ? curr.next.next : curr.next;
+			// RANDOM: the copy of any X is X.next
+			curr.next.random = curr.random == null ? null : curr.random.next;
+			curr = curr.next.next; // the next original
 		}
 
 		// 3. separate original and copied lists
 		Node given = head;
 		Node clone = head.next;
 		Node cloneHead = clone;
-		while (given != null && clone != null) {
-			given.next = (given.next != null) ? given.next.next : given.next;
-			clone.next = (clone.next != null) ? clone.next.next : clone.next;
+		while (given != null) {
+			given.next = clone.next; // SEPARATE: the next original, or null
+			clone.next = clone.next == null ? null : clone.next.next; // the next copy, or null
 			given = given.next;
-			clone = clone.next;
+			clone = clone.next; // already the next copy, or null: never reads through a null given
 		}
 		return cloneHead;
 	}
+
+	private static final String NODE = "[%d, %d] ";
 
 	public static void main(String[] args) {
 		Node head = new Node(1);
@@ -52,36 +57,27 @@ public final class CloneWithRandomNoExtraSpace {
 		head.next.next.next = new Node(4);
 		head.next.next.next.next = new Node(5);
 
-		// Setting up random references
-		head.rand = head.next.next;
-		head.next.rand = head.next.next.next;
-		head.next.next.rand = head.next.next.next.next;
-		head.next.next.next.next.rand = head.next;
+		// the random pointers
+		head.random = head.next.next;
+		head.next.random = head.next.next.next;
+		head.next.next.random = head.next.next.next.next;
+		head.next.next.next.next.random = head.next;
 
-		// making a clone of the original linked list
 		Node clone = clone(head);
 
 		System.out.println("original linked list: ");
-		print(head);
+		print(head); // [1, 3] [2, 4] [3, 5] [4, -1] [5, 2]
 
 		System.out.println("cloned linked list: ");
-		print(clone);
+		print(clone); // [1, 3] [2, 4] [3, 5] [4, -1] [5, 2]
 	}
 
+	// each node as [value, value of its random target], -1 for none
 	private static void print(Node head) {
-		Node curr = head;
-		while (curr != null) {
-			Node rand = curr.rand;
-			int randomData = (rand != null) ? rand.val : -1;
-			System.out.print("[" + curr.val + ", " + randomData + "] ");
-			curr = curr.next;
+		for (Node curr = head; curr != null; curr = curr.next) {
+			int randomValue = curr.random == null ? -1 : curr.random.val;
+			System.out.print(NODE.formatted(curr.val, randomValue));
 		}
 		System.out.println();
 	}
-
-	// original linked list:
-	// [1, 3] [2, 4] [3, 5] [4, -1] [5, 2]
-	// cloned linked list:
-	// [1, 3] [2, 4] [3, 5] [4, -1] [5, 2]
-
 }

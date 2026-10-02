@@ -3,35 +3,45 @@ package com.svetanis.datastructures.linkedlist.single.sort;
 import static com.svetanis.datastructures.linkedlist.single.Nodes.fromArray;
 import static com.svetanis.datastructures.linkedlist.single.Nodes.print;
 
-import com.svetanis.datastructures.linkedlist.single.Node;
+import com.svetanis.datastructures.linkedlist.single.ListNode;
 
 // 148. Sort List
+//
+// Sort a singly linked list into increasing order, reusing its own nodes, and return the
+// new head.
+//
+// Merge sort. Find the last node of the first half with two pointers (fast moves two nodes
+// for each one that slow moves), cut the arrow after it so the list becomes two lists, sort
+// each half the same way, then merge the two sorted halves behind a fake node by taking the
+// smaller front node each turn. A list of zero or one node is already sorted. For two nodes
+// the first half is exactly one node, so every cut makes both halves smaller.
 
 public final class MergeSort {
-	// Time Complexity: O(n log n)
-	// Space Complexity: O(log n)
+	// Time Complexity: O(n log n), the halving goes log n levels deep and each level touches
+	// every node once
+	// Space Complexity: O(log n), one stack frame per level of halving; merging uses a loop
 
-	public static Node sort(Node head) {
+	public static ListNode sort(ListNode head) {
 		if (head == null || head.next == null) {
 			return head;
 		}
 
-		Node middle = middleNode(head);
-		Node middleNext = middle.next;
+		ListNode middle = middleNode(head);
+		ListNode middleNext = middle.next;
 		middle.next = null;
 
 		// recursively sort and merge the sublists
-		Node left = sort(head);
-		Node right = sort(middleNext);
+		ListNode left = sort(head);
+		ListNode right = sort(middleNext);
 		return mergeDummy(left, right);
 	}
 
-	private static Node middleNode(Node head) {
+	private static ListNode middleNode(ListNode head) {
 		if (head == null) {
 			return head;
 		}
-		Node slow = head;
-		Node fast = head.next;
+		ListNode slow = head;
+		ListNode fast = head.next;
 		while (fast != null) {
 			fast = fast.next;
 			if (fast != null) {
@@ -42,11 +52,11 @@ public final class MergeSort {
 		return slow;
 	}
 
-	private static Node mergeDummy(Node left, Node right) {
-		Node dummy = new Node();
-		Node curr = dummy;
+	private static ListNode mergeDummy(ListNode left, ListNode right) {
+		ListNode dummy = new ListNode();
+		ListNode curr = dummy;
 		while (left != null && right != null) {
-			if (left.data <= right.data) {
+			if (left.val <= right.val) {
 				curr.next = left;
 				left = left.next;
 			} else {
@@ -59,31 +69,13 @@ public final class MergeSort {
 		return dummy.next;
 	}
 
-	private static Node merge(Node node1, Node node2) {
-		Node merged = null;
-		if (node1 == null) {
-			return node2;
-		}
-		if (node2 == null) {
-			return node1;
-		}
-		if (node1.data <= node2.data) {
-			merged = node1;
-			merged.next = merge(node1.next, node2);
-		} else {
-			merged = node2;
-			merged.next = merge(node1, node2.next);
-		}
-		return merged;
-	}
-
 	public static void main(String[] args) {
 		int[] a = { 4, 2, 1, 3 };
-		Node head = fromArray(a);
-		print(sort(head));
+		ListNode head = fromArray(a);
+		print(sort(head)); // 1 2 3 4
 
 		int[] a1 = { -1, 5, 3, 4, 0 };
-		Node head1 = fromArray(a1);
-		print(sort(head1));
+		ListNode head1 = fromArray(a1);
+		print(sort(head1)); // -1 0 3 4 5
 	}
 }

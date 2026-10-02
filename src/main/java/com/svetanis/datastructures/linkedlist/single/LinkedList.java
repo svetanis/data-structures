@@ -1,8 +1,18 @@
 package com.svetanis.datastructures.linkedlist.single;
 
 // 707. Design Linked List
+//
+// A list of ints with get, addAtHead, addAtTail, addAtIndex and deleteAtIndex, where index 0
+// is the first node. get returns -1 for an index outside the list. addAtIndex with an index
+// past the end, and deleteAtIndex with an index outside the list, change nothing.
+//
+// A fake node sits in front of the first real node, so every insert and every delete
+// changes the next of the node just before the position, even at index 0. size is kept up
+// to date on every change, so checking an index needs no walk.
 
 public class LinkedList {
+	// Time Complexity: O(index) per call, a walk from the fake node to the position; addAtTail is O(n)
+	// Space Complexity: O(n), one node per value held
 
 	private int size;
 	private ListNode dummyHead;
@@ -19,7 +29,7 @@ public class LinkedList {
 		while (index-- > 0) {
 			node = node.next;
 		}
-		return node.value;
+		return node.val;
 	}
 
 	public void addAtHead(int val) {
@@ -31,11 +41,11 @@ public class LinkedList {
 	}
 
 	public void addAtIndex(int index, int val) {
-		if (index > size) {
+		if (index > size) { // index == size is allowed: it adds after the last node
 			return;
 		}
 		ListNode node = dummyHead;
-		while (index-- > 0) {
+		while (index-- > 0) { // index steps from the fake node: the node before the position
 			node = node.next;
 		}
 		node.next = new ListNode(val, node.next);
@@ -66,13 +76,14 @@ public class LinkedList {
 		System.out.println(ll.get(1)); // 3
 	}
 
+	// a node type of its own; inside this class it is used instead of the package's ListNode
 	private static class ListNode {
 
-		private int value;
+		private int val;
 		private ListNode next;
 
 		public ListNode(int val, ListNode next) {
-			this.value = val;
+			this.val = val;
 			this.next = next;
 		}
 

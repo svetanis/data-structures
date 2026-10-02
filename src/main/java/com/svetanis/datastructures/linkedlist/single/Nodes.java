@@ -8,57 +8,62 @@ import java.util.List;
 
 import com.google.common.base.Optional;
 
+// Static helpers for lists of ListNode, used by the main methods across this repo: build a
+// list from a List or an array (both refuse an empty input), print, count, insert, search,
+// and find the last node. LeetCode builds its input lists itself, so a method meant to be
+// pasted into LeetCode must not call these. sum is the one helper that is not static.
+
 public final class Nodes {
 
-	public static boolean isNotNull(Node node) {
+	public static boolean isNotNull(ListNode node) {
 		return !isNull(node);
 	}
 
-	public static boolean isNull(Node node) {
+	public static boolean isNull(ListNode node) {
 		return node == null;
 	}
 
-	public static Node insertAtHead(Node head, int data) {
-		Node newNode = new Node(data);
+	public static ListNode insertAtHead(ListNode head, int data) {
+		ListNode newNode = new ListNode(data);
 		newNode.next = head;
 		head = newNode;
 		return head;
 	}
 
-	public static Node insertAtHead(Node head, Node node) {
-		Node newNode = node;
+	public static ListNode insertAtHead(ListNode head, ListNode node) {
+		ListNode newNode = node;
 		newNode.next = head;
 		head = newNode;
 		return head;
 	}
 
-	public static Node fromList(List<Integer> list) {
+	public static ListNode fromList(List<Integer> list) {
 		if (list == null || list.size() == 0) {
 			throw illegalArgument("invalid input");
 		}
-		Node head = new Node(list.get(0));
-		Node pointer = head;
+		ListNode head = new ListNode(list.get(0));
+		ListNode pointer = head;
 		for (int i = 1; i < list.size(); i++) {
-			pointer.next = new Node(list.get(i));
+			pointer.next = new ListNode(list.get(i));
 			pointer = pointer.next;
 		}
 		return head;
 	}
 
-	public static Node fromArray(int[] numbers) {
+	public static ListNode fromArray(int[] numbers) {
 		if (numbers == null || numbers.length == 0) {
 			throw illegalArgument("invalid input");
 		}
-		Node head = new Node(numbers[0]);
-		Node pointer = head;
+		ListNode head = new ListNode(numbers[0]);
+		ListNode pointer = head;
 		for (int i = 1; i < numbers.length; i++) {
-			pointer.next = new Node(numbers[i]);
+			pointer.next = new ListNode(numbers[i]);
 			pointer = pointer.next;
 		}
 		return head;
 	}
 
-	public static int size(Node node) {
+	public static int size(ListNode node) {
 		int count = 0;
 		while (node != null) {
 			count++;
@@ -67,17 +72,18 @@ public final class Nodes {
 		return count;
 	}
 
-	public int sum(Node head) {
+	public int sum(ListNode head) {
 		int sum = 0;
-		Node curr = head;
+		ListNode curr = head;
 		while (curr != null) {
-			sum += curr.data;
+			sum += curr.val;
 			curr = curr.next;
 		}
 		return sum;
 	}
 
-	public static void print(Node current) {
+	// walks until null, so on a list with a cycle it never stops
+	public static void print(ListNode current) {
 		while (current != null) {
 			System.out.print(current + " ");
 			current = current.next;
@@ -85,9 +91,9 @@ public final class Nodes {
 		System.out.println();
 	}
 
-	public static void printCircular(Node start) {
+	public static void printCircular(ListNode start) {
 		if (start != null) {
-			Node curr = start;
+			ListNode curr = start;
 			do {
 				System.out.print(curr + " ");
 				curr = curr.next;
@@ -96,19 +102,19 @@ public final class Nodes {
 		System.out.println();
 	}
 
-	public static Node insertSorted(Node head, int data) {
-		Node node = new Node(data);
+	public static ListNode insertSorted(ListNode head, int data) {
+		ListNode node = new ListNode(data);
 		return insertSorted(head, node);
 	}
 
-	public static Node insertSorted(Node head, Node node) {
-		if (head == null || head.data >= node.data) {
+	public static ListNode insertSorted(ListNode head, ListNode node) {
+		if (head == null || head.val >= node.val) {
 			node.next = head;
 			head = node;
 		} else {
 			// locate the node before the point of insertion
-			Node current = head;
-			while (current.next != null && current.next.data < node.data) {
+			ListNode current = head;
+			while (current.next != null && current.next.val < node.val) {
 				current = current.next;
 			}
 			node.next = current.next;
@@ -117,14 +123,15 @@ public final class Nodes {
 		return head;
 	}
 
-	public static boolean contains(Node head, int item) {
+	public static boolean contains(ListNode head, int item) {
 		return search(head, item).isPresent();
 	}
 
-	public static Optional<Node> search(Node head, int target) {
-		Node current = head;
-		while (current != null && current.next != null) {
-			if (current.data == target) {
+	// the first node holding target, or absent if no node holds it
+	public static Optional<ListNode> search(ListNode head, int target) {
+		ListNode current = head;
+		while (current != null) { // every node, the last one included
+			if (current.val == target) {
 				return of(current);
 			}
 			current = current.next;
@@ -132,11 +139,11 @@ public final class Nodes {
 		return absent();
 	}
 
-	public static Node appendToTail(Node head, int data) {
-		Node end = new Node(data);
-		Node current;
+	public static ListNode appendToTail(ListNode head, int data) {
+		ListNode end = new ListNode(data);
+		ListNode current;
 		if (head == null) {
-			current = new Node(data);
+			current = new ListNode(data);
 			head = current;
 		} else {
 			current = head;
@@ -148,14 +155,14 @@ public final class Nodes {
 		return head;
 	}
 
-	public static Node swap(Node curr, Node next) {
-		int temp = curr.data;
-		curr.data = next.data;
-		next.data = temp;
+	public static ListNode swap(ListNode curr, ListNode next) {
+		int temp = curr.val;
+		curr.val = next.val;
+		next.val = temp;
 		return curr;
 	}
 
-	public static Node getTail(Node head) {
+	public static ListNode getTail(ListNode head) {
 		while (head != null && head.next != null) {
 			head = head.next;
 		}

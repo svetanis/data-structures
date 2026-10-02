@@ -4,26 +4,34 @@ import static com.svetanis.datastructures.linkedlist.single.Nodes.fromList;
 import static com.svetanis.datastructures.linkedlist.single.Nodes.print;
 import static java.util.Arrays.asList;
 
-import com.svetanis.datastructures.linkedlist.single.Node;
+import com.svetanis.datastructures.linkedlist.single.ListNode;
 
 // 25. Reverse Nodes in k-Group
-
-// Given the head of a LinkedList and a number k, 
+//
+// Given the head of a LinkedList and a number k,
 // reverse every k sized sub-list starting from the head.
 // if the number of nodes is not a multiple of k then
 // left-out nodes, in the end, should remain as is
+//
+// A fake node in front of the list means every group has a node before it, and prev is that
+// node. curr walks k nodes ahead of prev; if it falls off the end, the last group is short and
+// the list is returned as it is. Otherwise the group is cut off after curr, reversed on its own
+// as a separate list, and attached back: prev is pointed at the reversed group's new first
+// node, and start, the group's old first node and now its last, is pointed at the rest of the
+// list. start is then the node before the next group.
 
 public final class ReverseInKGroupDummy {
-  // Time Complexity: O(n)
+  // Time Complexity: O(n), each node is counted once and reversed once
+  // Space Complexity: O(1)
 
-  public static Node reverse(Node head, int k) {
+  public static ListNode reverse(ListNode head, int k) {
     if (k <= 1 || head == null) {
       return head;
     }
 
-    Node dummy = new Node(0, head);
-    Node prev = dummy;
-    Node curr = dummy;
+    ListNode dummy = new ListNode(0, head);
+    ListNode prev = dummy;
+    ListNode curr = dummy;
     while (curr != null) {
       for (int i = 0; i < k && curr != null; i++) {
         curr = curr.next;
@@ -32,11 +40,11 @@ public final class ReverseInKGroupDummy {
         return dummy.next;
       }
       // temporarily store the next segment
-      Node temp = curr.next;
+      ListNode temp = curr.next;
       // detach the k nodes from the rest of the list
       curr.next = null;
       // start will be the new tail after reversal
-      Node start = prev.next;
+      ListNode start = prev.next;
       // reverse k nodes
       prev.next = reverse(start);
       // connect the new tail with the temp segment
@@ -48,11 +56,11 @@ public final class ReverseInKGroupDummy {
     return dummy.next;
   }
 
-  private static Node reverse(Node head) {
-    Node prev = null;
-    Node curr = head;
+  private static ListNode reverse(ListNode head) {
+    ListNode prev = null;
+    ListNode curr = head;
     while (curr != null) {
-      Node next = curr.next;
+      ListNode next = curr.next;
       curr.next = prev;
       prev = curr;
       curr = next;
@@ -61,13 +69,13 @@ public final class ReverseInKGroupDummy {
   }
 
   public static void main(String[] args) {
-    Node head = fromList(asList(1, 2, 3, 4, 5, 6, 7, 8));
-    print(reverse(head, 3));
+    ListNode head = fromList(asList(1, 2, 3, 4, 5, 6, 7, 8));
+    print(reverse(head, 3)); // 3 2 1 6 5 4 7 8
 
-    Node head1 = fromList(asList(1, 2, 3, 4, 5));
+    ListNode head1 = fromList(asList(1, 2, 3, 4, 5));
     print(reverse(head1, 2)); // 2 1 4 3 5
 
-    Node head2 = fromList(asList(1, 2, 3, 4, 5));
+    ListNode head2 = fromList(asList(1, 2, 3, 4, 5));
     print(reverse(head2, 3)); // 3 2 1 4 5
   }
 }
