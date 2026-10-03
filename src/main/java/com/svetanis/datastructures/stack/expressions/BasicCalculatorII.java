@@ -2,16 +2,24 @@ package com.svetanis.datastructures.stack.expressions;
 
 import static com.svetanis.datastructures.stack.expressions.Expressions.isOperator;
 import static java.lang.Character.isDigit;
-import static java.lang.Integer.parseInt;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
 
 // 227. Basic Calculator II
+//
+// s holds non-negative integers, the operators + - * / and spaces, with no brackets.
+// Returns the value of s, with * and / done before + and -, and / truncating toward zero.
+//
+// A number is applied when it ends, by the operator BEFORE it. + and - wait on the stack as
+// signed numbers, since a * or / to their right might still take their number; * and / change
+// the top at once. The last number has nothing after it, so it is applied at i == n - 1 -- which
+// is why spaces are not skipped with a continue: a trailing space would skip that last step.
+// BasicCalculatorIIApply is the same algorithm with the last step after the loop.
 
 public final class BasicCalculatorII {
-	// Time Complexity: O(n)
-	// Space Complexity: O(n)
+	// Time Complexity: O(n), each character is read once
+	// Space Complexity: O(n), one stack entry per number
 
 	public static int calculate(String s) {
 		int val = 0;
@@ -21,10 +29,10 @@ public final class BasicCalculatorII {
 		for (int i = 0; i < n; i++) {
 			char curr = s.charAt(i);
 			if (isDigit(curr)) {
-				val = val * 10 + parseInt(curr + "");
+				val = val * 10 + (curr - '0');
 			}
-			if (isOperator(curr) || i == n - 1) {
-				switch (operator) {
+			if (isOperator(curr) || i == n - 1) { // val just ended, or s ends here
+				switch (operator) { // the STORED operator decides, not curr
 				case '+':
 					stack.push(val);
 					break;
@@ -38,7 +46,7 @@ public final class BasicCalculatorII {
 					stack.push(stack.pop() / val);
 					break;
 				}
-				operator = curr;
+				operator = curr; // curr belongs to the NEXT number
 				val = 0;
 			}
 		}

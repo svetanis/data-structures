@@ -6,12 +6,24 @@ import java.util.Map;
 import java.util.TreeMap;
 
 // 726. Number of Atoms
+//
+// Input: a chemical formula such as K4(ON(SO3)2)2. Returns each element name in sorted order,
+// followed by its total count when that count is more than 1.
+//
+// Each '(' opens a group, and the stack holds one map of element counts per group still open,
+// the innermost on top. An element and its count are added to the map on top. A ')' pops that
+// group's map, multiplies every count by the number written after the ')', and adds the
+// results into the enclosing group's map. The map left at the bottom is the whole formula.
 
 public final class CountAtoms {
+	// Time Complexity: O(n^2 log n) worst case, n = formula length: each ')' copies every element
+	//   of its group into the enclosing map, deep nesting repeats that copy at every level, and
+	//   each TreeMap update is O(log n)
+	// Space Complexity: O(n), the open groups' maps hold at most one entry per element written
 
 	public static String countAtoms(String s) {
 		Deque<Map<String, Integer>> dq = new ArrayDeque<>();
-		dq.push(new TreeMap<>());
+		dq.push(new TreeMap<>()); // the whole formula; TreeMap keeps element names sorted
 		for (int i = 0; i < s.length();) {
 			if (s.charAt(i) == '(') {
 				dq.push(new TreeMap<>());
@@ -36,7 +48,7 @@ public final class CountAtoms {
 		while (index < s.length() && Character.isDigit(s.charAt(index))) {
 			index++;
 		}
-		int count = start < index ? Integer.parseInt(s.substring(start, index)) : 1;
+		int count = start < index ? Integer.parseInt(s.substring(start, index)) : 1; // no digits: 1
 		int prev = dq.peek().getOrDefault(element, 0);
 		dq.peek().put(element, prev + count);
 		return index;
@@ -51,7 +63,7 @@ public final class CountAtoms {
 		}
 		int count = start < index ? Integer.parseInt(s.substring(start, index)) : 1;
 		for (String element : top.keySet()) {
-			int freq = top.get(element) * count;
+			int freq = top.get(element) * count; // the whole group repeats 'count' times
 			int prev = dq.peek().getOrDefault(element, 0);
 			dq.peek().put(element, prev + freq);
 		}

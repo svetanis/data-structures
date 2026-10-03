@@ -4,10 +4,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 // 1441. Build an Array With Stack Operations
+//
+// Input: the target array a, in increasing order, and n. The numbers 1, 2, 3, ... are offered
+// one at a time. Returns the list of "Push" and "Pop" operations that leaves exactly a on the
+// stack.
+//
+// Every number from 1 up to the last target is pushed once. A number that is not in a is
+// popped straight back off, so nothing is ever left on top of it and the stack only ever
+// keeps target values. Numbers after the last target are never needed, which is why n is not
+// read.
 
 public final class BuildArrayWithStackOperations {
-	// Time Complexity: O(n)
-	// Space Complexity: O(n)
+	// Time Complexity: O(n), one step for each number from 1 to the last target, at most n
+	// Space Complexity: O(n) for the list of operations
 
 	public static List<String> buildArray(int n, int[] a) {
 		int current = 0;
@@ -15,7 +24,7 @@ public final class BuildArrayWithStackOperations {
 		for (int target : a) {
 			while (++current < target) {
 				operations.add("Push");
-				operations.add("Pop");
+				operations.add("Pop"); // not in a: taken straight back off
 			}
 			operations.add("Push");
 		}

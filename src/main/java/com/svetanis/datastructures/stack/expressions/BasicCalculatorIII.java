@@ -4,10 +4,18 @@ import java.util.ArrayDeque;
 import java.util.Deque;
 
 // 772. Basic Calculator III
+//
+// s holds non-negative integers, the operators + - * /, brackets and spaces; every operator has
+// an operand on each side. Returns the value of s, with * and / done before + and -.
+//
+// One stack holds numbers, the other holds operators and '(' not yet applied. Applying an
+// operator pops two numbers and pushes the result. Before an operator is pushed, every operator
+// on top with the same or higher precedence is applied: it came earlier, so it goes first. A ')'
+// applies the operators down to its '('. So between brackets, precedence rises bottom to top.
 
 public final class BasicCalculatorIII {
-	// Time Complexity: O(n)
-	// Space Complexity: O(n)
+	// Time Complexity: O(n), each operator is pushed once and applied once
+	// Space Complexity: O(n) for the two stacks
 
 	public static int calculate(String s) {
 		Deque<Integer> dqd = new ArrayDeque<>();
@@ -26,11 +34,11 @@ public final class BasicCalculatorIII {
 				dqc.push(c);
 			} else if (c == ')') {
 				while (dqc.peek() != '(') {
-					int b = dqd.pop();
+					int b = dqd.pop(); // the right operand is on top
 					int a = dqd.pop();
 					dqd.push(apply(dqc.pop(), a, b));
 				}
-				dqc.pop();
+				dqc.pop(); // drop the '(' itself
 			} else if (isOperator(c)) {
 				while (!dqc.isEmpty() && dqc.peek() != '(' && precedence(dqc.peek()) >= precedence(c)) {
 					int b = dqd.pop();

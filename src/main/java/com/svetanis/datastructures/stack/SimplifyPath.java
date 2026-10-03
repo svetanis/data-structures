@@ -12,15 +12,22 @@ import java.util.List;
 import com.google.common.collect.ImmutableList;
 
 // 71. Simplify Path
+//
+// Input: an absolute Unix-style path. Returns its simplified form: one '/' between names, no
+// "." or ".." left, and no '/' at the end.
+//
+// The stack holds the directory names of the path so far, the deepest on top. An empty piece
+// (from "//") and "." change nothing; ".." pops the deepest name, and does nothing at the
+// root; anything else, even "...", is a name and is pushed.
 
 public final class SimplifyPath {
-	// Time Complexity: O(n)
-	// Space Complexity: O(n)
+	// Time Complexity: O(n), the path is split once and each piece is pushed or popped once
+	// Space Complexity: O(n) for the pieces and the stack
 
 	public static String simplify(String path) {
 		Deque<String> stack = fill(path);
 		List<String> list = new ArrayList<>(stack);
-		Collections.reverse(list);
+		Collections.reverse(list); // the copy runs from the top, deepest name first
 		return "/" + String.join("/", list);
 	}
 
@@ -32,7 +39,7 @@ public final class SimplifyPath {
 				continue;
 			}
 			if ("..".equals(segment)) {
-				if (!stack.isEmpty()) {
+				if (!stack.isEmpty()) { // ".." at the root stays at the root
 					stack.pop();
 				}
 			} else {

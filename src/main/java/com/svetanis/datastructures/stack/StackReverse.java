@@ -1,13 +1,33 @@
 package com.svetanis.datastructures.stack;
 
-import java.util.Stack;
+import java.util.ArrayDeque;
+import java.util.Deque;
+
+// Reverses a stack in place, using recursion instead of a second stack.
+//
+// Input: the values pushed so far. After reverse(), the value pushed first is on top.
+//
+// reverse() pops the top value, reverses the rest, then puts the popped value at the bottom.
+// insertAtBottom works the same way: it pops every value, pushes the new one onto the empty
+// stack, and pushes the popped values back as the calls return. The values waiting to go back
+// are held in the method calls themselves, one per call.
 
 public final class StackReverse {
+  // Time Complexity: O(n^2), each of the n insertAtBottom calls pops and re-pushes up to n values
+  // Space Complexity: O(n), at most n reverse calls plus n insertAtBottom calls are open at once
 
-  private Stack<Integer> stack;
+  private Deque<Integer> stack;
 
   public StackReverse() {
-    this.stack = new Stack<>();
+    this.stack = new ArrayDeque<>();
+  }
+
+  public void push(int item) {
+    stack.push(item);
+  }
+
+  public int pop() {
+    return stack.pop();
   }
 
   public void reverse() {
@@ -41,5 +61,17 @@ public final class StackReverse {
       // function call stack
       stack.push(temp);
     }
+  }
+
+  public static void main(String[] args) {
+    StackReverse sr = new StackReverse();
+    for (int i = 1; i <= 5; i++) {
+      sr.push(i); // 5 is on top
+    }
+    sr.reverse();
+    for (int i = 0; i < 5; i++) {
+      System.out.print(sr.pop() + " "); // 1 2 3 4 5: the first pushed now comes off first
+    }
+    System.out.println();
   }
 }

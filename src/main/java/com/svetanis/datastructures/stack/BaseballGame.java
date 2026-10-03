@@ -4,10 +4,18 @@ import java.util.ArrayDeque;
 import java.util.Deque;
 
 // 682. Baseball Game
+//
+// Input: a list of operations. An integer records that score, "+" records the sum of the last
+// two scores, "D" records double the last score, and "C" removes the last score. Returns the
+// sum of the scores still recorded at the end.
+//
+// Every operation looks only at the most recent scores, so the stack holds the recorded scores
+// with the most recent on top. "+" needs the second one down as well: it pops the top, reads
+// the one beneath, and pushes the top back before pushing the sum.
 
 public final class BaseballGame {
-	// Time Complexity: O(n)
-	// Space Complexity: O(n)
+	// Time Complexity: O(n), one push or pop per operation, then one pass to add up
+	// Space Complexity: O(n) for the stack
 
 	public static int game(String[] operations) {
 		Deque<Integer> dq = new ArrayDeque<>();
@@ -16,7 +24,7 @@ public final class BaseballGame {
 			case "+":
 				int top = dq.pop();
 				int prev = dq.peek();
-				dq.push(top);
+				dq.push(top); // put back: "+" does not remove the last score
 				dq.push(top + prev);
 				break;
 			case "D":

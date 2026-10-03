@@ -22,7 +22,11 @@ public final class EvaluateExpressionHashing {
 	// Space Complexity: O(n * 2^n)
 
 	public static ImmutableList<Integer> generate(String s) {
-		Map<String, ImmutableList<Integer>> map = newHashMap();
+		return generate(s, newHashMap());
+	}
+
+	// map: every substring already evaluated, shared by the whole recursion
+	private static ImmutableList<Integer> generate(String s, Map<String, ImmutableList<Integer>> map) {
 		if (map.containsKey(s)) {
 			return map.get(s);
 		}
@@ -34,8 +38,8 @@ public final class EvaluateExpressionHashing {
 			for (int i = 0; i < s.length(); i++) {
 				char c = s.charAt(i);
 				if (!isDigit(c)) {
-					List<Integer> left = generate(s.substring(0, i));
-					List<Integer> right = generate(s.substring(i + 1));
+					List<Integer> left = generate(s.substring(0, i), map);
+					List<Integer> right = generate(s.substring(i + 1), map);
 					for (int l : left) {
 						for (int r : right) {
 							if (c == '+') {
