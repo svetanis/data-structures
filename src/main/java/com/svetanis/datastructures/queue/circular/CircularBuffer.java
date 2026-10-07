@@ -1,6 +1,21 @@
 package com.svetanis.datastructures.queue.circular;
 
+import static com.svetanis.java.base.Exceptions.illegalArgument;
+
+// A fixed-size buffer that keeps the newest items.
+//
+// append(item) adds at the back; when the buffer is full it OVERWRITES the oldest item.
+// remove() drops the oldest item, front() returns it (null when empty), read() prints oldest
+// to newest.
+//
+// One array used as a ring: first is the position of the oldest item, last is where the next
+// append writes, and count is how many positions are in use. Moving an index forward wraps
+// from the end of the array back to 0, so no item is ever shifted.
+
 public final class CircularBuffer<T> {
+  // Time Complexity: append, remove, front, size: O(1); read: O(n) for the n items held
+  // Space Complexity: O(capacity), the array is allocated once
+
   private T[] data; // data storage array
   private int first;
   private int last;
@@ -9,6 +24,9 @@ public final class CircularBuffer<T> {
 
   @SuppressWarnings("unchecked")
   public CircularBuffer(int capacity) {
+    if (capacity < 1) { // next() wraps modulo capacity, so it must be at least 1
+      throw illegalArgument("capacity must be at least 1, got %s", capacity);
+    }
     this.first = 0;
     this.last = 0;
     this.count = 0;
@@ -25,7 +43,7 @@ public final class CircularBuffer<T> {
   }
 
   private int next(int i) {
-    return (i + 1) % capacity;
+    return (i + 1) % capacity; // from the last position back to 0
   }
 
   public int size() {
@@ -35,8 +53,8 @@ public final class CircularBuffer<T> {
   public void append(T item) {
     data[last] = item;
     last = next(last);
-    if (count == capacity) {
-      first = next(first);
+    if (count == capacity) { // full: the write above replaced the oldest item
+      first = next(first); // so the oldest is now the one after it
     } else {
       count++;
     }
@@ -58,11 +76,9 @@ public final class CircularBuffer<T> {
   }
 
   public void read() {
-    while (first != last - 1) {
-      System.out.println(data[first]);
-      first = next(first);
+    for (int k = 0, i = first; k < count; k++, i = next(i)) { // reads only: first stays put
+      System.out.println(data[i]);
     }
-    System.out.println(data[last - 1]);
   }
 
   public static void main(String[] args) {

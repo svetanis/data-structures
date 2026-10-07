@@ -2,13 +2,23 @@ package com.svetanis.datastructures.queue;
 
 import static com.google.common.collect.Lists.newLinkedList;
 
+import java.util.ArrayDeque;
+import java.util.Deque;
 import java.util.Queue;
-import java.util.Stack;
+
+// Reverse a queue using a stack.
+//
+// Input: a queue. The same queue is emptied, refilled in reverse order, and returned.
+//
+// A stack gives items back newest first. Poll every item from the queue onto the stack: the
+// last one polled is the first one popped and offered back, so the order reverses.
 
 public final class ReverseQueueUsingStack {
+  // Time Complexity: O(n), each item is polled, pushed, popped and offered once
+  // Space Complexity: O(n) for the stack
 
   public static Queue<Integer> reverse(Queue<Integer> q) {
-    Stack<Integer> s = new Stack<>();
+    Deque<Integer> s = new ArrayDeque<>();
     while (!q.isEmpty()) {
       s.push(q.poll());
     }

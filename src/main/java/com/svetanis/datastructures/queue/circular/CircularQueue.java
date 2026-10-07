@@ -1,6 +1,22 @@
 package com.svetanis.datastructures.queue.circular;
 
+import static com.svetanis.java.base.Exceptions.illegalArgument;
+
+// 622. Design Circular Queue
+//
+// A first-in-first-out queue of ints with a fixed capacity, stored in one array used as a ring.
+// LC names the methods enQueue, deQueue, Front and Rear.
+//
+// enqueue returns false when full and dequeue returns false when empty; front and rear return
+// -1 when empty.
+//
+// Only front (the position of the oldest item) and size are stored. The next free position is
+// (front + size) % capacity, and the newest item sits one before it. Every index wraps modulo
+// capacity, so no item is ever shifted.
+
 public final class CircularQueue {
+	// Time Complexity: every operation O(1), index arithmetic only
+	// Space Complexity: O(k), one array of capacity k
 
 	private int size; // current size of the queue
 	private int front; // index of front element
@@ -8,6 +24,9 @@ public final class CircularQueue {
 	private int[] queue; // data storage array
 
 	public CircularQueue(int k) {
+		if (k < 1) { // every index wraps modulo k, so it must be at least 1
+			throw illegalArgument("capacity must be at least 1, got %s", k);
+		}
 		this.front = 0;
 		this.size = 0;
 		this.capacity = k;
@@ -30,7 +49,7 @@ public final class CircularQueue {
 		if (isFull()) {
 			return false;
 		}
-		int index = (front + size) % capacity;
+		int index = (front + size) % capacity; // first free position after the newest item
 		queue[index] = value;
 		size++;
 		return true;
@@ -40,7 +59,7 @@ public final class CircularQueue {
 		if (isEmpty()) {
 			return false;
 		}
-		front = (front + 1) % capacity;
+		front = (front + 1) % capacity; // the old slot is not cleared; a later enqueue reuses it
 		size--;
 		return true;
 	}

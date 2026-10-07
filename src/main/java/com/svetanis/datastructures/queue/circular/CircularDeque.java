@@ -1,6 +1,21 @@
 package com.svetanis.datastructures.queue.circular;
 
+import static com.svetanis.java.base.Exceptions.illegalArgument;
+
+// 641. Design Circular Deque
+//
+// A double-ended queue of ints with a fixed capacity, stored in one array used as a ring.
+//
+// insertFront and insertLast add at either end and return false when full; deleteFront and
+// deleteLast return false when empty; getFront and getRear return -1 when empty.
+//
+// Only front (the position of the first item) and size are stored. The last item sits at
+// (front + size - 1) % capacity, so deleteLast only has to shrink size. Every index wraps
+// modulo capacity, so no item is ever shifted.
+
 public final class CircularDeque {
+	// Time Complexity: every operation O(1), index arithmetic only
+	// Space Complexity: O(k), one array of capacity k
 
 	private int size; // current size of the queue
 	private int front; // index of front element
@@ -8,6 +23,9 @@ public final class CircularDeque {
 	private int[] queue; // data storage array
 
 	public CircularDeque(int k) {
+		if (k < 1) { // every index wraps modulo k, so it must be at least 1
+			throw illegalArgument("capacity must be at least 1, got %s", k);
+		}
 		this.front = 0;
 		this.size = 0;
 		this.capacity = k;
@@ -31,7 +49,7 @@ public final class CircularDeque {
 		if (isFull()) {
 			return false;
 		}
-		front = (front - 1 + capacity) % capacity;
+		front = (front - 1 + capacity) % capacity; // + capacity: in Java, -1 % capacity is -1
 		queue[front] = value;
 		size++;
 		return true;
@@ -61,7 +79,7 @@ public final class CircularDeque {
 		if (isEmpty()) {
 			return false;
 		}
-		size--;
+		size--; // the last item is found from front + size, so this alone drops it
 		return true;
 	}
 

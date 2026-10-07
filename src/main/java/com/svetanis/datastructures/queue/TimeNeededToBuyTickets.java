@@ -4,9 +4,20 @@ import java.util.ArrayDeque;
 import java.util.Deque;
 
 // 2073. Time Needed to Buy Tickets
+//
+// tickets[i] is how many tickets person i wants; the people stand in line in index order. Each
+// second the person at the front buys one ticket and, if they still want more, goes to the back.
+// Returns the seconds until person k has bought all their tickets.
+//
+// timeToBuy runs that line with a queue of {tickets still wanted, person}. timeRequiredToBuy
+// counts without the queue: k reaches the front tickets[k] times. A person up to k gets a turn
+// before each of k's turns, so buys min(tickets[i], tickets[k]); a person behind k gets one turn
+// fewer, because the count stops at k's last ticket, so buys min(tickets[i], tickets[k] - 1).
 
 public final class TimeNeededToBuyTickets {
-	// Time complexity: O(n)
+	// Time Complexity: timeRequiredToBuy O(n), one look at each person;
+	//   timeToBuy O(n + tickets sold until k finishes), one poll per ticket -- a simulation
+	// Space Complexity: timeRequiredToBuy O(1); timeToBuy O(n), one queue entry per person
 
 	public static int timeRequiredToBuy(int[] tickets, int k) {
 		int time = 0;
@@ -29,7 +40,7 @@ public final class TimeNeededToBuyTickets {
 			if (remained > 0) {
 				dq.offer(new int[] { remained, index });
 			}
-			if (index == k && remained == 0) {
+			if (index == k && remained == 0) { // k just bought their last ticket
 				return time;
 			}
 		}

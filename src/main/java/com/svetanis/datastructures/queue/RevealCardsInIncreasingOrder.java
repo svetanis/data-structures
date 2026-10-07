@@ -7,19 +7,28 @@ import java.util.Deque;
 import com.svetanis.java.base.utils.Print;
 
 // 950. Reveal Cards In Increasing Order
+//
+// deck holds the card values. Returns the deck in an order such that repeating "reveal the top
+// card, then move the next top card to the bottom" reveals the cards in increasing order.
+// deck itself is sorted in place, so the caller's array is changed.
+//
+// Run that same process on positions instead of cards. The queue holds the positions 0..n-1 of
+// the answer, top first. Each poll is the position revealed next, so it gets the next smallest
+// card; the position after it moves to the back, as the next top card would.
 
 public final class RevealCardsInIncreasingOrder {
-	// Time complexity: O(n log n)
+	// Time Complexity: O(n log n), the sort; the queue work is O(n)
+	// Space Complexity: O(n), the queue and the answer array
 
 	public static int[] deckRevealedIncreasing(int[] deck) {
-		Arrays.sort(deck);
+		Arrays.sort(deck); // sorts the caller's array in place
 		int n = deck.length;
 		Deque<Integer> dq = init(n);
 		int[] a = new int[n];
 		for (int card : deck) {
-			a[dq.poll()] = card;
+			a[dq.poll()] = card; // the position revealed next gets the next smallest card
 			if (!dq.isEmpty()) {
-				dq.offer(dq.poll());
+				dq.offer(dq.poll()); // the next top card moves to the bottom
 			}
 		}
 		return a;

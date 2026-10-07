@@ -4,7 +4,17 @@ import static com.google.common.collect.Lists.newLinkedList;
 
 import java.util.Queue;
 
+// Reverse a queue using recursion instead of an explicit stack.
+//
+// Input: a queue. The same queue is changed and returned, its items in reverse order.
+//
+// Take the front item off, reverse what is left, then offer the front item at the back. Each
+// call holds its front item while the deeper calls run, so the call stack does the job a stack
+// of items would do.
+
 public final class ReverseQueueRecursive {
+  // Time Complexity: O(n), one poll and one offer per item
+  // Space Complexity: O(n) call depth, one call per item
 
   public static Queue<Integer> reverse(Queue<Integer> q) {
     if (q.isEmpty()) {
@@ -12,7 +22,7 @@ public final class ReverseQueueRecursive {
     }
     int front = q.poll();
     q = reverse(q);
-    q.offer(front);
+    q.offer(front); // the rest is already reversed, so the old front goes last
     return q;
   }
 
