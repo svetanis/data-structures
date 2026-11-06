@@ -1,18 +1,27 @@
 package com.svetanis.datastructures.array;
 
 // 1822. Sign of the Product of an Array
+//
+// Input: an integer array a. On LeetCode: 1 <= a.length <= 1000, -100 <= a[i] <= 100.
+// Returns 1 if the product of all the numbers is positive, -1 if it is negative, 0 if it is zero.
+//
+// The one idea: only the sign matters, and multiplying all the numbers would overflow. The sign of
+// a product is decided by two facts: any zero makes it zero, and otherwise each negative number
+// flips it once. So walk the array keeping a sign (starting at 1), flip it on every negative, and
+// stop with 0 at the first zero.
+//
+// Time: O(n) -- one pass.
+// Space: O(1) -- one integer.
 
 public final class SignOfProductOfArray {
-	// Time Complexity: O(n)
-	// Space Complexity: O(1)
 
 	public static int arraySign(int[] a) {
-		int sign = 1;
+		int sign = 1; // SIGN: of the product so far
 		for (int num : a) {
-			if (num == 0) {
+			if (num == 0) { // ZERO: the product is zero whatever follows
 				return 0;
 			}
-			if (num < 0) {
+			if (num < 0) { // FLIP: a negative number changes the sign
 				sign *= -1;
 			}
 		}

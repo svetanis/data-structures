@@ -4,24 +4,27 @@ import java.util.Arrays;
 
 // 1470. Shuffle the Array
 //
-// Given an array of 2n numbers in the form [x1, x2, ..., xn, y1, y2, ..., yn], return them in the
-// form [x1, y1, x2, y2, ..., xn, yn]. Nothing is random: the two halves are dealt out in turn.
+// Input: an array nums of 2n numbers in the form [x1, x2, ..., xn, y1, y2, ..., yn], and n. Returns
+// them in the form [x1, y1, x2, y2, ..., xn, yn]. Nothing is random: the two halves are dealt out
+// in turn. On LeetCode: 1 <= n <= 500, nums.length == 2n, 1 <= nums[i] <= 10^3.
 //
-// x(i+1) sits at nums[i] and y(i+1) at nums[i + n], so pair i of the answer is nums[i], nums[i + n].
+// The one idea: x(i+1) sits at nums[i] and y(i+1) at nums[i + n], so pair i of the answer is
+// nums[i], nums[i + n]. Write the pairs one after another into a new array.
 // The two methods write the same answer with different bookkeeping:
 //   shuffle()         one step per PAIR: write nums[i], then nums[i + n]; k is the next free slot
 //   shuffleEvenOdd()  one step per SLOT: even slots take the next x, odd slots the next y; two
 //                     read positions, left over the x half and right over the y half
+//
+// Time: O(n) -- each of the 2n numbers is copied once.
+// Space: O(n) -- the answer array; nothing else is kept.
 
 public final class ShuffleArray1470 {
-	// Time Complexity: O(n), each of the 2n numbers is copied once
-	// Space Complexity: O(n), the answer array; nothing else is kept
 
 	public int[] shuffle(int[] nums, int n) {
 		int[] shuffled = new int[2 * n];
-		for (int i = 0, k = 0; i < n; i++) { // i runs over the pairs, k over the slots
-			shuffled[k++] = nums[i]; // x(i+1)
-			shuffled[k++] = nums[i + n]; // y(i+1): the y half starts at n
+		for (int i = 0, k = 0; i < n; i++) { // WALK: i runs over the pairs, k over the slots
+			shuffled[k++] = nums[i]; // TAKE: x(i+1)
+			shuffled[k++] = nums[i + n]; // TAKE: y(i+1): the y half starts at n
 		}
 		return shuffled;
 	}
@@ -30,8 +33,8 @@ public final class ShuffleArray1470 {
 		int left = 0; // the next x to deal
 		int right = n; // the next y to deal: the y half starts at n
 		int[] shuffled = new int[2 * n];
-		for (int i = 0; i < 2 * n; i++) { // i runs over the slots
-			shuffled[i] = i % 2 == 0 ? nums[left++] : nums[right++]; // x on even slots, y on odd
+		for (int i = 0; i < 2 * n; i++) { // WALK: i runs over the slots
+			shuffled[i] = i % 2 == 0 ? nums[left++] : nums[right++]; // TAKE: x on even slots, y on odd
 		}
 		return shuffled;
 	}

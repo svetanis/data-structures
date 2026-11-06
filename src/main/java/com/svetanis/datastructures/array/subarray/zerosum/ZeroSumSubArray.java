@@ -1,11 +1,16 @@
 package com.svetanis.datastructures.array.subarray.zerosum;
 
-import static com.google.common.collect.Maps.newHashMap;
-
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Map;
 
 // return true if any contiguous subarray adds up to zero.
+//
+// Input: an integer array a. Returns true if some non-empty contiguous subarray sums to 0. Not a
+// LeetCode problem; 525. Contiguous Array and 325. Maximum Size Subarray Sum Equals k (k = 0) use the
+// same prefix-sum idea. Time and space are O(n) for both versions: one pass, one map of at most n
+// running totals. Siblings: ZeroSumLongestSubArray returns the longest span, ZeroSumSubArrayIndices
+// one span, ZeroSumSubArrays every span.
 
 // sum of a[left ... right] = prefix[right] - prefix[left - 1],
 // so a subarray sums to zero exactly when the same prefix
@@ -44,14 +49,14 @@ public final class ZeroSumSubArray {
     // Time complexity: O(n)
     // Space complexity: O(n)
 
-    Map<Integer, Integer> map = newHashMap();
-    int sum = 0;
-    for (int i = 0; i < a.length; i++) {
+    Map<Integer, Integer> map = new HashMap<>(); // SEEN: running totals so far
+    int sum = 0; // RUNNING TOTAL: of a[0 .. i]
+    for (int i = 0; i < a.length; i++) { // WALK: left to right
       sum += a[i];
-      if (sum == 0 || map.containsKey(sum)) {
+      if (sum == 0 || map.containsKey(sum)) { // FOUND: a[0 .. i] sums to 0, or a total repeated
         return true;
       }
-      map.put(sum, i);
+      map.put(sum, i); // RECORD: this running total
     }
     return false;
   }
@@ -70,15 +75,15 @@ public final class ZeroSumSubArray {
     // Time complexity: O(n)
     // Space complexity: O(n)
 
-    Map<Integer, Integer> map = newHashMap();
+    Map<Integer, Integer> map = new HashMap<>(); // SEEN: running totals so far
     map.put(0, -1); // the empty prefix, covering nothing
     int sum = 0;
     for (int i = 0; i < a.length; i++) {
       sum += a[i];
-      if (map.containsKey(sum)) {
+      if (map.containsKey(sum)) { // FOUND: a total repeated (the seed covers the start)
         return true;
       }
-      map.put(sum, i);
+      map.put(sum, i); // RECORD: this running total
     }
     return false;
   }
