@@ -7,10 +7,27 @@ import java.util.Map;
 import java.util.TreeMap;
 
 // 1348. Tweet Counts Per Frequency
+//
+// recordTweet(tweetName, time) records one tweet at a second. getTweetCountsPerFrequency(freq,
+// tweetName, startTime, endTime) cuts the seconds startTime to endTime, both included, into
+// chunks of 60, 3600 or 86400 seconds ("minute", "hour", "day"), the last chunk possibly
+// shorter, and returns how many of that name's tweets fall in each chunk. On LeetCode:
+// 0 <= time, startTime, endTime <= 10^9, 0 <= endTime - startTime <= 10^4, at most 10^4
+// calls.
+//
+// Per tweet name, a TreeMap from second to how many tweets that second holds, so each chunk
+// is one range query. A chunk starting at t covers t up to, not including,
+// min(t + size, endTime + 1): the + 1 keeps endTime itself inside the last chunk. A name never
+// recorded has no tweets, so every chunk counts 0.
+//
+// Siblings, same problem: none in this package.
 
 public final class TweetCounts {
+	// Time complexity: recordTweet O(log s); get O(c log s + k), c chunks, k tweets in range,
+	//   s distinct seconds of that name
+	// Auxiliary Space: O(s) per name, one entry per distinct second; the result is c ints
 
-	private Map<String, TreeMap<Integer, Integer>> map;
+	private Map<String, TreeMap<Integer, Integer>> map; // name -> second -> tweets that second
 
 	public TweetCounts() {
 		this.map = new HashMap<>();
@@ -19,17 +36,17 @@ public final class TweetCounts {
 	public void recordTweet(String tweet, int time) {
 		map.putIfAbsent(tweet, new TreeMap<>());
 		TreeMap<Integer, Integer> frequencies = map.get(tweet);
-		frequencies.put(time, frequencies.getOrDefault(time, 0) + 1);
+		frequencies.put(time, frequencies.getOrDefault(time, 0) + 1); // RECORD: one more that second
 	}
 
 	public List<Integer> getTweetCountsPerFrequency(String freq, String tweet, int start, int end) {
 		int interval = intervalInSeconds(freq);
 		List<Integer> list = new ArrayList<>();
-		TreeMap<Integer, Integer> frequencies = map.get(tweet);
-		for (int time = start; time <= end; time += interval) {
+		TreeMap<Integer, Integer> frequencies = map.getOrDefault(tweet, new TreeMap<>()); // NONE: never recorded
+		for (int time = start; time <= end; time += interval) { // CHUNK: starts at time
 			int sum = 0;
-			int intervalEnd = Math.min(time + interval, end + 1);
-			for (int frequency : frequencies.subMap(time, intervalEnd).values()) {
+			int intervalEnd = Math.min(time + interval, end + 1); // END: excluded, so end + 1
+			for (int frequency : frequencies.subMap(time, intervalEnd).values()) { // RANGE: [time, intervalEnd)
 				sum += frequency;
 			}
 			list.add(sum);

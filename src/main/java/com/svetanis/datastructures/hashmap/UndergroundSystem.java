@@ -4,12 +4,28 @@ import java.util.HashMap;
 import java.util.Map;
 
 // 1396. Design Underground System
+//
+// checkIn(id, stationName, t) and checkOut(id, stationName, t) record a rider entering and
+// leaving; getAverageTime(startStation, endStation) returns the average time of all finished
+// trips from startStation straight to endStation. On LeetCode: 1 <= id, t <= 10^6, station
+// names are 1 to 10 letters and digits, at most 2 * 10^4 calls, every check-out follows its
+// rider's check-in, and getAverageTime is only asked about a route with a finished trip.
+//
+// Two kinds of record. An open trip, by rider id: where and when the rider checked in. A
+// finished route, by "start-end": the total time of its trips and how many there were, so an
+// average is one division. The "-" cannot appear inside a station name, so two routes never
+// share a key. The total is a long: a route can hold 10^4 trips of almost 10^6 seconds each,
+// far past an int.
+//
+// Siblings, same problem: none in this package.
 
 public final class UndergroundSystem {
+	// Time complexity: every call O(1) on average, a few map steps; the key is at most 21 chars
+	// Auxiliary Space: O(p + r), p riders seen and r routes travelled
 
-	private Map<Integer, Integer> checkInTimes;
-	private Map<Integer, String> checkInStations;
-	private Map<String, int[]> travelInfo;
+	private Map<Integer, Integer> checkInTimes; // OPEN: rider -> check-in time
+	private Map<Integer, String> checkInStations; // OPEN: rider -> check-in station
+	private Map<String, long[]> travelInfo; // ROUTE: "start-end" -> { total time, trips }
 
 	public UndergroundSystem() {
 		this.travelInfo = new HashMap<>();
@@ -18,22 +34,22 @@ public final class UndergroundSystem {
 	}
 
 	public void checkIn(int id, String stationName, int t) {
-		checkInTimes.put(id, t);
+		checkInTimes.put(id, t); // OPEN: a later check-in overwrites a finished trip's record
 		checkInStations.put(id, stationName);
 	}
 
 	public void checkOut(int id, String stationName, int t) {
-		String routeKey = checkInStations.get(id) + "-" + stationName;
-		int[] travelData = travelInfo.getOrDefault(routeKey, new int[2]);
-		travelData[0] += t - checkInTimes.get(id);
-		travelData[1]++;
+		String routeKey = checkInStations.get(id) + "-" + stationName; // KEY: "-" is never in a name
+		long[] travelData = travelInfo.getOrDefault(routeKey, new long[2]);
+		travelData[0] += t - checkInTimes.get(id); // ADD: this trip's time, in long
+		travelData[1]++; // COUNT
 		travelInfo.put(routeKey, travelData);
 	}
 
 	public double getAverageTime(String startStation, String endStation) {
 		String routeKey = startStation + "-" + endStation;
-		int[] travelData = travelInfo.get(routeKey);
-		return (double) travelData[0] / travelData[1];
+		long[] travelData = travelInfo.get(routeKey);
+		return (double) travelData[0] / travelData[1]; // AVERAGE: total over trips
 	}
 
 	public static void main(String[] args) {

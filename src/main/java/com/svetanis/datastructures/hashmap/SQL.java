@@ -3,14 +3,36 @@ package com.svetanis.datastructures.hashmap;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 // 2408. Design SQL
+//
+// The constructor takes the table names and each table's column count. ins(name, row) adds a
+// row with the table's next id (1, 2, 3, ...) and returns true, or returns false when the
+// table does not exist or the row has the wrong number of cells. rmv(name, rowId) deletes a
+// row, doing nothing when it does not exist. sel(name, rowId, columnId) returns one cell,
+// columns counted from 1, or "<null>" when the table, row or column does not exist -- a
+// column below 1 included, since the statement gives columnId no range.
+// exp(name) returns every row as "rowId,cell1,cell2,...", or an empty list for no table.
+//
+// One map from table name to a Table, and each Table keeps its column count, its next id and
+// a map from row id to row. The next id only ever goes up, so the id of a deleted row is never
+// handed out again: rows keep the ids they were given. The row map is a LinkedHashMap, so exp
+// lists rows in the order they were inserted, which is increasing id order because ids only
+// go up -- as the statement's examples show. A plain HashMap lists them in its bucket order,
+// which is by id only while every id is smaller than its table: a table that never held more
+// than two rows at once, left with ids 15 and 17, listed 17 first.
+//
+// Siblings, same problem: none in this package.
 
 public final class SQL {
+	// Time complexity: ins, rmv, sel O(1) on average, map lookups; exp O(r * c), every cell of
+	//   r rows of c cells
+	// Auxiliary Space: O(total cells), the rows as given
 
-	private Map<String, Table> tables;
+	private Map<String, Table> tables; // name -> its Table
 
 	public SQL(List<String> names, List<Integer> columns) {
 		int size = names.size();
@@ -22,10 +44,10 @@ public final class SQL {
 
 	public boolean ins(String name, List<String> row) {
 		Table table = tables.get(name);
-		if (table == null || table.cols != row.size()) {
+		if (table == null || table.cols != row.size()) { // FITS? the table exists, the width matches
 			return false;
 		}
-		table.rows.put(table.autoIncIndex++, row);
+		table.rows.put(table.autoIncIndex++, row); // ID: the next one, never reused
 		return true;
 	}
 
@@ -34,7 +56,7 @@ public final class SQL {
 		if (table == null) {
 			return;
 		}
-		table.rows.remove(rowId);
+		table.rows.remove(rowId); // DROP: the id goes with it
 	}
 
 	public String sel(String name, int rowId, int columnId) {
@@ -43,10 +65,10 @@ public final class SQL {
 			return "<null>";
 		}
 		List<String> row = table.rows.get(rowId);
-		if (row == null || columnId > row.size()) {
+		if (row == null || columnId < 1 || columnId > row.size()) { // CELL? the row exists, the column is inside it
 			return "<null>";
 		}
-		return row.get(columnId - 1);
+		return row.get(columnId - 1); // CELL: columns count from 1
 	}
 
 	public List<String> exp(String name) {
@@ -55,7 +77,7 @@ public final class SQL {
 			return List.of();
 		}
 		List<String> list = new ArrayList<>();
-		for (int rowId : table.rows.keySet()) {
+		for (int rowId : table.rows.keySet()) { // ROW: in insertion order, which is id order
 			list.add(rowId + "," + String.join(",", table.rows.get(rowId)));
 		}
 		return list;
@@ -116,14 +138,14 @@ public final class SQL {
 	}
 
 	private static class Table {
-		private int cols;
-		private int autoIncIndex;
-		private Map<Integer, List<String>> rows;
+		private int cols; // how many cells every row must have
+		private int autoIncIndex; // the id the next row gets
+		private Map<Integer, List<String>> rows; // row id -> row, in insertion (= id) order
 
 		public Table(int cols) {
 			this.autoIncIndex = 1;
 			this.cols = cols;
-			this.rows = new HashMap<>();
+			this.rows = new LinkedHashMap<>(); // ORDER: exp lists rows by increasing id
 		}
 	}
 }

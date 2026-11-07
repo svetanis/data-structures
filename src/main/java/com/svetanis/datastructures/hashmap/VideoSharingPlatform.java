@@ -4,14 +4,31 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.PriorityQueue;
 
-import com.svetanis.java.base.utils.Print;
-
 // 2254. Design Video Sharing Platform
+//
+// upload(video) stores a video, a string of digits, under the smallest id not in use and
+// returns that id; the ids of removed videos are used again. remove(videoId) deletes the video
+// and its counts. watch(videoId, startMinute, endMinute) adds a view and returns the video from
+// startMinute to min(endMinute, length - 1), both included. like and dislike add one;
+// getLikesAndDislikes returns [likes, dislikes]; getViews returns the views. A missing id
+// gives "-1", [-1] or -1, and like, dislike and remove do nothing. On LeetCode:
+// 1 <= video.length <= 10^5, 0 <= videoId <= 10^5, 0 <= startMinute < endMinute < 10^5,
+// startMinute < video.length (so watch never cuts before the start), at most 10^5 calls.
+//
+// Ids: a counter for the next never-used id, and a min-heap of the removed ones. Every removed
+// id is below the counter, so the heap's smallest, when there is one, is the smallest id not
+// in use. Each count lives in its own map by id, and remove clears all of them, so a reused id
+// starts again from zero views, likes and dislikes.
+//
+// Siblings, same problem: none in this package.
 
 public final class VideoSharingPlatform {
+	// Time complexity: upload, remove O(log r), r removed ids in the heap; watch O(m), the
+	//   m-character substring; like, dislike, the getters O(1) on average
+	// Auxiliary Space: O(L + u), L characters of stored video and u ids ever handed out
 
-	private int videoId;
-	private PriorityQueue<Integer> usedIds;
+	private int videoId; // NEXT: the smallest id never handed out
+	private PriorityQueue<Integer> usedIds; // FREED: ids of removed videos, smallest first
 	private Map<Integer, String> vidToVideo;
 	private Map<Integer, Integer> vidToViews;
 	private Map<Integer, Integer> vidToLikes;
@@ -35,19 +52,19 @@ public final class VideoSharingPlatform {
 	private int getVideoId() {
 		int result;
 		if (usedIds.isEmpty()) {
-			result = this.videoId;
+			result = this.videoId; // NEW: no freed id, take the counter
 			this.videoId += 1;
 		} else {
-			result = usedIds.poll();
+			result = usedIds.poll(); // REUSE: the smallest freed id, below the counter
 		}
 		return result;
 	}
 
 	public void remove(int vid) {
 		if (vidToVideo.containsKey(vid)) {
-			usedIds.add(vid);
+			usedIds.add(vid); // FREE the id
 			vidToVideo.remove(vid);
-			vidToViews.remove(vid);
+			vidToViews.remove(vid); // CLEAR: a reused id starts from zero
 			vidToLikes.remove(vid);
 			vidToDislikes.remove(vid);
 		}
@@ -57,9 +74,9 @@ public final class VideoSharingPlatform {
 		if (!vidToVideo.containsKey(vid)) {
 			return "-1";
 		}
-		vidToViews.merge(vid, 1, Integer::sum);
+		vidToViews.merge(vid, 1, Integer::sum); // VIEW
 		String video = vidToVideo.get(vid);
-		int duration = Math.min(endMinute, video.length() - 1) - startMinute + 1;
+		int duration = Math.min(endMinute, video.length() - 1) - startMinute + 1; // CLIP: stop at the last minute
 		return video.substring(startMinute, startMinute + duration);
 	}
 
@@ -78,7 +95,7 @@ public final class VideoSharingPlatform {
 	public int[] getLikesAndDislikes(int vid) {
 		if (vidToVideo.containsKey(vid)) {
 			int[] result = new int[2];
-			result[0] = vidToLikes.getOrDefault(vid, 0);
+			result[0] = vidToLikes.getOrDefault(vid, 0); // ZERO: never liked yet
 			result[1] = vidToDislikes.getOrDefault(vid, 0);
 			return result;
 		} else {
@@ -88,9 +105,9 @@ public final class VideoSharingPlatform {
 
 	public int getViews(int vid) {
 		if (vidToVideo.containsKey(vid)) {
-			return vidToViews.getOrDefault(vid, 0);
+			return vidToViews.getOrDefault(vid, 0); // ZERO: never watched yet
 		} else {
-			return vidToViews.getOrDefault(vid, -1);
+			return vidToViews.getOrDefault(vid, -1); // MISSING: remove cleared the views, so -1
 		}
 	}
 
@@ -109,7 +126,7 @@ public final class VideoSharingPlatform {
 		vsp.like(1); // Increase the number of likes on the video associated with videoId 1.
 		vsp.dislike(1); // Increase the number of dislikes on the video associated with videoId 1.
 		vsp.dislike(1); // Increase the number of dislikes on the video associated with videoId 1.
-		Print.print(vsp.getLikesAndDislikes(1)); // There is 1 like and 2 dislikes on the video associated with videoId
+		print(vsp.getLikesAndDislikes(1)); // There is 1 like and 2 dislikes on the video associated with videoId
 																							// 1, so return [1, 2].
 		System.out.println(vsp.getViews(1)); // The video associated with videoId 1 has 2 views, so return 2.
 
@@ -127,7 +144,15 @@ public final class VideoSharingPlatform {
 		System.out.println(vsp2.watch(0, 0, 1)); // There is no video associated with videoId 0, so return "-1".
 		vsp2.like(0); // There is no video associated with videoId 0, so do nothing.
 		vsp2.dislike(0); // There is no video associated with videoId 0, so do nothing.
-		Print.print(vsp2.getLikesAndDislikes(0)); // There is no video associated with videoId 0, so return [-1].
+		print(vsp2.getLikesAndDislikes(0)); // There is no video associated with videoId 0, so return [-1].
 		System.out.println(vsp2.getViews(0)); // There is no video associated with videoId 0, so return -1.
+	}
+
+	private static void print(int[] a) {
+		for (int value : a) {
+			System.out.print(value);
+			System.out.print(' ');
+		}
+		System.out.println();
 	}
 }

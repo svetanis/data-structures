@@ -1,70 +1,70 @@
 package com.svetanis.datastructures.hashmap;
 
-import static com.google.common.collect.Lists.newArrayList;
-import static com.google.common.collect.Maps.newHashMap;
-import static com.svetanis.java.base.utils.Print.print;
 import static java.util.Collections.swap;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
-// Design a data structure that supports following operations in Θ(1) time.
-// insert(x): Inserts an item x to the data structure if not already present.
-// remove(x): Removes an item x from the data structure if present. 
-// search(x): Searches an item x in the data structure.
-// getRandom(): Returns a random element from current set of elements 
+// Insert, remove, search and getRandom in O(1) -- no LeetCode number
+//
+// A set of distinct ints. add(x) inserts x if it is not already there; remove(x) deletes x
+// if it is there; search(x) returns x's position in the internal list, or -1 if x is absent;
+// getRandom() returns one of the stored values, each equally likely, and needs at least one.
+//
+// A list alone gives a random pick in O(1) but finds a value in O(n); a map alone finds a
+// value in O(1) but cannot pick a random one. So keep both: the list holds the values, the map
+// holds each value's position in the list. Removing from the middle of a list is O(n), so
+// remove first swaps x with the last value, deletes the last slot, and tells the map where the
+// moved value now sits. The map forgets x only after that: when x is itself the last value,
+// "the moved value" is x, and forgetting it first would put it straight back.
+//
+// Siblings, same problem: none in this package. RandomizedSet (380) is the same two
+// structures with LeetCode's interface: insert and remove return booleans, no search.
 
 public final class ConstTimeDataStructure {
+  // Time complexity: O(1) per operation, expected, for the hash lookups -- remove swaps with
+  // the last slot, so the list never shifts
+  // Auxiliary Space: O(n), n = values stored
 
   private static final Random generator = new Random();
 
-  private List<Integer> list;
-  private Map<Integer, Integer> hash;
+  private List<Integer> list; // VALUES: in no order, no gaps
+  private Map<Integer, Integer> hash; // POSITION: value -> its index in list
 
   public ConstTimeDataStructure() {
-    this.list = newArrayList();
-    this.hash = newHashMap();
+    this.list = new ArrayList<>();
+    this.hash = new HashMap<>();
   }
 
   public void add(int x) {
-    if (!hash.containsKey(x)) {
-      list.add(x);
-      hash.put(x, list.size() - 1);
+    if (!hash.containsKey(x)) { // NEW?: values are distinct
+      list.add(x); // JOIN: at the end
+      hash.put(x, list.size() - 1); // POSITION: the last index
     }
   }
 
   public void remove(int x) {
-    // check if element is present
-    if (hash.containsKey(x)) {
-      int index = hash.get(x);
-      // if present,
-      // then remove element from hash
-      hash.remove(x);
-
-      // swap element with last element so that
-      // remove from list can be done in O(1) time
+    if (hash.containsKey(x)) { // PRESENT?
+      int index = hash.get(x); // FIND: where x sits
       int size = list.size();
       int last = list.get(size - 1);
-      swap(list, index, size - 1);
-
-      // remove last element (this is O(1))
-      list.remove(size - 1);
-      // update hash table for new index of last element
-      hash.put(last, index);
+      swap(list, index, size - 1); // MOVE: x to the end, the last value into x's slot
+      list.remove(size - 1); // DROP: the end, O(1), nothing shifts
+      hash.put(last, index); // POSITION: the moved value's new index
+      hash.remove(x); // FORGET: after the line above, which re-adds x when x was last
     }
   }
 
   public int getRandom() {
-    // find a random index from 0 to size - 1
-    int index = generator.nextInt(list.size());
-
-    // return element at randomly picked index
+    int index = generator.nextInt(list.size()); // PICK: any index 0..size - 1; throws when empty
     return list.get(index);
   }
 
   public int search(int x) {
-    return hash.get(x);
+    return hash.getOrDefault(x, -1); // FIND: -1 when absent
   }
 
   public static void main(String[] args) {
@@ -73,12 +73,12 @@ public final class ConstTimeDataStructure {
     ds.add(20);
     ds.add(30);
     ds.add(40);
-    System.out.println(ds.search(30));
+    System.out.println(ds.search(30)); // 2
     ds.remove(20);
     ds.add(50);
-    System.out.println(ds.search(50));
-    System.out.println(ds.getRandom());
-    print(ds.list);
-    print(ds.hash);
+    System.out.println(ds.search(50)); // 3
+    System.out.println(ds.getRandom()); // one of 10, 40, 30, 50
+    System.out.println(ds.list); // [10, 40, 30, 50]
+    System.out.println(ds.hash);
   }
 }

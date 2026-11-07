@@ -6,21 +6,39 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 
 // 2817. Minimum Absolute Difference Between Elements With Constraint
+//
+// Each method takes a list of ints and a distance x, and returns the smallest
+// |nums[i] - nums[j]| over all pairs of indexes at least x apart, |i - j| >= x. On
+// LeetCode: 1 <= nums.length <= 10^5, 1 <= nums[i] <= 10^9, 0 <= x < nums.length.
+//
+// Walk i from x to the end. Just before looking at nums[i], add nums[i - x] to a sorted
+// set: the set then holds exactly nums[0..i - x], every value at least x places before i.
+// The closest of those to nums[i] is one of its two neighbours in sorted order, the
+// largest at or below it (floor) and the smallest at or above it (ceiling), so two
+// searches per i cover every pair once, from its right end.
+//
+// Three methods, same idea:
+//   minAbsDiff   TreeSet, floor and ceiling
+//   minAbsDiff2  TreeSet, the same two neighbours found as lower(curr + 1) and
+//                higher(curr - 1)
+//   minAbsDiff3  TreeMap counting copies; the counts are never read, so a TreeSet that
+//                drops repeats gives the same answer
 
 public final class MinAbsDiff {
-	// Time Complexity: O(n log n)
+	// Time complexity: O(n log n), one add and two searches on the sorted set per index
+	// Auxiliary Space: O(n), the set holds up to n - x values
 
 	public static int minAbsDiff(List<Integer> list, int x) {
 		int mad = Integer.MAX_VALUE;
 		TreeSet<Integer> set = new TreeSet<>();
 		for (int i = x; i < list.size(); i++) {
 			int curr = list.get(i);
-			set.add(list.get(i - x));
-			Integer ceil = set.ceiling(curr);
+			set.add(list.get(i - x)); // ADD: the newest value at least x places back
+			Integer ceil = set.ceiling(curr); // NEIGHBOUR at or above curr
 			if (ceil != null) {
 				mad = Math.min(mad, ceil - curr);
 			}
-			Integer floor = set.floor(curr);
+			Integer floor = set.floor(curr); // NEIGHBOUR at or below curr
 			if (floor != null) {
 				mad = Math.min(mad, curr - floor);
 			}
@@ -33,14 +51,14 @@ public final class MinAbsDiff {
 		TreeSet<Integer> set = new TreeSet<>();
 		for (int i = x; i < list.size(); i++) {
 			int curr = list.get(i);
-			set.add(list.get(i - x));
-			Integer ceil = set.lower(curr + 1);
-			if (ceil != null) {
-				mad = Math.min(mad, Math.abs(ceil - curr));
-			}
-			Integer floor = set.higher(curr - 1);
+			set.add(list.get(i - x)); // ADD: the newest value at least x places back
+			Integer floor = set.lower(curr + 1); // NEIGHBOUR below curr + 1: at or below curr
 			if (floor != null) {
-				mad = Math.min(mad, Math.abs(curr - floor));
+				mad = Math.min(mad, Math.abs(floor - curr));
+			}
+			Integer ceil = set.higher(curr - 1); // NEIGHBOUR above curr - 1: at or above curr
+			if (ceil != null) {
+				mad = Math.min(mad, Math.abs(curr - ceil));
 			}
 		}
 		return mad;
@@ -51,12 +69,12 @@ public final class MinAbsDiff {
 		TreeMap<Integer, Integer> map = new TreeMap<>();
 		for (int i = x; i < list.size(); i++) {
 			int curr = list.get(i);
-			map.merge(list.get(i - x), 1, Integer::sum);
-			Integer ceil = map.ceilingKey(curr);
+			map.merge(list.get(i - x), 1, Integer::sum); // ADD: the newest value at least x places back
+			Integer ceil = map.ceilingKey(curr); // NEIGHBOUR at or above curr
 			if (ceil != null) {
 				mad = Math.min(mad, ceil - curr);
 			}
-			Integer floor = map.floorKey(curr);
+			Integer floor = map.floorKey(curr); // NEIGHBOUR at or below curr
 			if (floor != null) {
 				mad = Math.min(mad, curr - floor);
 			}
