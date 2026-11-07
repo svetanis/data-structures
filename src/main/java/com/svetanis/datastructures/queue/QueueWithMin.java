@@ -1,12 +1,15 @@
 package com.svetanis.datastructures.queue;
 
-import static com.google.common.collect.Lists.newLinkedList;
-import static com.svetanis.java.base.Exceptions.illegalState;
-
 import java.util.Deque;
+import java.util.LinkedList;
 import java.util.Queue;
 
-// A queue that also answers min() in O(1).
+// A queue that also answers min() in O(1) (not a LeetCode problem; the same structure as LC 239,
+// Sliding Window Maximum, mirrored).
+//
+// Input: enqueue(value) adds at the back; dequeue() removes and returns the front; front()
+// returns it; min() returns the smallest value in the queue. dequeue, front and min throw
+// IllegalStateException when the queue is empty.
 //
 // WHY THIS IS NOT MinStack'S TRICK. MinStack keeps one summary per element -- "the
 // minimum at or below this depth" -- and that works because a stack removes the
@@ -20,59 +23,62 @@ import java.util.Queue;
 // Discard it on the spot. A stack cannot do this: there the larger element
 // OUTLIVES the smaller one and may be the minimum after it pops.
 //
-// So the deque holds exactly the elements that could still become the minimum, in
-// increasing order, oldest first -- and min() is its front.
+// The one idea: one deque entry is one value that could still become the minimum. The deque holds
+// exactly those values, in increasing order, oldest first -- and min() is its front.
+//
+// Time: enqueue amortized O(1) -- one call may drop many values, but n calls drop at most n;
+//   dequeue, front, min O(1)
+// Space: O(n) -- the queue, plus O(n) worst case for the deque (an increasing input keeps every
+//   value as a live candidate)
+//
+// Siblings: QueueWithMax is the mirror; the only differences are the direction of the eviction
+// comparison and the method name.
 
 public final class QueueWithMin {
-  // enqueue: amortized O(1) -- one call may drop many, but n calls drop at most n
-  // dequeue, front, min: O(1)
-  // Space: O(n) for the queue, plus O(n) worst case for the deque (an increasing
-  // input keeps every element as a live candidate)
-
   private Queue<Integer> queue;
   private Deque<Integer> deque;
 
   public QueueWithMin() {
-    this.queue = newLinkedList();
-    this.deque = newLinkedList();
+    this.queue = new LinkedList<>();
+    this.deque = new LinkedList<>();
   }
 
   public void enqueue(int value) {
-    queue.offer(value);
+    queue.offer(value); // TAKE: at the back of the queue
     // STRICTLY greater, and the > is load-bearing: it KEEPS duplicates. With >=
     // the second of two equal values evicts the first, the deque ends up holding
     // one copy, dequeue removes it, and the copy still sitting in the queue has no
     // representative left -- min() then throws on a non-empty queue.
     while (!deque.isEmpty() && deque.getLast() > value) {
-      deque.pollLast(); // beaten for life: it leaves before value does
+      deque.pollLast(); // EVICT: beaten for life: it leaves before value does
     }
-    deque.offerLast(value);
+    deque.offerLast(value); // RECORD: value is a live candidate
   }
 
   public int dequeue() {
     if (queue.isEmpty()) {
-      throw illegalState("queue underflow");
+      throw new IllegalStateException("queue underflow");
     }
     int ret = queue.peek();
     if (ret == deque.getFirst()) {
-      deque.pollFirst(); // it was a live candidate, and now it is gone
+      deque.pollFirst(); // EVICT: it was a live candidate, and now it is gone
     }
-    queue.poll();
+    queue.poll(); // SKIP past the front
     return ret;
   }
 
   public int front() {
     if (queue.isEmpty()) {
-      throw illegalState("queue underflow");
+      throw new IllegalStateException("queue underflow");
     }
-    return queue.peek();
+    return queue.peek(); // RETURN: the oldest
   }
 
   public int min() {
     if (queue.isEmpty()) {
-      throw illegalState("queue underflow");
+      throw new IllegalStateException("queue underflow");
     }
-    return deque.getFirst();
+    return deque.getFirst(); // RETURN: the smallest live candidate
   }
 
   public static void main(String[] args) {

@@ -7,19 +7,26 @@ import java.util.Set;
 
 // 353. Design Snake Game
 //
-// The board is height rows by width columns; food lists [row, col] cells, eaten in the given
-// order. move("U" / "D" / "L" / "R") returns the score so far (food eaten), or -1 when the
-// head leaves the board or runs into the snake's body.
+// Input: SnakeGame(width, height, food) -- a board of height rows by width columns, the snake one
+// cell long at row 0, column 0. food lists [row, col] cells; one food item shows at a time and
+// the next appears once it is eaten. move("U" / "D" / "L" / "R") moves the head one cell and
+// returns the score so far (food eaten), or -1 when the head leaves the board or runs into the
+// snake's body. The cell the tail leaves in the same move is free. On LeetCode:
+// 1 <= width, height <= 10^4, 1 <= food.length <= 50, 0 <= row < height, 0 <= col < width, at
+// most 10^4 calls to move, and food never appears on a cell the snake covers.
 //
-// The deque holds the snake's cells, head at the front and tail at the back, each stored as one
-// int: row * width + col. The set holds the same cells, so a collision check is one look-up.
-// Each move adds a new head; unless the new head is on the next food, the tail leaves first,
-// so the head may step into the cell the tail has just left.
+// The one idea: one deque entry is one cell of the snake, stored as the single number
+// row * width + col, head at the front and tail at the back. The set holds the same numbers, so
+// "is this cell part of the snake" is one look-up instead of a walk along the deque. A move adds
+// the new head at the front. If the new head is not on the next food, the snake does not grow, so
+// the tail leaves from the back first: that frees its cell before the collision check, which is
+// why the head may step into the cell the tail has just left.
+//
+// Time: move O(1) -- a fixed number of deque and hash-set operations
+// Space: O(f) -- the snake grows by one cell per food item eaten, so it never holds more than
+//   f + 1 cells
 
 public final class SnakeGame {
-	// Time Complexity: move O(1), a fixed number of deque and hash-set operations
-	// Space Complexity: O(f) for f food items, the snake grows by one cell per food eaten
-
 	private int height;
 	private int width;
 	private int index;
@@ -39,14 +46,14 @@ public final class SnakeGame {
 
 	public int move(String direction) {
 		int head = dq.peekFirst();
-		int[] coordinates = next(head, direction);
+		int[] coordinates = next(head, direction); // STEP: where the head would land
 		int x = coordinates[0];
 		int y = coordinates[1];
-		if (!safe(x, y)) {
+		if (!safe(x, y)) { // WALL: off the board
 			return -1;
 		}
 		if (index < food.length && food[index][0] == x && food[index][1] == y) {
-			score++;
+			score++; // EAT: the snake grows, the tail stays
 			index++;
 		} else {
 			int tail = dq.pollLast(); // no food: the tail moves first, freeing its cell
@@ -56,17 +63,17 @@ public final class SnakeGame {
 		if (visited.contains(newHead)) { // runs into its own body
 			return -1;
 		}
-		dq.offerFirst(newHead);
+		dq.offerFirst(newHead); // RECORD: the new head, in the deque and in the set
 		visited.add(newHead);
-		return score;
+		return score; // RETURN: food eaten so far
 	}
 
 	private boolean safe(int x, int y) {
-		return x >= 0 && x < height && y >= 0 && y < width;
+		return x >= 0 && x < height && y >= 0 && y < width; // RETURN: inside the board
 	}
 
 	private int[] next(int head, String direction) {
-		int row = head / width;
+		int row = head / width; // DECODE: the cell number back into row and column
 		int col = head % width;
 		int x = row;
 		int y = col;
@@ -84,7 +91,7 @@ public final class SnakeGame {
 			y++;
 			break;
 		}
-		return new int[] { x, y };
+		return new int[] { x, y }; // RETURN: the next cell, possibly off the board
 	}
 
 	public static void main(String[] args) {

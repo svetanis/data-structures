@@ -1,22 +1,29 @@
 package com.svetanis.datastructures.queue.circular;
 
-import static com.svetanis.java.base.Exceptions.illegalArgument;
-
 // 622. Design Circular Queue
 //
-// A first-in-first-out queue of ints with a fixed capacity, stored in one array used as a ring.
-// LC names the methods enQueue, deQueue, Front and Rear.
+// Input: a first-in-first-out queue of ints with a fixed capacity k, stored in one array used as
+// a ring. LC names the methods enQueue, deQueue, Front and Rear. enqueue returns false when full
+// and dequeue returns false when empty; front and rear return -1 when empty. On LeetCode:
+// 1 <= k <= 1000, 0 <= value <= 1000, at most 3000 calls.
 //
-// enqueue returns false when full and dequeue returns false when empty; front and rear return
-// -1 when empty.
+// The one idea: one array slot is one place in the line, and the line wraps: after the last slot
+// comes slot 0 again. Only front (the slot of the oldest item) and size are stored. The next
+// free slot is (front + size) % capacity, and the newest item sits one slot before it. Every
+// index wraps modulo capacity, so no item is ever shifted.
 //
-// Only front (the position of the oldest item) and size are stored. The next free position is
-// (front + size) % capacity, and the newest item sits one before it. Every index wraps modulo
-// capacity, so no item is ever shifted.
+// Time: every operation O(1) -- index arithmetic only
+// Space: O(k) -- one array of capacity k
+//
+// Siblings:
+//   CircularQueueRear  the same problem, with rear stored as well: every index moves only by
+//                      (x + 1) % capacity, and rear starts at -1
+//   CircularDeque      LC 641, the same ring with adds and removes at both ends
+//   CircularBuffer     not LeetCode: when full, an append overwrites the oldest item
+//   DynamicQueue       not LeetCode: when full, the array doubles
 
 public final class CircularQueue {
-	// Time Complexity: every operation O(1), index arithmetic only
-	// Space Complexity: O(k), one array of capacity k
+	private static final String BAD_CAPACITY = "capacity must be at least 1, got %d";
 
 	private int size; // current size of the queue
 	private int front; // index of front element
@@ -25,7 +32,7 @@ public final class CircularQueue {
 
 	public CircularQueue(int k) {
 		if (k < 1) { // every index wraps modulo k, so it must be at least 1
-			throw illegalArgument("capacity must be at least 1, got %s", k);
+			throw new IllegalArgumentException(BAD_CAPACITY.formatted(k));
 		}
 		this.front = 0;
 		this.size = 0;
@@ -46,37 +53,37 @@ public final class CircularQueue {
 	}
 
 	public boolean enqueue(int value) {
-		if (isFull()) {
+		if (isFull()) { // FULL?
 			return false;
 		}
 		int index = (front + size) % capacity; // first free position after the newest item
-		queue[index] = value;
-		size++;
+		queue[index] = value; // WRITE
+		size++; // GROW
 		return true;
 	}
 
 	public boolean dequeue() {
-		if (isEmpty()) {
+		if (isEmpty()) { // EMPTY?
 			return false;
 		}
-		front = (front + 1) % capacity; // the old slot is not cleared; a later enqueue reuses it
-		size--;
+		front = (front + 1) % capacity; // ADVANCE; the old slot is not cleared, a later enqueue reuses it
+		size--; // SHRINK
 		return true;
 	}
 
 	public int front() {
-		if (isEmpty()) {
+		if (isEmpty()) { // EMPTY?
 			return -1;
 		} else {
-			return queue[front];
+			return queue[front]; // the oldest
 		}
 	}
 
 	public int rear() {
-		if (isEmpty()) {
+		if (isEmpty()) { // EMPTY?
 			return -1;
 		} else {
-			int index = (front + size - 1) % capacity;
+			int index = (front + size - 1) % capacity; // the newest: one fewer step than size
 			return queue[index];
 		}
 	}

@@ -1,19 +1,24 @@
 package com.svetanis.datastructures.queue.impl.array;
 
-import static com.svetanis.java.base.Exceptions.illegalState;
-
-// A first-in-first-out queue of ints with a fixed capacity, stored in one array used as a ring.
+// A first-in-first-out queue of ints with a fixed capacity, stored in one array used as a ring
+// (not a LeetCode problem; LC 622, in the circular package, is the same ring with LeetCode's
+// method names).
 //
-// push adds at the back; when the queue is full, push does nothing and the item is silently
-// dropped. pop removes the front item and front returns it; both throw when the queue is empty.
+// Input: push(item) adds at the back; when the queue is full, push does nothing and the item is
+// silently dropped. pop() removes the front item and front() returns it; both throw
+// IllegalStateException when the queue is empty. The capacity is at least 1.
 //
-// head is the position of the oldest item and tail the position of the newest. Both move
-// forward and wrap modulo capacity, so no item is ever shifted.
+// The one idea: one array slot is one place in the line, and the line wraps: after the last slot
+// comes slot 0 again. head is the slot of the oldest item and tail the slot of the newest. Both
+// move forward and wrap modulo capacity, so no item is ever shifted.
+//
+// Time: push, pop, front, size O(1) -- index arithmetic only
+// Space: O(capacity) -- the array is allocated once
+//
+// Siblings: queue/circular/CircularQueue and CircularQueueRear are the same ring with LC 622's
+// contract (false when full); impl/list/Queue holds the items in a linked list.
 
 public final class Queue {
-  // Time Complexity: push, pop, front, size: O(1)
-  // Space Complexity: O(capacity), the array is allocated once
-
   private int[] data; // data storage array
   private int head;
   private int tail;
@@ -37,7 +42,7 @@ public final class Queue {
   }
 
   private int next(int i) {
-    return (i + 1) % capacity;
+    return (i + 1) % capacity; // STEP: from the last slot back to 0
   }
 
   public int size() {
@@ -46,25 +51,38 @@ public final class Queue {
 
   public void push(int item) {
     if (size() < capacity) { // when full the item is dropped, with no error
-      tail = next(tail);
-      data[tail] = item;
-      count++;
+      tail = next(tail); // ADVANCE
+      data[tail] = item; // WRITE
+      count++; // GROW
     }
   }
 
   public void pop() {
     if (isEmpty()) {
-      throw illegalState("queue underflow");
+      throw new IllegalStateException("queue underflow");
     }
-    head = next(head);
-    count--;
+    head = next(head); // ADVANCE: the old slot is not cleared, a later push reuses it
+    count--; // SHRINK
   }
 
   public int front() {
     if (isEmpty()) {
-      throw illegalState("queue underflow");
+      throw new IllegalStateException("queue underflow");
     }
-    return data[head];
+    return data[head]; // RETURN: the oldest
   }
 
+  public static void main(String[] args) {
+    Queue q = new Queue(2);
+    q.push(1);
+    q.push(2);
+    q.push(3); // dropped: the queue is full
+    System.out.println(q.size()); // 2
+    System.out.println(q.front()); // 1
+    q.pop();
+    q.push(4); // wraps round to the slot the pop freed
+    System.out.println(q.front()); // 2
+    q.pop();
+    System.out.println(q.front()); // 4
+  }
 }
