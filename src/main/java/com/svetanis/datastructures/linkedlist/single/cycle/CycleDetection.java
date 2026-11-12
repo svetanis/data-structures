@@ -1,41 +1,39 @@
 package com.svetanis.datastructures.linkedlist.single.cycle;
 
-import static com.google.common.collect.Lists.newArrayList;
 import static com.svetanis.datastructures.linkedlist.single.Nodes.fromList;
 import static com.svetanis.datastructures.linkedlist.single.Nodes.print;
+import static java.util.Arrays.asList;
 
 import com.svetanis.datastructures.linkedlist.single.ListNode;
 
 // 141. Linked List Cycle
 //
-// given the head of a Singly LinkedList,
-// determine if the SLL has a cycle in it or not
-// Return true if following next from the head comes back to a node already passed, and
-// false if it reaches null.
+// Input: the head of a singly linked list. On LeetCode: 0 <= number of nodes <= 10^4,
+// -10^5 <= val <= 10^5. Returns true if following next from the head comes back to a node
+// already passed, and false if it reaches null.
 //
-// traverse SLL using two pointers.
-// move one pointer by one and the other pointer by two.
-// if these pointers meet at some node then there is a loop.
-// if pointers don't meet then SLL doesn't have a loop.
-// Each pointer holds one node of the list. Without a cycle, fast reaches null and the loop
-// ends. With a cycle, both end up going round it, and each turn fast gains one node on slow,
-// so the gap between them closes to zero and they stand on the same node.
+// The one idea: two walkers start on the head. slow takes one node per turn, fast takes two.
+// Without a cycle, fast reaches null and the loop ends. With a cycle, both end up going round
+// it, and each turn fast gains exactly one node on slow, so the gap between them shrinks by one
+// per turn until it is zero and they stand on the same node. A gap that shrinks by one can never
+// jump over zero, which is why two steps against one is enough.
+//
+// Time: O(n) -- fast catches slow before slow has gone once round the cycle.
+// Space: O(1) -- two pointers.
 
 public final class CycleDetection {
-  // Time Complexity: O(n), fast catches slow before slow has gone once round the cycle
-  // Space Complexity: O(1), two pointers
 
   public static boolean hasCycle(ListNode head) {
-	  
+
     if (head == null) {
-      return false;
+      return false; // BASE: an empty list has no cycle
     }
     ListNode slow = head;
     ListNode fast = head;
     while (fast != null && fast.next != null) { // fast can take two steps only if both exist
-      slow = slow.next;
-      fast = fast.next.next;
-      if (slow == fast) { // tested after the steps: before them both are on the head
+      slow = slow.next; // STEP: one node
+      fast = fast.next.next; // STEP: two nodes
+      if (slow == fast) { // MEET: tested after the steps: before them both are on the head
         return true;
       }
     }
@@ -43,7 +41,7 @@ public final class CycleDetection {
   }
 
   public static void main(String[] args) {
-    ListNode head = fromList(newArrayList(50, 20, 15, 4, 10));
+    ListNode head = fromList(asList(50, 20, 15, 4, 10));
     print(head); // 50 20 15 4 10
     System.out.println(hasCycle(head)); // false
     // create a loop for testing

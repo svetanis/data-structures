@@ -8,33 +8,38 @@ import com.svetanis.datastructures.linkedlist.single.ListNode;
 
 // 2095. Delete the Middle Node of a Linked List
 //
-// Remove the middle node and return the head. Counting from 0, the middle of n nodes is the
-// node at index n / 2, so with an even count it is the second of the two central nodes. A
-// one-node list becomes the empty list.
+// Input: the head of a singly linked list. LeetCode: 1 <= n <= 10^5 nodes, node values
+// 1..10^5. Returns: the head after the middle node is removed. Counting from 0, the middle of
+// n nodes is the node at index n / 2, so with an even count it is the second of the two central
+// nodes. A one-node list becomes the empty list (null).
 //
-// Two pointers start on the head: midd moves one node per turn, curr moves two. When curr
-// cannot take two more steps, midd has gone half as far, so it is on the middle node. prev is
-// the node midd was on one turn earlier, the node just before the middle, and pointing
-// prev.next past the middle removes it.
+// The one idea: two markers walk at different speeds. A marker is one node of the list. curr
+// moves two nodes per turn and midd moves one, so when curr cannot take two more steps, midd
+// has gone half as far: it is on the middle node. prev is the node midd was on one turn
+// earlier, the node just before the middle, and pointing prev.next past the middle removes it.
+//
+// Time: O(n) -- curr walks the list once, in steps of two; midd walks half as far.
+// Space: O(1) -- three markers.
+//
+// Siblings: DeleteMiddleNodeDummy does the same with a fake node in front of the head, so it
+// needs neither the one-node branch nor the third marker prev.
 
 public final class DeleteMiddleNode {
-  // Time Complexity: O(n), one pass
-  // Space Complexity: O(1)
 
   public static ListNode delete(ListNode head) {
-    if (head == null) {
+    if (head == null) { // BASE: empty list
       return null;
     }
-    if (head.next == null) {
+    if (head.next == null) { // BASE: one node
       // one node: it IS the middle, and nothing in a singly linked list
       // points at the head, so there is no predecessor to unlink it
       // from. the dummy-headed sibling needs no such branch, because
       // the dummy is that predecessor
-      return null;
+      return null; // RETURN: the empty list
     }
 
-    ListNode curr = head;
-    ListNode midd = head;
+    ListNode curr = head; // FAST marker: two nodes per turn
+    ListNode midd = head; // SLOW marker: one node per turn
     ListNode prev = midd;
     while (curr != null && curr.next != null) { // STOP when curr cannot take two steps
       curr = curr.next.next;
@@ -43,8 +48,8 @@ public final class DeleteMiddleNode {
     }
     // delete middle node
     prev.next = midd.next; // SKIP: prev now points past the middle
-    midd = null;
-    return head;
+    midd = null; // DROP: the removed node's name, no effect on the list
+    return head; // RETURN: head is unchanged, the list has at least two nodes
   }
 
   public static void main(String[] args) {
@@ -63,6 +68,6 @@ public final class DeleteMiddleNode {
     // one node: the answer is the empty list. print() on null prints a
     // blank line, which is what an empty list looks like here
     ListNode head4 = fromList(asList(7));
-    print(delete(head4)); // []
+    print(delete(head4)); // (empty line)
   }
 }

@@ -8,18 +8,20 @@ import com.svetanis.datastructures.linkedlist.single.ListNode;
 
 // 1669. Merge In Between Linked Lists
 //
-// Given list1, list2 and two positions a <= b counted from 0, remove list1's nodes at positions
-// a through b and put the whole of list2 in their place. Returns the head of list1. LC 1669
-// promises 1 <= a, so the head of list1 is never removed.
+// Input: list1, list2 and two positions a <= b counted from 0. On LeetCode: 3 <= list1 length
+// <= 10^4, 1 <= a <= b < list1 length - 1, 1 <= list2 length <= 10^4. Remove list1's nodes at
+// positions a through b and put the whole of list2 in their place. Returns the head of list1.
+// Because 1 <= a, the head of list1 is never removed.
 //
-// Only two nodes of list1 matter: the one at position a - 1, just before the removed run, where
-// list2 is attached; and the one at position b, the last removed node, whose next is where
-// list1 carries on. Find both, attach list2 after the first, walk to the last node of list2,
-// and point it at the node after b.
+// The one idea: only two nodes of list1 matter. The one at position a - 1, just before the
+// removed run, is where list2 is attached; the one at position b, the last removed node, has a
+// next that is where list1 carries on. Find both, attach list2 after the first, walk to the last
+// node of list2, and point it at the node after b.
+//
+// Time: O(n) -- n is the length of list1 plus list2; list1 is walked up to b, list2 to its end.
+// Space: O(1) -- a few pointers.
 
 public final class MergeInBetweenLL {
-	// Time Complexity: O(n), n = the length of list1 plus list2; list1 is walked up to b, list2 to its end
-	// Space Complexity: O(1)
 
 	public static ListNode mergeInBetween(ListNode root1, int a, int b, ListNode root2) {
 		ListNode head = root1;
@@ -30,11 +32,11 @@ public final class MergeInBetweenLL {
 		for (int i = 0; i < b; i++) { // stop on position b, the last node removed
 			tail = tail.next;
 		}
-		head.next = root2; // attach list2 after position a - 1
+		head.next = root2; // ATTACH list2 after position a - 1
 		while (head.next != null) { // walk to the last node of list2
 			head = head.next;
 		}
-		head.next = tail.next; // the last node of list2 points at what came after position b
+		head.next = tail.next; // JOIN: the last node of list2 points at what came after position b
 		tail.next = null; // detach the removed run from the rest of list1
 		return root1;
 	}
@@ -42,9 +44,9 @@ public final class MergeInBetweenLL {
 	public static void main(String[] args) {
 		ListNode head1 = fromList(asList(10, 1, 13, 6, 9, 5));
 		ListNode head2 = fromList(asList(1000000, 1000001, 1000002));
-		print(mergeInBetween(head1, 3, 4, head2)); // 10,1,13,1000000,1000001,1000002,5
+		print(mergeInBetween(head1, 3, 4, head2)); // 10 1 13 1000000 1000001 1000002 5
 		ListNode head3 = fromList(asList(0, 1, 2, 3, 4, 5, 6));
 		ListNode head4 = fromList(asList(1000000, 1000001, 1000002, 1000003, 1000004));
-		print(mergeInBetween(head3, 2, 5, head4)); // 0,1,1000000,1000001,1000002,1000003,1000004,6
+		print(mergeInBetween(head3, 2, 5, head4)); // 0 1 1000000 1000001 1000002 1000003 1000004 6
 	}
 }

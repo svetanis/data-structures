@@ -8,15 +8,23 @@ import com.svetanis.datastructures.linkedlist.single.ListNode;
 
 // 206. Reverse Linked List
 //
-// Given the head of a singly linked list, reverse it and return the new head.
+// Input: the head of a singly linked list. LeetCode: 0 <= n <= 5000 nodes, values
+// -5000..5000. Returns: the head of the reversed list (null for an empty list).
 //
-// Walk the list once and turn each arrow around. Before an arrow is turned, the node it
-// pointed to is saved in next, because turning it loses the only way forward. Every node
-// gets the same four lines, in this order: SAVE, FLIP, KEEP, MOVE.
+// The one idea: one node holds a value and an arrow to the next node. Walk the list once and
+// turn each arrow around, so it points at the node behind it. Before an arrow is turned, the
+// node it pointed to is saved in next, because turning it loses the only way forward. Every
+// node gets the same four lines, in this order: SAVE, FLIP, KEEP, MOVE.
+//
+// Time: O(n) -- each node is visited once.
+// Space: O(1) -- three markers.
+//
+// Siblings: ReverseListMoveToFront inserts each node at the front of a new list behind a fake node.
+// ReverseListRecursive turns the arrows on the way back from the recursion,
+// ReverseListTailRecursive turns them on the way forward with prev and curr as arguments, and
+// ReverseListStack pushes the nodes and pops them back.
 
-public final class ReverseIterative {
-	// Time Complexity: O(n), one pass
-	// Space Complexity: O(1)
+public final class ReverseList {
 
 	public static ListNode reverse(ListNode head) {
 		ListNode prev = null; // END: the reversed part so far; the old head's flip points it at null

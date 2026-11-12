@@ -1,24 +1,29 @@
 package com.svetanis.datastructures.linkedlist.dll.random;
 
-import static com.svetanis.java.base.collect.Maps.newMap;
-
 import java.util.HashMap;
 import java.util.Map;
 
-import com.google.common.collect.ImmutableMap;
-
 // 138. Copy List with Random Pointer
 //
-// Each node has a next pointer and a random pointer to any node in the list, or null.
-// Return a deep copy: new nodes only, with every pointer aimed at the matching new node.
+// Input: the head of a linked list in which every node has a next pointer and a random pointer,
+// the random one aimed at any node of the same list, or null. On LeetCode: 0 <= number of nodes
+// <= 1000, -10^4 <= val <= 10^4. Returns a deep copy: only new nodes, with every next and random
+// pointer aimed at the new node that matches the old target. The original list is left as it was.
 //
-// A random pointer can aim forward, at a node not copied yet, so copy in two passes. The
-// first makes a copy of every node and records original -> copy in a map; the second sets
-// each copy's next and random by looking up the copies of the original's targets.
+// The one idea: one node is a value plus two arrows, and a copy needs its own arrows, aimed at
+// copies. A random arrow can aim forward, at a node that has no copy yet, so the copying takes
+// two passes. Pass 1 makes a lone copy of every node (a value, no arrows) and writes
+// original -> copy in a map. Pass 2 walks the originals again; for each one the map answers
+// "which copy belongs to the node this arrow aims at", and the copy gets that arrow. In pass 2
+// every copy already exists, so no arrow can aim at a node that is missing.
+//
+// Time: O(n) -- two passes over the list, and each map put or get is O(1) on average.
+// Space: O(n) -- the map holds one entry per node.
+//
+// Siblings: CloneWithRandomNoExtraSpace and CloneWithRandomSubmit use no map: they weave each
+// copy in right after its original, so the copy of any node X is X.next.
 
 public final class CloneWithRandomHashing {
-	// Time Complexity: O(n)
-	// Space Complexity: O(n) for the map
 
 	public static Node clone(Node head) {
 		Map<Node, Node> copyOf = copies(head); // PASS 1: every copy exists before any arrow is set
@@ -27,20 +32,20 @@ public final class CloneWithRandomHashing {
 			Node copy = copyOf.get(curr);
 			copy.next = copyOf.get(curr.next); // WIRE: null maps to null, get(null) finds nothing
 			copy.random = copyOf.get(curr.random); // WIRE: the copy of the original's target
-			curr = curr.next;
+			curr = curr.next; // WALK to the next original
 		}
 		return copyOf.get(head); // RETURN the copy of the head, never head itself
 	}
 
 	// original -> its copy, pointers not set yet
-	private static ImmutableMap<Node, Node> copies(Node head) {
+	private static Map<Node, Node> copies(Node head) {
 		Map<Node, Node> copyOf = new HashMap<>();
 		Node curr = head;
 		while (curr != null) {
 			copyOf.put(curr, new Node(curr.val)); // COPY and RECORD original -> copy; no arrows yet
-			curr = curr.next;
+			curr = curr.next; // WALK
 		}
-		return newMap(copyOf);
+		return copyOf;
 	}
 
 	private static final String NODE = "[%d, %d] ";
@@ -60,10 +65,10 @@ public final class CloneWithRandomHashing {
 
 		Node clone = clone(head);
 
-		System.out.println("original linked list: ");
+		System.out.println("original linked list: "); // original linked list:
 		print(head); // [1, 3] [2, 4] [3, 5] [4, -1] [5, 2]
 
-		System.out.println("cloned linked list: ");
+		System.out.println("cloned linked list: "); // cloned linked list:
 		print(clone); // [1, 3] [2, 4] [3, 5] [4, -1] [5, 2]
 	}
 

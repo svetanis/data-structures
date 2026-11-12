@@ -8,35 +8,31 @@ import com.svetanis.datastructures.linkedlist.single.ListNode;
 
 // Length of the Cycle in a Linked List
 //
-// given the head of a LinkedList with
-// a cycle, find the length of the cycle
-// Return the number of nodes that make up the cycle, or 0 if the list has no cycle.
+// Input: the head of a singly linked list that may have a cycle. Returns the number of nodes
+// that make up the cycle, or 0 if the list has no cycle. The list is not changed.
 //
-// once the fast and slow pointers meet,
-// save the slow pointer and iterate the
-// whole cycle with another pointer until
-// we see the slow pointer again to find
-// the length of the cycle
-// slow moves one node per turn and fast two, as in Linked List Cycle (LC 141). If there is
-// a cycle they meet on a node inside it, and walking next from a node inside the cycle
-// comes back to that node after exactly as many steps as the cycle has nodes.
+// The one idea: slow moves one node per turn and fast two, as in Linked List Cycle (LC 141).
+// If there is a cycle they meet on a node inside it. Standing on a node of a cycle and
+// following next until the walker is back on that same node takes exactly as many steps as the
+// cycle has nodes, so count those steps.
+//
+// Time: O(n) -- finding the meeting point is O(n), then one walk round the cycle is at most n.
+// Space: O(1) -- a few pointers and a counter.
 
 public final class CycleLength {
-  // Time Complexity: O(n), finding the meeting point, then one walk round the cycle
-  // Space Complexity: O(1), a few pointers and a counter
 
   public static int cycleLength(ListNode head) {
-	  
+
     if (head == null) {
-      return 0;
+      return 0; // BASE: an empty list has no cycle
     }
     ListNode slow = head;
     ListNode fast = head;
     // find the meeting point
     while (fast != null && fast.next != null) {
-      slow = slow.next;
-      fast = fast.next.next;
-      if (slow == fast) {
+      slow = slow.next; // STEP: one node
+      fast = fast.next.next; // STEP: two nodes
+      if (slow == fast) { // MEET
         return length(slow); // slow is on a node inside the cycle
       }
     }
@@ -44,15 +40,15 @@ public final class CycleLength {
   }
 
   private static int length(ListNode node) {
-	int count = 0;
-    ListNode current = node;
-	do {
-		current = current.next;
-		count++;
-	} while(current != node);
-	return count;
+    int count = 1; // COUNT the first step, taken before the test
+    ListNode current = node.next;
+    while (current != node) { // WALK round the cycle until back on the start
+      current = current.next;
+      count++;
+    }
+    return count;
   }
-  
+
   public static void main(String[] args) {
     ListNode head = fromList(asList(50, 20, 15, 4, 10));
     print(head); // 50 20 15 4 10

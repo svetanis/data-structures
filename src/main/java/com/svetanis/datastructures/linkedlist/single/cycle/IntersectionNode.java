@@ -6,16 +6,20 @@ import com.svetanis.datastructures.linkedlist.single.ListNode;
 
 // 160. Intersection of Two Linked Lists
 //
-// Two singly linked lists may join at some node and share everything after it. Return that
-// node, or null if they never join.
+// Input: the heads of two singly linked lists that have no cycles. They may join at some node
+// and share every node after it. On LeetCode: 1 <= list lengths <= 3 * 10^4, 1 <= val <= 10^5.
+// Returns the first shared node, or null if the lists never join. Both lists are left as they were.
 //
-// Each pointer walks its own list, then switches to the head of the other. Both then walk
-// the same total, m + n, so they reach the joining node on the same turn. Lists that never
-// join reach null together, which ends the loop too.
+// The one idea: let a and b be the nodes only list 1 and only list 2 have, and c the shared
+// nodes at the end. Each pointer walks its own list, then switches to the head of the other one.
+// Pointer 1 walks a + c + b nodes, pointer 2 walks b + c + a, the same total, so they reach the
+// joining node on the same turn, even when the two lists have different lengths. Lists that
+// never join (c = 0) make both pointers reach null together, which ends the loop too.
+//
+// Time: O(n + m) -- each pointer walks both lists once, n and m the two lengths.
+// Space: O(1) -- two pointers.
 
 public final class IntersectionNode {
-	// Time Complexity: O(n + m)
-	// Space Complexity: O(1)
 
 	public static ListNode intersection(ListNode head1, ListNode head2) {
 		ListNode curr1 = head1;

@@ -7,27 +7,31 @@ import com.svetanis.datastructures.linkedlist.single.ListNode;
 
 // Alternating split of a linked list
 //
-// Split one list into two, counting positions from 0: the nodes at positions 0, 2, 4, ... go
-// to the first list and the nodes at positions 1, 3, 5, ... to the second, each keeping its
-// order. Returns both heads; a list of 0 or 1 nodes gives an empty (null) second list, and the
-// empty list gives two empty lists.
+// Input: the head of a singly linked list. Split it into two lists, counting positions from 0:
+// the nodes at positions 0, 2, 4, ... go to the first list and the nodes at positions 1, 3, 5, ...
+// to the second, each keeping its order. Returns both heads; a list of 0 or 1 nodes gives an
+// empty (null) second list, and the empty list gives two empty lists.
 //
-// Two chains grow side by side: even sits on the last node given to the first list, odd on the
-// last node given to the second. curr is the next node not yet given out; it goes to even, and
-// the node after it to odd. At the end both chains are ended with null, because the last node
-// of each may still point into the other. LC 328 (Odd Even Linked List) builds the same two
-// chains and then joins them; this keeps them apart.
+// The one idea: every second node belongs to the same list, so each list is built by skipping
+// the node the other list takes. Two chains grow side by side: even sits on the last node given
+// to the first list, odd on the last node given to the second. curr is the next node not yet
+// given out; it goes to even, and the node after it to odd. At the end both chains are ended
+// with null, because the last node of each may still point into the other.
+//
+// Time: O(n) -- one pass.
+// Space: O(1) -- the existing nodes are relinked.
+//
+// Siblings: RearrangeOddEven (LC 328) builds the same two chains and then joins them; this keeps
+// them apart.
 
 public final class SplitAlternate {
-  // Time Complexity: O(n), one pass
-  // Space Complexity: O(1), the existing nodes are relinked
 
   // the two heads; either may be null when the list is too short to fill it
   public record Halves(ListNode first, ListNode second) {}
 
   public static Halves split(ListNode head) {
     if (head == null || head.next == null) {
-      return new Halves(head, null); // 0 or 1 node: nothing goes to the second list
+      return new Halves(head, null); // BASE: 0 or 1 node: nothing goes to the second list
     }
     ListNode even = head;
     ListNode odd = head.next;
@@ -36,17 +40,17 @@ public final class SplitAlternate {
     ListNode h2 = odd;
 
     while (curr != null) {
-      even.next = curr;
+      even.next = curr; // GIVE curr to the first list
       even = even.next;
       curr = curr.next;
 
       if (curr != null) {
-        odd.next = curr;
+        odd.next = curr; // GIVE the next node to the second list
         odd = odd.next;
         curr = curr.next;
       }
     }
-    even.next = null; // end both lists: the last node of each may still point into the other
+    even.next = null; // END both lists: the last node of each may still point into the other
     odd.next = null;
     return new Halves(h1, h2);
   }
@@ -68,6 +72,6 @@ public final class SplitAlternate {
 
     Halves one = split(new ListNode(7));
     print(one.first()); // 7
-    print(one.second()); // []
+    print(one.second()); // (empty line)
   }
 }

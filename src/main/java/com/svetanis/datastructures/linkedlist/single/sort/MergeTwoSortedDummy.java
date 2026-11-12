@@ -7,17 +7,24 @@ import com.svetanis.datastructures.linkedlist.single.ListNode;
 
 // 21. Merge Two Sorted Lists
 //
-// Merge two sorted singly linked lists into one sorted list, made of their own nodes, and
-// return its head.
+// Input: head1 and head2 -- the first nodes of two singly linked lists, each sorted in increasing
+// order (either may be empty). On LeetCode: 0 to 50 nodes in each, each value -100 to 100.
+// Returns the head of one sorted list made of their own nodes.
 //
-// Build the answer behind a fake node: take the smaller front node each turn and hang it
-// on the end. The fake node means the first node taken needs no special case, and neither
-// does an empty list: the loop never runs, and the other list is attached whole.
+// The one idea: both lists are sorted, so the smallest node not yet placed is always one of the
+// two front nodes. Take the smaller front node each turn and hang it on the end of the answer.
+// A fake node in front of the answer means the first node taken needs no special case, and
+// neither does an empty list: the loop never runs, and the other list is attached whole. When
+// one list runs out, the other is already sorted, so one arrow attaches all of it.
+//
+// Time: O(n + m) -- each turn places one node, and no node is looked at twice
+// Space: O(1) -- the nodes are reused
+//
+// Siblings: MergeTwoSortedIterative is the same merge without the fake node, so it chooses the
+// head before the loop. MergeTwoSortedRecursive takes the smaller front node and merges the rest
+// by a call, which stacks one call per node. MergeSort uses this merge loop in its own method.
 
 public final class MergeTwoSortedDummy {
-  // Time Complexity: O(n + m)
-  // Space Complexity: O(1), the nodes are reused
-
   public static ListNode merge(ListNode head1, ListNode head2) {
     ListNode dummy = new ListNode(); // FAKE: the answer's first node needs something in front of it
     ListNode current = dummy; // TAIL: the last node of the answer so far

@@ -7,35 +7,35 @@ import com.svetanis.datastructures.linkedlist.single.ListNode;
 
 // 1721. Swapping Nodes in a Linked List
 //
-// Given a singly linked list, swap kth node from beginning with kth node from end.
-// Swapping of data is not allowed, only pointers should be changed.
+// Input: the head of a list and k. On LeetCode: 1 <= k <= number of nodes <= 10^5,
+// 0 <= val <= 100. Swap the kth node from the beginning with the kth node from the end, and
+// return the head. k counts from 1 at either end. LeetCode lets you swap the two values; this
+// version moves the nodes themselves, by changing links only. If k is less than 1 or larger than
+// the length, the list comes back unchanged.
 //
-// k counts from 1 at either end, and the head is returned. LC 1721 lets you swap the two
-// values; this version moves the nodes themselves. If k is less than 1 or larger than the
-// length, the list comes back unchanged.
-//
-// To move a node you must change the link that points at it, and that link lives in the node
-// before it. So walk to the kth node from the head, keeping the node before it. For the kth
-// node from the end, start one pointer on the kth node and one on the head, and move both
-// until the first is on the last node: the second has then moved the same distance and sits k
-// from the end. The swap has two extra cases: either node may be the head, which has no node
+// The one idea: to move a node you must change the link that points at it, and that link lives
+// in the node before it. So walk to the kth node from the head, keeping the node before it. For
+// the kth node from the end, start one pointer on the kth node and one on the head, and move
+// both until the first is on the last node: the second has then moved the same distance and sits
+// k from the end. The swap has two extra cases: either node may be the head, which has no node
 // before it, and the two may be neighbours.
+//
+// Time: O(n) -- one walk to the kth node, then one walk to the end.
+// Space: O(1) -- a few pointers.
 
 public final class SwapKthNodes {
-  // Time Complexity: O(n), one walk to the kth node, then one walk to the end
-  // Space Complexity: O(1)
 
   public static ListNode swapKth(ListNode head, int k) {
 
     if (head == null || k < 1) {
-      return head;
+      return head; // BASE: nothing to swap
     }
 
     // 1. walk to the kth node from the head, keeping the node before it.
     // k = 1 must leave currX ON the head, so the loop runs k - 1 times
     ListNode prevX = null;
     ListNode currX = head;
-    for (int i = 1; i < k && currX != null; i++) {
+    for (int i = 1; i < k && currX != null; i++) { // WALK k - 1 steps
       prevX = currX;
       currX = currX.next;
     }
@@ -49,7 +49,7 @@ public final class SwapKthNodes {
     // out the second has travelled the same distance and sits k from the end
     ListNode prevY = null;
     ListNode currY = head;
-    for (ListNode node = currX; node.next != null; node = node.next) {
+    for (ListNode node = currX; node.next != null; node = node.next) { // WALK both to the end
       prevY = currY;
       currY = currY.next;
     }
@@ -70,24 +70,24 @@ public final class SwapKthNodes {
       // y comes first: swap the roles so only one adjacency case is left
       return swap(head, prevY, y, prevX, x);
     }
-    ListNode afterY = y.next; // save before y.next is overwritten
+    ListNode afterY = y.next; // SAVE before y.next is overwritten
     if (prevX != null) {
-      prevX.next = y;
+      prevX.next = y; // the node before x now leads to y
     } else {
-      head = y;
+      head = y; // x was the head: y is the new head
     }
     if (prevY == x) {
       // x sits immediately before y
       y.next = x;
     } else {
       if (prevY != null) {
-        prevY.next = x;
+        prevY.next = x; // the node before y now leads to x
       } else {
-        head = x;
+        head = x; // y was the head: x is the new head
       }
       y.next = x.next;
     }
-    x.next = afterY;
+    x.next = afterY; // x takes y's old place in the chain
     return head;
   }
 

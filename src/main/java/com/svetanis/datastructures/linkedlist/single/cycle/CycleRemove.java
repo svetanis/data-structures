@@ -8,25 +8,24 @@ import com.svetanis.datastructures.linkedlist.single.ListNode;
 
 // Remove the Cycle from a Linked List
 //
-// given a Singly LinkedList
-// find whether the SLL contains a loop
-// and if loop is present, remove it
-// The list is changed in place and nothing is returned: afterwards it holds the same nodes
-// in the same order, and the last one points to null instead of back into the list.
+// Input: the head of a singly linked list that may have a cycle. The list is changed in place
+// and nothing is returned: afterwards it holds the same nodes in the same order, and the last
+// one points to null instead of back into the list. A list without a cycle is not changed.
 //
-// Find where the cycle starts, as in Linked List Cycle II (LC 142): slow and fast meet on a
-// node inside the cycle; then one pointer from the head and one from the meeting point,
-// one node per turn each, meet on the cycle's first node. The node whose next is that first
-// node is the last node of the list, and its next is the one link to set to null.
+// The one idea: find where the cycle starts, as in Linked List Cycle II (LC 142): slow and fast
+// meet on a node inside the cycle; then one pointer from the head and one from the meeting
+// point, one node per turn each, meet on the cycle's first node. The node whose next is that
+// first node is the last node of the list, and its next is the one link to set to null.
+//
+// Time: O(n) -- find the meeting point, then the start, then one walk round the cycle.
+// Space: O(1) -- a few pointers.
 
 public final class CycleRemove {
-  // Time Complexity: O(n), find the meeting point, the start, then one walk round the cycle
-  // Space Complexity: O(1), a few pointers
 
   public static void cycleRemove(ListNode head) {
-	  
+
     if (head == null || head.next == null) {
-      return;
+      return; // BASE: no node, or one node that does not point at itself, has no cycle to cut
     }
 
     ListNode slow = head;
@@ -34,9 +33,9 @@ public final class CycleRemove {
 
     // find the meeting point
     while (fast != null && fast.next != null) {
-      slow = slow.next;
-      fast = fast.next.next;
-      if (slow == fast) {
+      slow = slow.next; // STEP: one node
+      fast = fast.next.next; // STEP: two nodes
+      if (slow == fast) { // MEET
         cut(head, slow);
         return;
       }
@@ -51,7 +50,7 @@ public final class CycleRemove {
   // the node pointing AT the start, which is the link to break.
   private static void cut(ListNode head, ListNode meeting) {
     ListNode start = head;
-    while (start != meeting) {
+    while (start != meeting) { // WALK both one node per turn until they meet on the start
       start = start.next;
       meeting = meeting.next;
     }
@@ -59,12 +58,12 @@ public final class CycleRemove {
     while (tail.next != start) { // stop on the node that points back AT the start
       tail = tail.next;
     }
-    tail.next = null; // the only link that closed the cycle
+    tail.next = null; // CUT: the only link that closed the cycle
   }
 
   public static void main(String[] args) {
     ListNode head = fromList(asList(50, 20, 15, 4, 10));
-    print(head);
+    print(head); // 50 20 15 4 10
     // create a loop for testing
     head.next.next.next.next.next = head.next.next;
     cycleRemove(head);

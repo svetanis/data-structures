@@ -9,9 +9,9 @@ public final class Nodes {
 
   public static Node push(Node head, int data) {
     Node node = new Node(data);
-    node.down = head;
+    node.down = head; // LINK the new node on top of the old column
     head = node;
-    return head;
+    return head; // RETURN the new top
   }
 
 
@@ -21,10 +21,10 @@ public final class Nodes {
     Node curr = null;
     for (int i = 0; i < n; ++i) {
       if (head == null) {
-        head = new Node();
+        head = new Node(); // the first node is the head
         curr = head;
       } else {
-        curr.next = new Node();
+        curr.next = new Node(); // APPEND one node per value
         curr = curr.next;
       }
       curr.val = a[i];
@@ -36,16 +36,16 @@ public final class Nodes {
 
   public static void printDown(Node node) {
     while (node != null) {
-      System.out.print(node + " ");
-      node = node.down;
+      System.out.print(node + " "); // PRINT the value
+      node = node.down; // WALK down
     }
     System.out.println();
   }
 
   public static void printNext(Node node) {
     while (node != null) {
-      System.out.print(node + " ");
-      node = node.next;
+      System.out.print(node + " "); // PRINT the value
+      node = node.next; // WALK right
     }
     System.out.println();
   }

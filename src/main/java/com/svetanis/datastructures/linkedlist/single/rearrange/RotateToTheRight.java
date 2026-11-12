@@ -8,31 +8,32 @@ import com.svetanis.datastructures.linkedlist.single.ListNode;
 
 // 61. Rotate List
 //
-// given a Singly LinkedList,
-// rotate the SLL clockwise
-// by k nodes
+// Input: the head of a list and k. On LeetCode: 0 <= number of nodes <= 500, -100 <= val <= 100,
+// 0 <= k <= 2 * 10^9. Rotate the list clockwise by k nodes: move the last k nodes, in their
+// order, to the front and return the new head: 1 2 3 4 5 with k = 2 becomes 4 5 1 2 3. k may be
+// larger than the length.
 //
-// Move the last k nodes, in their order, to the front and return the new head: 1 2 3 4 5 with
-// k = 2 becomes 4 5 1 2 3. k may be larger than the length.
+// The one idea: rotating by the length n puts every node back where it was, so only k % n
+// matters. Then two pointers held k nodes apart: when fast is on the last node, slow is on the
+// node just before the last k. Cut after slow, and point the last node at the old head.
 //
-// Rotating by the length n gives the same list back, so only k % n matters. Then two pointers
-// held k nodes apart: when fast is on the last node, slow is on the node just before the last
-// k. Cut after slow, and point the last node at the old head.
+// Time: O(n) -- one pass to count, one to move fast k nodes, one for both to reach the end.
+// Space: O(1) -- a few pointers.
+//
+// Siblings: RotateToTheLeft turns the other way and does not reduce k by the length.
 
 public final class RotateToTheRight {
-  // Time Complexity: O(n), one pass to count, one to find the cut
-  // Space Complexity: O(1)
 
   public static ListNode rotate(ListNode head, int k) {
     // 1. check for edge cases
     if (head == null || head.next == null) {
-      return head;
+      return head; // BASE: nothing to rotate
     }
     // 2. calculate the length
     int n = size(head);
 
     // 3. adjust k
-    k = k % n;
+    k = k % n; // REDUCE: n rotations bring every node home
 
     // 4. early exit for k = 0
     if (k == 0) {
@@ -42,26 +43,26 @@ public final class RotateToTheRight {
     ListNode fast = head;
     ListNode slow = head;
     // 6. move fast pointer by k
-    for (int i = 0; i < k; i++) {
+    for (int i = 0; i < k; i++) { // GAP: fast gets k nodes ahead of slow
       fast = fast.next;
     }
     // 7. move both pointers
     // until fast reaches the end
-    while (fast.next != null) {
+    while (fast.next != null) { // WALK both until fast is on the last node
       fast = fast.next;
       slow = slow.next;
     }
     // 8. perform rotation
     ListNode newHead = slow.next; // save before the cut: the first of the last k nodes
-    slow.next = null; // cut: slow is the new last node
-    fast.next = head; // the old last node points at the old head
+    slow.next = null; // CUT: slow is the new last node
+    fast.next = head; // JOIN: the old last node points at the old head
     return newHead;
   }
 
   private static int size(ListNode node) {
     int count = 0;
     while (node != null) {
-      count++;
+      count++; // COUNT one node
       node = node.next;
     }
     return count;

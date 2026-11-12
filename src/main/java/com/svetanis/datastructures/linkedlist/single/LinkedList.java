@@ -2,17 +2,21 @@ package com.svetanis.datastructures.linkedlist.single;
 
 // 707. Design Linked List
 //
-// A list of ints with get, addAtHead, addAtTail, addAtIndex and deleteAtIndex, where index 0
-// is the first node. get returns -1 for an index outside the list. addAtIndex with an index
-// past the end, and deleteAtIndex with an index outside the list, change nothing.
+// Input: a list of ints with get(index), addAtHead(val), addAtTail(val), addAtIndex(index, val)
+// and deleteAtIndex(index), where index 0 is the first node. get returns -1 for an index outside
+// the list. addAtIndex with an index past the end, and deleteAtIndex with an index outside the
+// list, change nothing. On LeetCode: 0 <= index, val <= 1000, at most 2000 calls.
 //
-// A fake node sits in front of the first real node, so every insert and every delete
-// changes the next of the node just before the position, even at index 0. size is kept up
-// to date on every change, so checking an index needs no walk.
+// The one idea: one node holds a value and the arrow to the next node. The change for every
+// insert and every delete is the same: set the next arrow of the node just before the position.
+// The first real node has no node before it, so a fake node sits in front of it; then index 0
+// is no special case. size is kept up to date on every change, so checking an index needs no walk.
+//
+// Time: O(index) per call -- a walk from the fake node to the position; addAtTail is O(n) because
+//   its position is the end.
+// Space: O(n) -- one node per value held.
 
 public class LinkedList {
-	// Time Complexity: O(index) per call, a walk from the fake node to the position; addAtTail is O(n)
-	// Space Complexity: O(n), one node per value held
 
 	private int size;
 	private ListNode dummyHead;
@@ -23,10 +27,10 @@ public class LinkedList {
 
 	public int get(int index) {
 		if (index < 0 || index >= size) {
-			return -1;
+			return -1; // outside the list
 		}
 		ListNode node = dummyHead.next;
-		while (index-- > 0) {
+		while (index-- > 0) { // WALK index nodes from the first real node
 			node = node.next;
 		}
 		return node.val;
@@ -48,20 +52,20 @@ public class LinkedList {
 		while (index-- > 0) { // index steps from the fake node: the node before the position
 			node = node.next;
 		}
-		node.next = new ListNode(val, node.next);
+		node.next = new ListNode(val, node.next); // LINK: the new node takes over the old next
 		size++;
 	}
 
 	public void deleteAtIndex(int index) {
 		if (index < 0 || index >= size) {
-			return;
+			return; // outside the list: nothing to delete
 		}
 		ListNode node = dummyHead;
-		while (index-- > 0) {
+		while (index-- > 0) { // WALK to the node before the one to delete
 			node = node.next;
 		}
 		ListNode toDelete = node.next;
-		node.next = toDelete.next;
+		node.next = toDelete.next; // SKIP the deleted node
 		toDelete.next = null;
 		size--;
 	}

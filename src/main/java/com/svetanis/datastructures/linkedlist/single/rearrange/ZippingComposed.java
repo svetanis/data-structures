@@ -7,20 +7,26 @@ import com.svetanis.datastructures.linkedlist.single.ListNode;
 
 // 143. Reorder List
 //
-// Rearrange L0 -> L1 -> ... -> Ln-1 -> Ln into L0 -> Ln -> L1 -> Ln-1 -> L2 -> Ln-2 -> ...,
-// moving nodes, not values.
+// Input: the head of a list L0 -> L1 -> ... -> Ln-1 -> Ln. On LeetCode: 1 <= number of nodes <=
+// 5 * 10^4, 1 <= val <= 1000. Rearrange it in place into L0 -> Ln -> L1 -> Ln-1 -> L2 -> Ln-2
+// -> ..., moving nodes, not values; nothing is returned. The list must have at least one node.
 //
-// Built from three methods that each solve a problem on their own: the middle (876), the
+// The one idea: the new order takes one node from the front, then one from the back, then the
+// next from the front, and a singly linked list cannot be read from the back. So turn the back
+// around. Built from three methods that each solve a problem on their own: the middle (876), the
 // reversal (206), and a weave that is the merge of 21 with the comparison taken out, one node
-// from each half in turn. Zipping does the same three steps inline and weaves in place.
+// from each half in turn.
 //
 // The middle here is the second of the two on an even length, so the first half can be two
 // nodes longer than the second. The weave still comes out right: those two nodes are
 // neighbours at the end of the answer, and the LEFTOVER line attaches them as they are.
+//
+// Time: O(n) -- each of the three steps is one pass over the list or half of it.
+// Space: O(1) -- the halves are relinked in place.
+//
+// Siblings: Zipping does the same three steps inline and weaves in place, and returns the head.
 
 public final class ZippingComposed {
-	// Time Complexity: O(n)
-	// Space Complexity: O(1)
 
 	public static void reorder(ListNode head) {
 		ListNode middle = middle(head); // MIDDLE: the last node of the first half

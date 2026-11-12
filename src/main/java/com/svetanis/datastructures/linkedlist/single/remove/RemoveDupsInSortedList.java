@@ -8,19 +8,26 @@ import com.svetanis.datastructures.linkedlist.single.ListNode;
 
 // 83. Remove Duplicates from Sorted List
 //
-// The list is sorted, so equal values sit next to each other. Keep one node of every value
-// and return the head.
+// Input: the head of a sorted singly linked list. LeetCode: 0 <= n <= 300 nodes, values
+// -100..100, sorted ascending. Returns: the head after every repeated value is cut down to one
+// node, so each value appears once.
 //
-// curr is a node that stays in the list. While the node after it has the same value, unlink
-// that next node and keep curr where it is, because the new next node may hold the same value
-// too. Only when the next value is different does curr move on to it.
+// The one idea: the list is sorted, so equal values sit next to each other, in a run. curr is a
+// node that stays in the list. While the node after it has the same value, unlink that next
+// node and keep curr where it is, because the new next node may hold the same value too. Only
+// when the next value is different does curr move on to it. A run of any length shrinks to its
+// first node, and the first node of the list is never removed, so no fake node is needed.
+//
+// Time: O(n) -- each node is looked at once; every step either unlinks a node or moves curr.
+// Space: O(1) -- nodes are unlinked in place.
+//
+// Siblings: RemoveDupsInSortedListII (LC 82) removes a repeated value completely instead of
+// keeping one copy, so the head can go and it needs a fake node.
 
 public final class RemoveDupsInSortedList {
-	// Time Complexity: O(n), each node is looked at once
-	// Space Complexity: O(1), nodes are unlinked in place
 
 	public static ListNode remove(ListNode head) {
-		ListNode curr = head;
+		ListNode curr = head; // KEEP: curr is a node that stays
 		while (curr != null && curr.next != null) { // STOP when there is no next node to compare
 			if (curr.val == curr.next.val) {
 				curr.next = curr.next.next; // SKIP the repeat; curr stays, the new next may repeat too
@@ -28,7 +35,7 @@ public final class RemoveDupsInSortedList {
 				curr = curr.next; // MOVE: the next value is different, so it stays
 			}
 		}
-		return head;
+		return head; // RETURN: the first node of a run is kept, so head never changes
 	}
 
 	public static void main(String[] args) {

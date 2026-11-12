@@ -5,28 +5,31 @@ import static com.svetanis.datastructures.linkedlist.single.flatten.Nodes.printN
 
 // Flatten a Multilevel Linked List, Level by Level
 //
-// Each node has a next pointer to the node on its right and a down pointer to the head of
-// another list, or null. Join every list into one list along next pointers: the first row,
-// then each list one level down, left to right, then the level below that, and so on. The
-// list is changed in place and nothing is returned; down pointers are left as they were.
+// Input: the head of a list in which each node has a next pointer to the node on its right and
+// a down pointer to the head of another list, or null; those lists can have down lists of their
+// own. The list is changed in place and nothing is returned: every list is joined into one list
+// along next pointers, the first row, then each list one level down, left to right, then the
+// level below that, and so on. Down pointers are left as they were.
 //
-// tail holds the last node of the joined list. curr walks the joined list from the head;
-// whenever curr has a down list, that list is attached after tail and tail moves to its end.
-// A list attached earlier is walked earlier, so its own down lists are attached earlier too,
-// and the levels come out in order.
+// The one idea: the joined list is built at its end while it is being read. tail holds the last
+// node of the joined list, and curr walks the joined list from the head. Whenever curr has a
+// down list, that list is attached after tail and tail moves to the end of it. A list attached
+// earlier is walked earlier, so its own down lists are attached earlier too, and the levels come
+// out in order, as in a breadth-first walk.
+//
+// Time: O(n) -- curr passes each node once, and so does the walk to each new tail.
+// Space: O(1) -- a few pointers.
 
 public final class FlattenMultiLevelList {
-	// Time Complexity: O(n), curr passes each node once, and so does the walk to each new tail
-	// Space Complexity: O(1), a few pointers
 
 	public static void flatten(Node head) {
 		if (head == null) {
-			return;
+			return; // BASE: nothing to join
 		}
 
 		// find tail node of first level linked list
 		Node tail = head;
-		while (tail.next != null) {
+		while (tail.next != null) { // WALK to the end of the first row
 			tail = tail.next;
 		}
 
@@ -37,15 +40,15 @@ public final class FlattenMultiLevelList {
 			// if current node has child
 			if (curr.down != null) {
 				// then append the child at the end of current list
-				tail.next = curr.down;
+				tail.next = curr.down; // ATTACH the down list after tail
 				// and update the tail to new last node
 				Node temp = curr.down;
-				while (temp.next != null) {
+				while (temp.next != null) { // WALK to the end of the attached list
 					temp = temp.next;
 				}
-				tail = temp;
+				tail = temp; // MOVE tail to the new last node
 			}
-			curr = curr.next;
+			curr = curr.next; // WALK the joined list
 		}
 	}
 
@@ -57,14 +60,14 @@ public final class FlattenMultiLevelList {
 	}
 
 	private static Node createList() {
-		int a1[] = { 10, 5, 12, 7, 11 };
-		int a2[] = { 4, 20, 13 };
-		int a3[] = { 17, 6 };
-		int a4[] = { 9, 8 };
-		int a5[] = { 19, 15 };
-		int a6[] = { 2 };
-		int a7[] = { 16 };
-		int a8[] = { 3 };
+		int[] a1 = { 10, 5, 12, 7, 11 };
+		int[] a2 = { 4, 20, 13 };
+		int[] a3 = { 17, 6 };
+		int[] a4 = { 9, 8 };
+		int[] a5 = { 19, 15 };
+		int[] a6 = { 2 };
+		int[] a7 = { 16 };
+		int[] a8 = { 3 };
 
 		// create 8 linked lists
 		Node head1 = fromArray(a1);

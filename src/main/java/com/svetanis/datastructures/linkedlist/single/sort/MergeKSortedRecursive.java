@@ -1,33 +1,37 @@
 package com.svetanis.datastructures.linkedlist.single.sort;
 
-import static com.google.common.collect.ImmutableList.copyOf;
-import static com.google.common.collect.Lists.newArrayList;
 import static com.svetanis.datastructures.linkedlist.single.Nodes.fromArray;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import com.google.common.collect.ImmutableList;
 import com.svetanis.datastructures.linkedlist.single.ListNode;
 import com.svetanis.datastructures.linkedlist.single.Nodes;
 
 // 23. Merge k Sorted Lists
 //
-// Given a list of k sorted singly linked lists (any of them may be empty, and k may be 0),
-// merge them into one sorted list made of their own nodes and return its head.
+// Input: nodes -- a list of k sorted singly linked lists (any of them may be empty, and k may be
+// 0). On LeetCode: 0 <= k <= 10^4, each list sorted in increasing order, at most 10^4 nodes in
+// all, each value -10^4 to 10^4. Returns the head of one sorted list made of their own nodes.
 //
-// Merges the lists in pairs: each half of the lists is merged recursively, then the two
-// results are merged. Every node takes part in about log2(k) merges, one per level of
-// halving. Folding the lists into one running result instead walks the early nodes again
-// for every list after them, which grows with k times the total length.
-// A range holding a single list needs no merging: that list is already sorted, and an
-// empty list arrives as null and is returned as null.
+// The one idea: merging two sorted lists is easy, so merge the k lists in pairs. Each half of the
+// lists is merged recursively, then the two results are merged. A range holding a single list
+// needs no merging: that list is already sorted, and an empty list arrives as null and is
+// returned as null. Every node takes part in about log2(k) merges, one per level of halving.
+// Folding the lists into one running result instead walks the early nodes again for every list
+// after them, which grows with k times the total length.
+//
+// Time: O(N log k) -- N nodes in all; each level of halving merges every node once, and there are
+// about log2(k) levels
+// Space: O(N) -- the two-list merge recurses once per node it places, so at most N calls deep
+//
+// Siblings: MergeKSortedPriorityQueue takes the smallest front node from a heap instead, in
+// O(N log k) time and O(k) space.
 
 public final class MergeKSortedRecursive {
-	// Time Complexity: O(N log k), N nodes in all, k lists
-	// Space Complexity: O(N), the two-list merge recurses once per node it places
 
 	public static ListNode mergeKSorted(List<ListNode> nodes) {
-		if (nodes.isEmpty()) { // k = 0: no range to split
+		if (nodes.isEmpty()) { // BASE: k = 0, no range to split
 			return null;
 		}
 		return mergeRange(nodes, 0, nodes.size() - 1);
@@ -35,25 +39,25 @@ public final class MergeKSortedRecursive {
 
 	// merges nodes[left..right], both ends inclusive
 	private static ListNode mergeRange(List<ListNode> nodes, int left, int right) {
-		if (left == right) { // one list: already sorted
+		if (left == right) { // BASE: one list is already sorted
 			return nodes.get(left);
 		}
-		int mid = left + (right - left) / 2;
+		int mid = left + (right - left) / 2; // SPLIT the range of lists in two halves
 		ListNode first = mergeRange(nodes, left, mid);
 		ListNode second = mergeRange(nodes, mid + 1, right);
-		return merge(first, second);
+		return merge(first, second); // MERGE the two sorted results
 	}
 
 	// merges two sorted lists, reusing their nodes
 	private static ListNode merge(ListNode node1, ListNode node2) {
 		ListNode merged = null;
-		if (node1 == null) {
+		if (node1 == null) { // BASE: one list is used up, the other is the rest
 			return node2;
 		}
 		if (node2 == null) {
 			return node1;
 		}
-		if (node1.val <= node2.val) {
+		if (node1.val <= node2.val) { // TAKE the smaller front node; the rest is merged recursively
 			merged = node1;
 			merged.next = merge(node1.next, node2);
 		} else {
@@ -69,7 +73,7 @@ public final class MergeKSortedRecursive {
 		Nodes.print(merged); // 1 2 2 3 3 4 4 5 5 5 5 6 6 6 7 7 8 8 9 9 10 10 11 11 12 13 14 15
 	}
 
-	private static ImmutableList<ListNode> createList() {
+	private static List<ListNode> createList() {
 		int[] a1 = { 1, 2, 3, 5, 5, 6 };
 		int[] a2 = { 4, 5, 6, 7, 8, 9, 10, 11 };
 		int[] a3 = { 3, 5, 7, 9, 11, 13, 15 };
@@ -78,11 +82,11 @@ public final class MergeKSortedRecursive {
 		ListNode head2 = fromArray(a2);
 		ListNode head3 = fromArray(a3);
 		ListNode head4 = fromArray(a4);
-		List<ListNode> heads = newArrayList();
+		List<ListNode> heads = new ArrayList<>();
 		heads.add(head1);
 		heads.add(head2);
 		heads.add(head3);
 		heads.add(head4);
-		return copyOf(heads);
+		return heads;
 	}
 }
