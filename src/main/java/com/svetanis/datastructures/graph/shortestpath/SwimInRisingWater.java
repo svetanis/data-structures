@@ -4,11 +4,29 @@ import java.util.ArrayDeque;
 import java.util.Deque;
 
 // 778. Swim in Rising Water
-// BFS + Binary search
+//
+// Input: grid -- an n x n grid; grid[i][j] is the elevation of square (i, j). At time t the water
+// is t deep everywhere, and you can swim between two neighbouring squares (up, down, left or
+// right) only if both have elevation at most t. You start at the top-left square. Returns the
+// least time at which you can reach the bottom-right square. On LeetCode: 1 <= n <= 50,
+// 0 <= grid[i][j] < n * n, every value is different.
+//
+// The one idea: ask a yes/no question instead of searching for the best time. "Can the bottom-right
+// square be reached when the water is t deep?" is a plain flood fill that refuses any square higher
+// than t. It is monotone: if t works, every larger t works. So the answer is the smallest t that
+// works, found by binary search between the start's own elevation and the highest square on the
+// board. The highest square is read from the grid itself rather than taken to be n * n - 1,
+// because LC's promise of distinct values is the only reason those two agree: {{3,5},{5,5}} needs
+// 5, and a bound of n * n - 1 = 3 would stop the search at 3.
+//
+// Time: O(n^2 * log(n^2)) = O(n^2 * log n) -- about log(n^2) rounds, each one flood fill of n^2
+// squares.
+// Space: O(n^2) -- the visited board and the queue.
+//
+// Siblings: SwimInRisingWaterDijkstra finds the same answer in one pass, always stepping onto the
+// lowest square next to the area already reached.
 
 public final class SwimInRisingWater {
-	// Time Complexity: O(n^2 * log n);
-	// Space Complexity: O(n^2)
 
 	private static final int[] dx = { -1, 0, 1, 0 };
 	private static final int[] dy = { 0, -1, 0, 1 };
@@ -19,19 +37,16 @@ public final class SwimInRisingWater {
 		while (left < right) {
 			int mid = left + (right - left) / 2;
 			if (canSwim(grid, mid)) {
-				right = mid;
+				right = mid; // KEEP: mid works, so the answer is mid or less
 			} else {
-				left = mid + 1;
+				left = mid + 1; // SKIP: mid fails, so the answer is above it
 			}
 		}
-		return left;
+		return left; // RETURN: the smallest depth that works
 	}
 
 	private static int highest(int[][] grid) {
-		// the answer can never exceed the deepest cell on the board. n * n - 1
-		// is that same bound spelled from LC 778's promise that the grid holds
-		// each of 0 .. n*n-1 exactly once, and it is too small the moment a
-		// value repeats -- {{3,5},{5,5}} needs 5 and n * n - 1 caps it at 3
+		// the answer can never exceed the highest square on the board
 		int max = grid[0][0];
 		for (int[] row : grid) {
 			for (int cell : row) {
@@ -43,7 +58,7 @@ public final class SwimInRisingWater {
 
 	private static boolean canSwim(int[][] grid, int target) {
 		if (grid[0][0] > target) {
-			return false;
+			return false; // BASE: the start itself is under water too deep to stand in
 		}
 		int n = grid.length;
 		boolean[][] visited = new boolean[n][n];
@@ -55,7 +70,7 @@ public final class SwimInRisingWater {
 			int row = node[0];
 			int col = node[1];
 			if (row == n - 1 && col == n - 1) {
-				return true;
+				return true; // RETURN: the far corner is reachable
 			}
 			for (int i = 0; i < 4; i++) {
 				int x = row + dx[i];
@@ -67,7 +82,7 @@ public final class SwimInRisingWater {
 					continue;
 				}
 				if (grid[x][y] > target) {
-					continue;
+					continue; // SKIP: too high to swim onto at this depth
 				}
 				visited[x][y] = true;
 				dq.add(new int[] { x, y });
@@ -88,10 +103,7 @@ public final class SwimInRisingWater {
 				{ 10, 9, 8, 7, 6 } };
 		System.out.println(swimInWater(g2)); // 16
 
-		// two cells hold 5 and the deepest is 5, but n * n - 1 is 3, so a
-		// search that stops at 3 answers 3 and calls a board unswimmable
-		// that is not. LC 778 promises every value 0 .. n*n-1 appears once,
-		// which is the only reason the old bound was ever right
+		// repeated values are outside LC 778; the highest square is 5, so the answer is 5
 		int[][] g3 = { { 3, 5 }, { 5, 5 } };
 		System.out.println(swimInWater(g3)); // 5
 	}

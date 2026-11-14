@@ -1,14 +1,14 @@
 package com.svetanis.datastructures.graph.unionfind.impl;
 
-import static com.google.common.collect.ImmutableList.copyOf;
-import static com.google.common.collect.Lists.newArrayList;
+import java.util.Arrays;
 
-import java.util.List;
-
-import com.google.common.collect.ImmutableList;
-import com.svetanis.java.base.Pair;
-
-// RUNG 4 of four, and the one to use. TWO ideas, not one:
+// Union-find with union by rank and path halving: the fourth of four union-find structures.
+//
+// Input: n sites numbered 0..n-1, each in a component of its own; then any mix of union(p, q) --
+// join the components of p and q -- and areConnected(p, q) -- are p and q in one component.
+// count() is the number of components left.
+//
+// The one idea: TWO ideas, not one:
 //   union by RANK -- the shallower tree goes underneath. rank is an
 //     upper bound on depth, not a count of nodes, which is where it
 //     differs from WeightedQuickUnion's size
@@ -19,15 +19,18 @@ import com.svetanis.java.base.Pair;
 // once compression starts shortening paths, rank stops being an exact
 // depth. that is why it is only ever compared, never read as a
 // measurement.
+//
+// Time: find O(alpha(n)) amortised, union O(alpha(n)) amortised -- alpha is the inverse Ackermann
+// function, at most 4 or 5 for any n that fits in this universe. NOT the lg n bound of
+// WeightedQuickUnion, which this file improves on by flattening the path it just walked.
+// Space: O(n) -- the parent and rank arrays.
+//
+// RUNG 4 of four, and the one to use. Siblings: QuickFind, QuickUnion, WeightedQuickUnion.
 public final class UF {
-  // find:  O(alpha(n)) amortized -- inverse Ackermann, at most 4 or 5
-  // union: O(alpha(n)) amortized -- for any n that fits in this universe
-  // NOT the lg n bound below: that bound is WeightedQuickUnion's, and it
-  // is what this file improves on by flattening the path it just walked
 
   private int[] parent; // parent link (site indexed)
   // parent[i] = parent of i
-  private byte[] rank; // size of component for roots
+  private byte[] rank; // rank of the tree for roots (an upper bound on its height)
   // rank[i] = rank of subtree rooted at i (never more than 31)
   private int count; // num of components
 
@@ -64,7 +67,7 @@ public final class UF {
     // find component name
     while (p != parent[p]) {
       // path compression by halving
-      parent[p] = parent[parent[p]];
+      parent[p] = parent[parent[p]]; // HALVE: point at the grandparent
       p = parent[p];
     }
     return p;
@@ -80,47 +83,38 @@ public final class UF {
     // make root of smaller rank point
     // to root of larger rank
     if (rank[rootP] < rank[rootQ]) {
-      parent[rootP] = rootQ;
+      parent[rootP] = rootQ; // JOIN: lower rank under higher
     } else if (rank[rootP] > rank[rootQ]) {
       parent[rootQ] = rootP;
     } else {
       parent[rootQ] = rootP;
-      rank[rootP]++;
+      rank[rootP]++; // RAISE: only when equal ranks meet
     }
-    count--;
+    count--; // COUNT: one component fewer
   }
 
   public static void main(String[] args) {
     int N = 10;
     UF uf = new UF(N);
-    List<Pair<Integer, Integer>> pairs = init();
-    for (Pair<Integer, Integer> pair : pairs) {
-      int p = pair.getLeft();
-      int q = pair.getRight();
+    int[][] pairs = init();
+    for (int[] pair : pairs) {
+      int p = pair[0];
+      int q = pair[1];
       // ignore if connected
       if (uf.areConnected(p, q)) {
-        continue;
+        continue; // SKIP: the pair adds nothing
       }
       // combine components
-      uf.union(p, q);
-      System.out.println(pair);
+      uf.union(p, q); // JOIN the two components
+      // [4, 3] [3, 8] [6, 5] [9, 4] [2, 1] [5, 0] [7, 2] [6, 1], one per line
+      System.out.println(Arrays.toString(pair));
     }
-    System.out.println(uf.count() + " components");
+    System.out.println(uf.count() + " components"); // 2 components
   }
 
-  private static ImmutableList<Pair<Integer, Integer>> init() {
-    List<Pair<Integer, Integer>> list = newArrayList();
-    list.add(Pair.build(4, 3));
-    list.add(Pair.build(3, 8));
-    list.add(Pair.build(6, 5));
-    list.add(Pair.build(9, 4));
-    list.add(Pair.build(2, 1));
-    list.add(Pair.build(8, 9));
-    list.add(Pair.build(5, 0));
-    list.add(Pair.build(7, 2));
-    list.add(Pair.build(6, 1));
-    list.add(Pair.build(1, 0));
-    list.add(Pair.build(6, 7));
-    return copyOf(list);
+  // the 11 pairs of a 10-site example: 8 of them join two components, 3 are already joined
+  private static int[][] init() {
+    return new int[][] { { 4, 3 }, { 3, 8 }, { 6, 5 }, { 9, 4 }, { 2, 1 }, { 8, 9 }, { 5, 0 }, { 7, 2 }, { 6, 1 },
+        { 1, 0 }, { 6, 7 } };
   }
 }

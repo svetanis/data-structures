@@ -1,21 +1,24 @@
 package com.svetanis.datastructures.graph.unionfind.impl;
 
-import static com.google.common.collect.ImmutableList.copyOf;
-import static com.google.common.collect.Lists.newArrayList;
+import java.util.Arrays;
 
-import java.util.List;
-
-import com.google.common.collect.ImmutableList;
-import com.svetanis.java.base.Pair;
-
-// RUNG 1 of four. see QuickUnion, WeightedQuickUnion and UF beside it.
-// id[i] IS the component label, so find is one array read -- and that
-// is exactly why union is expensive: to merge two components, every
-// member of one of them has to be relabelled.
+// Quick-find: the first of four union-find structures.
+//
+// Input: n sites numbered 0..n-1, each in a component of its own; then any mix of union(p, q) --
+// join the components of p and q -- and areConnected(p, q) -- are p and q in one component.
+// count() is the number of components left.
+//
+// The one idea: id[i] IS the component label of site i, so find is one array read -- and that is
+// exactly why union is expensive: to merge two components, every member of one of them has to be
+// relabelled, which means scanning the whole array.
+//
+// Time: find O(1); union O(n) -- scans the whole array; n unions therefore cost O(n^2), which is
+// the reason the next rung exists.
+// Space: O(n) -- the id array.
+//
+// RUNG 1 of four. Siblings: QuickUnion (links instead of labels), WeightedQuickUnion (the smaller
+// tree goes under the larger) and UF (weighted, with path halving).
 public final class QuickFind {
-  // find:  O(1)
-  // union: O(n) -- scans the whole array
-  // n unions therefore cost O(n^2), which is the reason rung 2 exists
 
   private int[] id;
   private int count; // num of components
@@ -64,43 +67,34 @@ public final class QuickFind {
     // rename p's component to q's name
     for (int i = 0; i < id.length; i++) {
       if (id[i] == pId) {
-        id[i] = qId;
+        id[i] = qId; // RELABEL: every member of p's component
       }
     }
-    count--;
+    count--; // COUNT: one component fewer
   }
 
   public static void main(String[] args) {
     int n = 10;
     QuickFind uf = new QuickFind(n);
-    List<Pair<Integer, Integer>> pairs = init();
-    for (Pair<Integer, Integer> pair : pairs) {
-      int p = pair.getLeft();
-      int q = pair.getRight();
+    int[][] pairs = init();
+    for (int[] pair : pairs) {
+      int p = pair[0];
+      int q = pair[1];
       // ignore if connected
       if (uf.areConnected(p, q)) {
-        continue;
+        continue; // SKIP: the pair adds nothing
       }
       // combine components
-      uf.union(p, q);
-      System.out.println(pair);
+      uf.union(p, q); // JOIN the two components
+      // [4, 3] [3, 8] [6, 5] [9, 4] [2, 1] [5, 0] [7, 2] [6, 1], one per line
+      System.out.println(Arrays.toString(pair));
     }
-    System.out.println(uf.count() + " components");
+    System.out.println(uf.count() + " components"); // 2 components
   }
 
-  private static ImmutableList<Pair<Integer, Integer>> init() {
-    List<Pair<Integer, Integer>> list = newArrayList();
-    list.add(Pair.build(4, 3));
-    list.add(Pair.build(3, 8));
-    list.add(Pair.build(6, 5));
-    list.add(Pair.build(9, 4));
-    list.add(Pair.build(2, 1));
-    list.add(Pair.build(8, 9));
-    list.add(Pair.build(5, 0));
-    list.add(Pair.build(7, 2));
-    list.add(Pair.build(6, 1));
-    list.add(Pair.build(1, 0));
-    list.add(Pair.build(6, 7));
-    return copyOf(list);
+  // the 11 pairs of a 10-site example: 8 of them join two components, 3 are already joined
+  private static int[][] init() {
+    return new int[][] { { 4, 3 }, { 3, 8 }, { 6, 5 }, { 9, 4 }, { 2, 1 }, { 8, 9 }, { 5, 0 }, { 7, 2 }, { 6, 1 },
+        { 1, 0 }, { 6, 7 } };
   }
 }

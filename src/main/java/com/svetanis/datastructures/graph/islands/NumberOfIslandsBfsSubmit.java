@@ -4,26 +4,30 @@ import java.util.ArrayDeque;
 import java.util.Queue;
 
 // 200. Number of Islands
-
-// the same sweep as NumberOfIslandsMatrixSubmit with the
-// pending cells in a queue instead of on the call stack.
-// takes LC's char[][] and allocates nothing but the queue,
-// so it can be pasted as is.
-
-// NumberOfIslandsMatrixSubmit recurses once per land cell,
-// so a 300x300 grid of solid land -- inside LC's constraints
-// -- asks for 90,000 nested calls and throws
-// StackOverflowError instead of answering. this version has
-// no recursion at all: the queue lives on the heap and holds
-// one band of the island at a time, which on a solid n x n
-// grid never exceeds n cells.
+//
+// Input: g -- an m x n map of characters, '1' for land and '0' for water, exactly as LeetCode
+// gives it. An island is a group of land cells joined by sides (up, down, left or right), and
+// everything off the edge of the grid is water. Returns the number of islands. On LeetCode:
+// 1 <= m, n <= 300, every cell is '0' or '1'.
+//
+// The one idea: the same sweep as NumberOfIslandsMatrixSubmit with the pending cells in a queue
+// instead of on the call stack. A land cell that no earlier walk has marked is the first cell of
+// an island nobody has counted, so the count goes up by one and a breadth-first walk marks every
+// land cell joined to it. visited[r][c] says whether a cell is already spoken for; it is set the
+// moment a cell goes into the queue, never when the walk takes it out, so no cell is queued twice.
+// Marking after the take-out would leave a window in which a cell is queued and unmarked, and
+// every neighbour taken out during that window would queue it again: the same answer with several
+// times the queue traffic. The recursive version asks for up to 90,000 nested calls on a 300 x 300
+// grid of land and throws StackOverflowError; this one has no recursion, so it has no such limit.
+//
+// Time: O(r * c) -- every cell is queued at most once and looks at four sides.
+// Space: O(r * c) -- the boolean[r][c] visited array. The queue itself is only O(r + c): it holds
+// one band of the island at a time, which on a solid n x n grid never exceeds n cells.
+//
+// Siblings: NumberOfIslandsMatrixSubmit is the recursive walk on the same input. It takes LC's
+// char[][] and allocates nothing but the queue and the visited array, so it can be pasted as is.
 
 public final class NumberOfIslandsBfsSubmit {
-	// Time complexity: O(r * c) -- every cell is polled at most once
-	// Space Complexity: O(r * c) -- the boolean[r][c] visited array. the
-	// queue itself is only O(r + c): on a solid n x n grid it peaks at
-	// exactly n. there is no stack depth here, so the array is the
-	// whole cost.
 
 	private static final char WATER = '0';
 
@@ -39,9 +43,9 @@ public final class NumberOfIslandsBfsSubmit {
 		for (int r = 0; r < n; r++) {
 			for (int c = 0; c < m; c++) {
 				if (g[r][c] != WATER && !visited[r][c]) {
-					visited[r][c] = true; // marked before the walk starts,
-					bfs(g, r, c, visited); // never when the walk polls it
-					count++; // the sweep counts, the walk never does
+					visited[r][c] = true; // MARK: the first cell, before the walk starts
+					bfs(g, r, c, visited); // WALK: mark the rest of the island
+					count++; // TAKE: the sweep counts, the walk never does
 				}
 			}
 		}
@@ -59,14 +63,7 @@ public final class NumberOfIslandsBfsSubmit {
 				// same test as the dfs in NumberOfIslandsMatrixSubmit:
 				// in bounds, land, and not already accounted for
 				if (isLand(g, x, y) && !visited[x][y]) {
-					// mark and queue on the same two lines, always.
-					// the mark means "already spoken for, nobody else
-					// needs to queue it", and that is true the moment
-					// the cell goes in. moving it after the poll
-					// leaves a window in which the cell is queued and
-					// unmarked, so every neighbour polled during that
-					// window queues it again -- twice the queue
-					// traffic on a solid grid, same answer, no symptom
+					// MARK and queue on the same two lines, always
 					visited[x][y] = true;
 					queue.add(new int[] { x, y });
 				}
@@ -109,8 +106,8 @@ public final class NumberOfIslandsBfsSubmit {
 				g4[r][c] = '1';
 			}
 		}
-		// the grid that throws StackOverflowError in every
-		// recursive file in this package
+		// a 300 x 300 block of land, LC's largest grid: the recursive
+		// versions of this problem throw StackOverflowError on it
 		System.out.println(count(g4)); // 1
 	}
 }

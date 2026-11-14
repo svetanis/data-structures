@@ -5,48 +5,62 @@ import static java.util.Comparator.comparingInt;
 import java.util.Arrays;
 
 // 1135. Connecting Cities With Minimum Cost
+//
+// Input: n cities numbered 1..n and connections[i] = [x, y, cost], a road that can be built
+// between cities x and y for that cost. On LeetCode: 1 <= n <= 10^4, 1 <= connections.length <=
+// 10^4, x != y, 0 <= cost <= 10^5. The array is sorted in place.
+// Returns the least total cost to build roads so every city can reach every other, or -1 when
+// the given roads cannot join all the cities.
+//
+// The one idea (the same Kruskal method in all three files): the cheapest set of roads never
+// needs a loop, so it is a tree of n - 1 roads. Go through the roads from cheapest to dearest. A
+// road between two cities that are not yet connected is needed: build it. A road between two
+// cities that are already connected would only close a loop: skip it. The cheapest road is never
+// regretted, since a road that joins the same two groups at no lower cost was seen first.
+// "Already connected?" is union-find: every city points toward the root of its group, and two
+// cities are connected when they reach the same root.
+//
+// This file counts EDGES up to n - 1: `count == n - 1` states the fact the problem rests on -- a
+// tree on n nodes has n - 1 edges -- so the stopping rule and the -1 check are the same line read
+// twice, and n == 1 needs no special case (count and n - 1 are both 0). The two methods differ
+// only in how the 1-based city labels meet a 0-based array: one shifts every label down by one,
+// the other leaves the labels alone and gives slot 0 away. The choice is free.
+//
 // The three 1135 files are a ladder, and each rung adds exactly one thing:
 //   1. ConnectCitiesMinCostEdgeCount  -- Kruskal, counting EDGES up to n - 1
 //   2. ConnectCitiesMinCost           -- the same, counting COMPONENTS down to 1
 //   3. ConnectCitiesMinCostCounting   -- rung 2 with the comparison sort replaced
 //                                        by a counting sort on the cost
 // All three return the same answer on every input. Rung 1 is the one to write.
+// The two counts are the same fact from opposite ends: a spanning tree has exactly one
+// component and exactly n - 1 edges.
 //
-// RUNG 1, and the version to carry. `count == n - 1` states the fact the problem
-// rests on -- a tree on n nodes has n - 1 edges -- so the stopping rule and the
-// -1 guard are the same line read twice.
-// Kruskal counting EDGES up to n - 1. ConnectCitiesMinCost counts COMPONENTS down to 1
-// instead; the two stopping rules are the same fact stated from opposite ends, since a
-// spanning tree has exactly n - 1 edges and exactly one component.
-// Both methods here are the same algorithm and differ only in how the 1-based city
-// labels are fitted to a 0-based array -- the choice is free, and worth seeing twice.
+// Time: O(m log m) -- the sort dominates; the union-find walk is nearly free.
+// Space: O(n) -- the parent and size arrays (the sort is in place).
 
 public final class ConnectCitiesMinCostEdgeCount {
-	// Time Complexity: O(m log m) -- the sort dominates; the union-find walk is nearly free
-	// Space Complexity: O(n)
-
 	private DisjointSet ds;
 
 	// cities are 1..n, so every label is shifted down by one to index 0..n-1
 	public int minimumCostShifted(int n, int[][] connections) {
 		this.ds = new DisjointSet(n);
-		Arrays.sort(connections, comparingInt(connection -> connection[2]));
+		Arrays.sort(connections, comparingInt(connection -> connection[2])); // SORT: cheapest road first
 		int total = 0;
-		int count = 0;
+		int count = 0; // COUNT: roads built so far
 		for (int[] connection : connections) {
 			int from = connection[0] - 1;
 			int to = connection[1] - 1;
 			int cost = connection[2];
-			// union is the cycle check and the join in one call
-			if (ds.union(from, to)) {
+			// union is the loop check and the join in one call
+			if (ds.union(from, to)) { // TAKE: not connected yet, build the road
 				total += cost;
 				count += 1;
 			}
 			if (count == n - 1) {
-				break;
+				break; // STOP: a tree on n cities is complete
 			}
 		}
-		// fewer than n - 1 edges taken means the cities were never all joined,
+		// RETURN: fewer than n - 1 roads built means the cities were never all joined,
 		// and the total of a forest is a plausible number that is not an answer.
 		// n == 1 needs no special case: count and n - 1 are both 0.
 		return count < n - 1 ? -1 : total;
@@ -55,19 +69,19 @@ public final class ConnectCitiesMinCostEdgeCount {
 	// the same, leaving the labels alone and giving slot 0 away unused
 	public int minimumCostPadded(int n, int[][] connections) {
 		this.ds = new DisjointSet(n + 1);
-		Arrays.sort(connections, comparingInt(connection -> connection[2]));
+		Arrays.sort(connections, comparingInt(connection -> connection[2])); // SORT: cheapest road first
 		int total = 0;
 		int count = 0;
 		for (int[] connection : connections) {
-			if (ds.union(connection[0], connection[1])) {
+			if (ds.union(connection[0], connection[1])) { // TAKE
 				total += connection[2];
 				count += 1;
 			}
 			if (count == n - 1) {
-				break;
+				break; // STOP
 			}
 		}
-		return count < n - 1 ? -1 : total;
+		return count < n - 1 ? -1 : total; // RETURN
 	}
 
 	public static void main(String[] args) {
@@ -99,10 +113,10 @@ public final class ConnectCitiesMinCostEdgeCount {
 
 		int find(int x) {
 			int root = parent[x];
-			while (root != parent[root]) {
+			while (root != parent[root]) { // WALK: up to the root
 				root = parent[root];
 			}
-			parent[x] = root;
+			parent[x] = root; // COMPRESS: the asked-about city points straight at the root
 			return root;
 		}
 
@@ -112,7 +126,7 @@ public final class ConnectCitiesMinCostEdgeCount {
 			if (ra == rb) {
 				return false;
 			}
-			if (size[ra] > size[rb]) {
+			if (size[ra] > size[rb]) { // JOIN: the smaller group goes under the larger
 				parent[rb] = ra;
 				size[ra] += size[rb];
 			} else {

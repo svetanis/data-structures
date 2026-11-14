@@ -3,11 +3,28 @@ package com.svetanis.datastructures.graph.shortestpath;
 import java.util.Arrays;
 
 // 1334. Find the City With the Smallest Number of Neighbors at a Threshold Distance
-// Dijkstra's Algorithm 
+//
+// Input: n -- the number of cities, labelled 0 to n - 1; edges[i] = { from, to, weight } -- a
+// two-way road of that length; distanceThreshold -- the farthest a city may be to count as a
+// neighbour. Returns the city that can reach the fewest other cities within the threshold along
+// roads; on a tie, the city with the larger label. On LeetCode: 2 <= n <= 100,
+// 1 <= edges.length <= n * (n - 1) / 2, from < to, 1 <= weight, distanceThreshold <= 10^4, every
+// pair of cities appears at most once.
+//
+// The one idea: for each city in turn, find its shortest road distance to every other city, then
+// count the cities within the threshold. dist[c] is the shortest distance found so far from the
+// city being tried to city c. Each round finds the unvisited city with the smallest dist, closest,
+// whose distance is now final, and offers every road out of it as a shorter way to its far end.
+// The graph is a matrix with one slot per pair, so finding closest is a scan of n slots and the
+// whole search is n rounds of n + n steps.
+//
+// Time: O(n^3) -- n starting cities, each running n rounds that scan n slots twice.
+// Space: O(n^2) -- the matrix of road lengths.
+//
+// Siblings: CityWithMinNeighborsFloydWarshall computes every pair's distance in one triple loop
+// and counts afterwards.
 
 public final class CityWithMinNeighborsDijkstra {
-	// Time Complexity: O(n^3)
-	// Space Complexity: O(n^2)
 
 	private static final int INF = 1 << 30;
 
@@ -23,14 +40,14 @@ public final class CityWithMinNeighborsDijkstra {
 		init(n, edges);
 		int min = INF;
 		int index = n;
-		for (int city = n - 1; city >= 0; city--) {
+		for (int city = n - 1; city >= 0; city--) { // WALK: larger labels first, so a tie keeps the larger
 			int reachable = dijkstra(city);
 			if (min > reachable) {
 				min = reachable;
 				index = city;
 			}
 		}
-		return index;
+		return index; // RETURN: the city with the fewest neighbours
 	}
 
 	private void init(int n, int[][] edges) {
@@ -44,9 +61,9 @@ public final class CityWithMinNeighborsDijkstra {
 			int from = edge[0];
 			int to = edge[1];
 			int weight = edge[2];
-			// keep the CHEAPER road, not the last one read. LC 1334 promises
-			// each pair of cities appears once, so plain assignment agrees --
-			// but a matrix has one slot per pair and silently drops the other
+			// BUILD: keep the cheaper road, not the last one read. LC 1334 lists each pair once,
+			// so plain assignment agrees there, but a matrix has one slot per pair and would
+			// silently drop the cheaper of two roads between the same pair
 			graph[from][to] = Math.min(graph[from][to], weight);
 			graph[to][from] = graph[from][to];
 		}
@@ -60,30 +77,29 @@ public final class CityWithMinNeighborsDijkstra {
 			int closest = -1;
 			for (int j = 0; j < n; j++) {
 				if (!visited[j] && (closest == -1 || dist[closest] > dist[j])) {
-					closest = j;
+					closest = j; // PICK: the unvisited city nearest the start
 				}
 			}
 			if (dist[closest] == INF) {
-				// the nearest unvisited city is already unreachable, so every
-				// city still left is too. going on would compute INF + INF,
-				// and two of these overflow past Integer.MAX_VALUE into a
-				// large NEGATIVE number that then reads as a very short path
+				// STOP: the nearest unvisited city is unreachable, so every city left is too.
+				// Going on would compute INF + INF, which overflows past Integer.MAX_VALUE
+				// into a large negative number that then reads as a very short road
 				break;
 			}
 			visited[closest] = true;
 			for (int j = 0; j < n; j++) {
 				if (graph[closest][j] == INF) {
-					// no road between these two, so there is nothing to add
+					// SKIP: no road between these two, so there is nothing to add
 					continue;
 				}
 				int d = dist[closest] + graph[closest][j];
-				dist[j] = Math.min(dist[j], d);
+				dist[j] = Math.min(dist[j], d); // RELAX: a shorter way to j through closest
 			}
 		}
 		int count = 0;
 		for (int city = 0; city < n; city++) {
-			// a city is not its own neighbour: dist[src] is 0, which clears
-			// every threshold, so counting it adds one to every city's total
+			// COUNT: a city is not its own neighbour. dist[src] is 0, which clears every
+			// threshold, so counting it would add one to every city's total
 			if (city != src && dist[city] <= threshold) {
 				count++;
 			}
@@ -99,17 +115,13 @@ public final class CityWithMinNeighborsDijkstra {
 		int[][] g2 = { { 0, 1, 2 }, { 0, 4, 8 }, { 1, 2, 3 }, { 1, 4, 2 }, { 2, 3, 1 }, { 3, 4, 1 } };
 		System.out.println(cmn.city(5, g2, 2)); // 0
 
-		// four cities and one road. cities 0 and 2 reach nobody, and the
-		// tie goes to the larger label, so the answer is 2. every city
-		// with no road out used to relax INF against INF, and the sum
-		// wrapped negative, so all four looked equally reachable and the
-		// first one tried won -- this printed 3
+		// four cities and one road: cities 0 and 2 reach nobody and the tie goes to the
+		// larger label. Cities with no road out are where INF meets INF
 		int[][] g3 = { { 1, 3, 4 } };
 		System.out.println(cmn.city(4, g3, 9)); // 2
 
-		// the road 0-1 is listed twice, once cheap and once dear. LC 1334
-		// promises that never happens, and the matrix has one slot for the
-		// pair, so writing whichever came last kept the 9 and answered 0
+		// the road 0-1 is listed twice, once cheap and once dear. LC 1334 never does this;
+		// the cheaper road is kept, so cities 0, 1, 2 are all within 2 and the tie goes to 2
 		int[][] g4 = { { 0, 1, 1 }, { 0, 1, 9 }, { 1, 2, 1 } };
 		System.out.println(cmn.city(3, g4, 2)); // 2
 	}

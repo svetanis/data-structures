@@ -1,10 +1,32 @@
 package com.svetanis.datastructures.graph.islands;
 
 // 1254. Number of Closed Islands
+//
+// Input: g -- an m x n grid of 0 (land) and 1 (water). An island is a group of land cells joined
+// by sides (up, down, left or right); it is closed if water borders it on all four sides all the
+// way round, which means none of its cells lies on the edge of the grid. Returns the number of
+// closed islands. The grid is changed by the call: every land cell ends up as 1. On LeetCode:
+// 1 <= m, n <= 100, every cell is 0 or 1.
+//
+// The one idea: sweep the grid, and walk each island from the first land cell the sweep meets,
+// turning every cell it walks into water so it is never met again. A walk returns 1 if the island
+// is closed and 0 if not. A single cell on the edge of the grid makes the whole island open, so
+// each cell contributes "am I off the edge?" and the walk combines the answers of all its cells
+// with &=. Every neighbour is still walked after the answer is already 0, because the rest of an
+// open island must be turned to water too, or the sweep would meet it again and count it.
+//
+// Time: O(r * c) -- each cell is walked at most once.
+// Space: O(r * c) -- the recursion depth: one island can snake through every cell.
+//
+// Known limit: the recursion overflows the default Java stack on a very large island. LC allows
+// 100 x 100, i.e. 10,000 frames, and a grid of all land that size throws StackOverflowError on a
+// fresh JVM (frames get smaller once the method has been compiled, so a warmed-up run can
+// survive). It is left as it is; NumberOfClosedIslandsIterative is the same algorithm with an
+// explicit stack.
+//
+// Siblings: NumberOfClosedIslandsIterative.
 
 public final class NumberOfClosedIslands {
-	// Time complexity: O(r * c)
-	// Space Complexity: O(r * c)
 
 	// horizontal + vertical moves
 	private static int[] dx = { -1, 0, 0, 1 };
@@ -18,7 +40,7 @@ public final class NumberOfClosedIslands {
 		for (int r = 0; r < n; r++) {
 			for (int c = 0; c < m; c++) {
 				if (g[r][c] == 0) {
-					count += dfs(g, r, c);
+					count += dfs(g, r, c); // TAKE: 1 if the island just walked was closed
 				}
 			}
 		}
@@ -35,7 +57,7 @@ public final class NumberOfClosedIslands {
 			int x = row + dx[k];
 			int y = col + dy[k];
 			if (safe(g, x, y)) {
-				closed &= dfs(g, x, y);
+				closed &= dfs(g, x, y); // WALK: one cell on the edge makes the island open
 			}
 		}
 		return closed;
@@ -77,6 +99,5 @@ public final class NumberOfClosedIslands {
 				{ 1, 0, 0, 0, 0, 0, 1 }, //
 				{ 1, 1, 1, 1, 1, 1, 1 } };//
 		System.out.println(closedIslands(g3)); // 2
-
 	}
 }

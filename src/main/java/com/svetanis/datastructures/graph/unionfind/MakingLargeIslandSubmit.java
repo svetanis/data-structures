@@ -5,6 +5,17 @@ import java.util.HashSet;
 import java.util.Set;
 
 // 827. Making A Large Island
+//
+// Input: grid -- an n x n grid of 0 (water) and 1 (land); an island is a group of land cells
+// joined up, down, left or right. Returns the size of the largest island there can be after
+// changing at most one 0 into a 1. On LeetCode: n == grid.length == grid[i].length,
+// 1 <= n <= 500, grid[i][j] is 0 or 1.
+//
+// The one idea: first join touching land cells into groups that remember their size, then try
+// each WATER cell as land -- itself plus the size of every DIFFERENT group touching it. Nothing
+// is flipped for real, so "at most one" needs no counter. One element is one cell, numbered
+// row * cols + col; sizes[root] is the size of the group whose root it is.
+//
 // The three 827 files:
 //   1. MakingLargeIsland       -- union-find on the shared DisjointSet, three methods
 //   2. MakingLargeIslandSubmit -- the same, structure inlined, for pasting
@@ -15,10 +26,13 @@ import java.util.Set;
 // The set below holds island ROOTS, not visited cells. Union-find never walks, so
 // nothing can be revisited; the set is there so that two neighbours sitting in the
 // same island are not counted twice, and it is rebuilt for each water cell.
+//
+// Time: O(n^2 log n) -- each cell is joined with its neighbours once and looked up four times;
+// find only compresses paths (the join does not pick the smaller tree), which is O(log n)
+// amortised per find.
+// Space: O(n^2) -- parent and sizes, one slot per cell.
 
 public final class MakingLargeIslandSubmit {
-	// Time Complexity: O(n^2)
-	// Space Complexity: O(n^2)
 
 	private int[] parent;
 	private int[] sizes;
@@ -30,7 +44,7 @@ public final class MakingLargeIslandSubmit {
 		int rows = grid.length;
 		int cols = grid[0].length;
 		init(rows * cols);
-		int max = union(grid, 1);
+		int max = union(grid, 1); // BUILD: join the land, keep the biggest island so far
 		return maxSize(grid, max);
 	}
 
@@ -43,7 +57,7 @@ public final class MakingLargeIslandSubmit {
 					continue;
 				}
 				// process only water cells
-				int size = 1;
+				int size = 1; // the flipped cell itself
 				Set<Integer> islands = new HashSet<>();
 				for (int k = 0; k < dx.length; k++) {
 					int x = i + dx[k];
@@ -54,7 +68,7 @@ public final class MakingLargeIslandSubmit {
 					int root = find(x * cols + y);
 					if (!islands.contains(root)) {
 						islands.add(root);
-						size += sizes[root];
+						size += sizes[root]; // ADD: this island, once
 					}
 				}
 				max = Math.max(max, size);
@@ -85,7 +99,7 @@ public final class MakingLargeIslandSubmit {
 					// if neighbors belong to different
 					// sets perform union operation
 					if (cp != np) {
-						parent[np] = cp;
+						parent[np] = cp; // JOIN: neighbour's island under this one
 						sizes[cp] += sizes[np];
 						max = Math.max(max, sizes[cp]);
 					}
@@ -96,9 +110,8 @@ public final class MakingLargeIslandSubmit {
 	}
 
 	private boolean valid(int[][] grid, int x, int y) {
-		// the row count bounds x and the COLUMN count bounds y. one
-		// length used for both is right only while the grid is square,
-		// which is what LC 827 promises and nothing else does
+		// the row count bounds x and the COLUMN count bounds y; the two are
+		// equal only while the grid is square, which is what LC 827 promises
 		boolean one = x >= 0 && x < grid.length;
 		boolean two = y >= 0 && y < grid[0].length;
 		return one && two && grid[x][y] == 1;
@@ -106,7 +119,7 @@ public final class MakingLargeIslandSubmit {
 
 	private int find(int x) {
 		if (parent[x] != x) {
-			parent[x] = find(parent[x]);
+			parent[x] = find(parent[x]); // WALK up, then COMPRESS on the way back
 		}
 		return parent[x];
 	}
@@ -131,8 +144,7 @@ public final class MakingLargeIslandSubmit {
 		int[][] g3 = { { 1, 1 }, { 1, 1 } };
 		System.out.println(mli.largestIsland(g3)); // 4
 
-		// wider than it is tall. with grid.length standing in for the
-		// column count this printed 4, and a taller-than-wide grid threw
+		// wider than it is tall: the column count must bound y
 		int[][] g4 = { { 1, 1, 1 }, { 1, 1, 1 } };
 		System.out.println(mli.largestIsland(g4)); // 6
 

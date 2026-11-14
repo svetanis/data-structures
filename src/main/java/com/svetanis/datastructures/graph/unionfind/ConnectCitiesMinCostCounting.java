@@ -1,26 +1,41 @@
 package com.svetanis.datastructures.graph.unionfind;
 
 // 1135. Connecting Cities With Minimum Cost
+//
+// Input: n cities numbered 1..n and connections[i] = [x, y, cost], a road that can be built
+// between cities x and y for that cost. On LeetCode: 1 <= n <= 10^4, 1 <= connections.length <=
+// 10^4, x != y, 0 <= cost <= 10^5. The array is left as it is.
+// Returns the least total cost to build roads so every city can reach every other, or -1 when
+// the given roads cannot join all the cities.
+//
+// The one idea (the same Kruskal method in all three files): the cheapest set of roads never
+// needs a loop, so it is a tree of n - 1 roads. Go through the roads from cheapest to dearest. A
+// road between two cities that are not yet connected is needed: build it. A road between two
+// cities that are already connected would only close a loop: skip it. The cheapest road is never
+// regretted, since a road that joins the same two groups at no lower cost was seen first.
+// "Already connected?" is union-find: every city points toward the root of its group, and two
+// cities are connected when they reach the same root.
+//
+// This file is rung 3: rung 2 (count COMPONENTS down to 1) with the comparison sort replaced by a
+// counting sort. That is possible only because the statement BOUNDS THE COST (whole numbers up to
+// 10^5): count how many roads carry each cost, add the counts up to learn where each cost starts
+// in the sorted order, and drop each road into its place. Without that bound there is no counter
+// array to build, and rung 2 is all there is. n == 1 needs a special case, since no road is ever
+// built and the count never moves.
+//
 // The three 1135 files are a ladder, and each rung adds exactly one thing:
 //   1. ConnectCitiesMinCostEdgeCount  -- Kruskal, counting EDGES up to n - 1
 //   2. ConnectCitiesMinCost           -- the same, counting COMPONENTS down to 1
 //   3. ConnectCitiesMinCostCounting   -- rung 2 with the comparison sort replaced
 //                                        by a counting sort on the cost
 // All three return the same answer on every input. Rung 1 is the one to write.
+// The two counts are the same fact from opposite ends: a spanning tree has exactly one
+// component and exactly n - 1 edges.
 //
-// RUNG 3: rung 2 with the comparison sort replaced. Measured at the constraint
-// maximum (n = m = 10^4, costs to 10^5): 0.68 ms against 4.36 ms, about 6x.
-// The trick is only available because the statement BOUNDS THE COST. Take that
-// bound away and there is no counter array to build, and rung 2 is all there is.
-
-// Kruskal, but the connections reach the loop in cost order without ever
-// being compared with each other. the costs are whole numbers no larger
-// than 100,000, and counting how many carry each value orders them in
-// three straight passes -- so the sort stops being the expensive half
+// Time: O(n + m + c) -- c is the largest cost present; no log factor, because nothing is compared.
+// Space: O(n + m + c) -- the counter array of size c and the order array of size m.
 
 public final class ConnectCitiesMinCostCounting {
-	// Time Complexity: O(n + m + c), c = the largest cost present
-	// Space Complexity: O(n + m + c)
 
 	private int[] rank;
 	private int[] parent;
@@ -33,26 +48,26 @@ public final class ConnectCitiesMinCostCounting {
 		if (n <= 1) {
 			return 0;
 		}
-		// reaching n cities takes n - 1 connections, so anything shorter
+		// reaching n cities takes n - 1 roads, so anything shorter
 		// leaves a city stranded whatever the costs are
 		if (connections.length < n - 1) {
 			return -1;
 		}
 		initParent(n);
 		int totalCost = 0;
-		int remainingComponents = n;
-		for (int index : byAscendingCost(connections)) {
+		int remainingComponents = n; // COUNT: groups still apart
+		for (int index : byAscendingCost(connections)) { // SORT: cheapest road first, by counting
 			int[] connection = connections[index];
 			if (!union(connection[0] - 1, connection[1] - 1)) {
-				continue;
+				continue; // SKIP: already connected, this road would close a loop
 			}
-			totalCost += connection[2];
+			totalCost += connection[2]; // TAKE: build the road
 			remainingComponents -= 1;
 			if (remainingComponents == 1) {
-				return totalCost;
+				return totalCost; // RETURN: one group left, every city is joined
 			}
 		}
-		return -1;
+		return -1; // RETURN: roads ran out with groups still apart
 	}
 
 	private void initParent(int n) {
@@ -74,14 +89,14 @@ public final class ConnectCitiesMinCostCounting {
 		// c + 1, so that after the running total below, start[c] holds
 		// where cost c begins rather than where it ends
 		int[] start = new int[maxCost + 2];
-		for (int[] connection : connections) {
+		for (int[] connection : connections) { // COUNT: how many roads carry each cost
 			start[connection[2] + 1] += 1;
 		}
-		for (int cost = 1; cost <= maxCost + 1; cost++) {
+		for (int cost = 1; cost <= maxCost + 1; cost++) { // ADD UP: running total gives each cost's start
 			start[cost] += start[cost - 1];
 		}
 		int[] order = new int[connections.length];
-		for (int i = 0; i < connections.length; i++) {
+		for (int i = 0; i < connections.length; i++) { // PLACE: each road at its cost's next free slot
 			int cost = connections[i][2];
 			order[start[cost]] = i;
 			// the next connection of this same cost lands one slot along
@@ -140,6 +155,7 @@ public final class ConnectCitiesMinCostCounting {
 		int[][] g2 = { { 1, 2, 3 }, { 3, 4, 4 }, { 1, 4, 7 }, { 2, 3, 5 } };
 		System.out.println(ccc.minCost(4, g2)); // 12
 
+		// a single city, already connected, nothing to buy
 		System.out.println(ccc.minCost(1, new int[0][])); // 0
 
 		// no connection reaches city 3

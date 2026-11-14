@@ -1,23 +1,26 @@
 package com.svetanis.datastructures.graph.unionfind.impl;
 
-import static com.google.common.collect.ImmutableList.copyOf;
-import static com.google.common.collect.Lists.newArrayList;
+import java.util.Arrays;
 
-import java.util.List;
-
-import com.google.common.collect.ImmutableList;
-import com.svetanis.java.base.Pair;
-
-// RUNG 2 of four. parent[i] is a LINK, not an answer: a component is
-// named by the root you reach by following the links. union becomes a
-// single write, and the whole cost moves into find.
+// Quick-union: the second of four union-find structures.
+//
+// Input: n sites numbered 0..n-1, each in a component of its own; then any mix of union(p, q) --
+// join the components of p and q -- and areConnected(p, q) -- are p and q in one component.
+// count() is the number of components left.
+//
+// The one idea: parent[i] is a LINK, not an answer: a component is named by the root you reach by
+// following the links. union becomes a single write -- hang one root under the other -- and the
+// whole cost moves into find.
+//
+// Time: find O(depth), worst case O(n); union O(depth), worst case O(n). find walks to the root, so
+// both cost the DEPTH of the tree. Nothing here keeps that depth down: union(i, i+1) for
+// i = 0..n-2 re-roots every time and builds a chain of length n-1, which is what
+// WeightedQuickUnion exists to prevent.
+// Space: O(n) -- the parent array.
+//
+// RUNG 2 of four. Siblings: QuickFind (labels instead of links), WeightedQuickUnion (the smaller
+// tree goes under the larger) and UF (weighted, with path halving).
 public final class QuickUnion {
-  // find:  O(depth), worst case O(n)
-  // union: O(depth), worst case O(n)
-  // find walks to the root, so both find and union cost the DEPTH of
-  // the tree. nothing here keeps that depth down: union(i, i+1) for
-  // i = 0..n-2 re-roots every time and builds a chain of length n-1,
-  // which is what WeightedQuickUnion.java exists to prevent
 
   private int[] parent;
   private int count; // num of components
@@ -42,7 +45,7 @@ public final class QuickUnion {
     validate(p);
     // find component name
     while (p != parent[p]) {
-      p = parent[p];
+      p = parent[p]; // WALK up to the root
     }
     return p;
   }
@@ -61,41 +64,32 @@ public final class QuickUnion {
     if (rootP == rootQ) {
       return;
     }
-    parent[rootP] = rootQ;
-    count--;
+    parent[rootP] = rootQ; // JOIN: p's root under q's root
+    count--; // COUNT: one component fewer
   }
 
   public static void main(String[] args) {
     int n = 10;
     QuickUnion uf = new QuickUnion(n);
-    List<Pair<Integer, Integer>> pairs = init();
-    for (Pair<Integer, Integer> pair : pairs) {
-      int p = pair.getLeft();
-      int q = pair.getRight();
+    int[][] pairs = init();
+    for (int[] pair : pairs) {
+      int p = pair[0];
+      int q = pair[1];
       // ignore if connected
       if (uf.areConnected(p, q)) {
-        continue;
+        continue; // SKIP: the pair adds nothing
       }
       // combine components
-      uf.union(p, q);
-      System.out.println(pair);
+      uf.union(p, q); // JOIN the two components
+      // [4, 3] [3, 8] [6, 5] [9, 4] [2, 1] [5, 0] [7, 2] [6, 1], one per line
+      System.out.println(Arrays.toString(pair));
     }
-    System.out.println(uf.count() + " components");
+    System.out.println(uf.count() + " components"); // 2 components
   }
 
-  private static ImmutableList<Pair<Integer, Integer>> init() {
-    List<Pair<Integer, Integer>> list = newArrayList();
-    list.add(Pair.build(4, 3));
-    list.add(Pair.build(3, 8));
-    list.add(Pair.build(6, 5));
-    list.add(Pair.build(9, 4));
-    list.add(Pair.build(2, 1));
-    list.add(Pair.build(8, 9));
-    list.add(Pair.build(5, 0));
-    list.add(Pair.build(7, 2));
-    list.add(Pair.build(6, 1));
-    list.add(Pair.build(1, 0));
-    list.add(Pair.build(6, 7));
-    return copyOf(list);
+  // the 11 pairs of a 10-site example: 8 of them join two components, 3 are already joined
+  private static int[][] init() {
+    return new int[][] { { 4, 3 }, { 3, 8 }, { 6, 5 }, { 9, 4 }, { 2, 1 }, { 8, 9 }, { 5, 0 }, { 7, 2 }, { 6, 1 },
+        { 1, 0 }, { 6, 7 } };
   }
 }

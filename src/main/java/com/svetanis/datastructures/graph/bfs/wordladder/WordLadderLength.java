@@ -1,69 +1,90 @@
 package com.svetanis.datastructures.graph.bfs.wordladder;
 
-import static com.google.common.collect.Lists.newLinkedList;
-import static com.google.common.collect.Sets.newHashSet;
-import static com.svetanis.datastructures.graph.bfs.wordladder.WordLadderUtil.largeDictionary;
-import static com.svetanis.datastructures.graph.bfs.wordladder.WordLadderUtil.neighbors;
-
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Queue;
 import java.util.Set;
 
+// 127. Word Ladder
+//
+// Input: beginWord, endWord, wordList. A ladder changes one letter at a time, and every word after
+// beginWord must be in wordList. Returns the number of words on the shortest ladder, beginWord and
+// endWord both counted, or 0 if there is none. On LeetCode: 1 <= beginWord.length <= 10,
+// endWord.length == beginWord.length, 1 <= wordList.length <= 5000, lowercase letters,
+// beginWord != endWord, all words in wordList are different. The caller's list is left unchanged.
+//
+// The one idea: a word is a node and one changed letter is an edge, so the shortest ladder is a
+// breadth-first search one level at a time, and the level number is the number of words in the
+// chain -- words, not steps: hit -> hot -> dot -> dog -> cog is 5 words and 4 steps. The
+// neighbours are generated, not compared: each position changed to each of the other 25 letters,
+// every candidate one lookup in a set. Removing a word from that set when it is queued is the
+// visited mark, so each word is queued once.
+//
+// Time: O(n * 25 * m * m) -- each of the n words is queued once; it makes 25 * m candidates, each
+// an m-letter string built and looked up (m is the word length).
+// Space: O(n * m) -- the set and the queue.
+//
+// Siblings: WordLadderLenEfficientSubmit is the same search with a map of word -> ladder length,
+// written for two sides but running only the start side; WordLadder returns the ladder itself.
+
 public final class WordLadderLength {
 
-	public static int ladderLen(String src, String dst, Set<String> words) {
-		return bfs(src, dst, words);
-	}
-
-	private static int bfs(String src, String dst, Set<String> dictionary) {
-		// the BFS marks visited by REMOVING from this set, and adds dst to
-		// it -- so it must own the set. O(n) against an O(n * L * 26) walk
-		Set<String> words = newHashSet(dictionary);
-		// the end word has to BE in the dictionary. Adding it here instead
-		// builds a ladder onto a word nobody offered, and the last step of
-		// that ladder is a word transformation the problem never allowed
-		if (!words.contains(dst)) {
+	public static int ladderLength(String beginWord, String endWord, List<String> wordList) {
+		Set<String> words = new HashSet<>(wordList); // a SET: one step per lookup, never the List
+		if (!words.contains(endWord)) { // NO PATH: endWord is not in the list
 			return 0;
 		}
-		boolean isLarge = largeDictionary(src, words);
-		Queue<Node> queue = newLinkedList();
-		queue.add(new Node(src, 1));
-
+		Queue<String> queue = new ArrayDeque<>();
+		queue.offer(beginWord); // START: beginWord is level 1
+		int level = 1;
 		while (!queue.isEmpty()) {
-			Node node = queue.poll();
-			String word = node.word;
-			if (word.equals(dst)) {
-				return node.len;
-			}
-			for (String neighbor : neighbors(word, words, isLarge)) {
-				if (words.contains(neighbor)) {
-					queue.add(new Node(neighbor, node.len + 1));
-					words.remove(neighbor);
+			int size = queue.size(); // LEVEL: exactly the words on this level
+			for (int i = 0; i < size; i++) {
+				String word = queue.poll();
+				if (word.equals(endWord)) { // FOUND: the chain has level words
+					return level;
+				}
+				for (String neighbor : neighbors(word)) {
+					if (words.contains(neighbor)) { // in the list, not queued before
+						queue.offer(neighbor);
+						words.remove(neighbor); // MARK: never queued again
+					}
 				}
 			}
+			level += 1; // NEXT LEVEL: one more word in the chain
 		}
-		return 0;
+		return 0; // NO PATH: the queue ran dry
+	}
+
+	private static List<String> neighbors(String word) {
+		List<String> out = new ArrayList<>();
+		char[] letters = word.toCharArray(); // a char[] can be changed; a String cannot
+		for (int pos = 0; pos < letters.length; pos++) {
+			char letter = letters[pos]; // SAVE: the letter now at pos
+			for (char c = 'a'; c <= 'z'; c++) {
+				if (c == letter) { // SKIP: that candidate is the word itself
+					continue;
+				}
+				letters[pos] = c; // SWAP
+				out.add(new String(letters)); // the candidate, as a String
+			}
+			letters[pos] = letter; // RESTORE: before the next position
+		}
+		return out;
 	}
 
 	public static void main(String[] args) {
-		Set<String> set = newHashSet("hit", "hot", "dot", "dog", "dog", "cog");
-		System.out.println(ladderLen("hit", "cog", set)); // 5
+		List<String> list = Arrays.asList("hot", "dot", "dog", "lot", "log", "cog");
+		System.out.println(ladderLength("hit", "cog", list)); // 5
 
-		// the same dictionary with the end word taken out. There is no
-		// ladder, because "cog" is not a word you are allowed to reach
-		Set<String> noEnd = newHashSet("hit", "hot", "dot", "dog");
-		System.out.println(ladderLen("hit", "cog", noEnd)); // 0
+		// the same list without the end word: no ladder, because "cog" is not a word you may reach
+		List<String> noEnd = Arrays.asList("hot", "dot", "dog", "lot", "log");
+		System.out.println(ladderLength("hit", "cog", noEnd)); // 0
 
-		// the dictionary is the caller's, and it comes back untouched
-		System.out.println(set.size()); // 5
-	}
-
-	private static class Node {
-		private int len;
-		private String word;
-
-		public Node(String word, int len) {
-			this.word = word;
-			this.len = len;
-		}
+		// the list is the caller's, and it comes back untouched
+		System.out.println(list.size()); // 6
 	}
 }

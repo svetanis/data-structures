@@ -1,31 +1,41 @@
 package com.svetanis.datastructures.graph;
 
-import static com.google.common.base.Objects.equal;
-import static com.svetanis.java.base.Objects.notEqual;
 import static java.util.Objects.hash;
 
 // A position in a grid, and nothing else.
-
-// It used to carry a `dist` field as well, which put a BFS's depth inside
-// the identity of a square: Cell(3, 7, 0) and Cell(3, 7, 4) were unequal,
-// so a visited set held one entry per (square, depth) pair rather than one
-// per square. On an 8x8 knight board that is 354 entries for 64 squares and
-// five times the work, and where the destination is unreachable the depth
-// keeps climbing and the search never ends.
-
-// Distance belongs to the traversal, not to the square. Every caller that
-// needs it either walks the queue one LEVEL at a time -- so the depth is a
-// loop variable -- or already records it in a grid of its own.
+//
+// Input: a row-like number x and a column-like number y; either name can be used for either axis,
+// each caller says which it means (getRow and getCol read the same two numbers as getX and getY).
+// The no-argument constructor gives (-1, -1), a position outside every grid, for "not set".
+// Nothing is checked against a grid size.
+// Returns: a value that is equal to another Cell exactly when both numbers match, and that can be
+// used as a key in a HashSet or HashMap.
+//
+// The one idea: a Cell is the address of one square, so its identity is that address and nothing
+// more. Distance is not part of it. If a breadth-first search stored its depth inside the Cell,
+// Cell(3, 7) reached at depth 0 and Cell(3, 7) reached at depth 4 would be two different keys, a
+// visited set would hold one entry per (square, depth) pair instead of one per square, and a
+// search for an unreachable target would never stop. Distance belongs to the traversal: a loop
+// variable when the queue is walked one level at a time, or a grid of its own.
+//
+// Time: O(1) per call -- the hash is computed once, in the constructor.
+// Space: O(1) -- two ints and the stored hash.
+//
+// Siblings: none.
 
 public final class Cell {
 	protected int x;
 	protected int y;
-	private final int hash;
+	private final int hash; // the hash of (x, y), computed once
+
+	public Cell() {
+		this(-1, -1); // DEFAULT: a position outside every grid
+	}
 
 	public Cell(int x, int y) {
 		this.x = x;
 		this.y = y;
-		this.hash = hash(x, y);
+		this.hash = hash(x, y); // HASH: fixed at construction
 	}
 
 	@Override
@@ -36,12 +46,12 @@ public final class Cell {
 	@Override
 	public boolean equals(Object object) {
 		if (this == object) {
-			return true;
-		} else if (notEqual(this, object)) {
-			return false;
+			return true; // SAME: the very same object
+		} else if (object == null || getClass() != object.getClass()) {
+			return false; // SKIP: not a Cell
 		} else {
 			Cell other = (Cell) object;
-			return equal(x, other.x) && equal(y, other.y);
+			return x == other.x && y == other.y; // RETURN: equal when both numbers match
 		}
 	}
 
@@ -50,6 +60,14 @@ public final class Cell {
 	}
 
 	public int getY() {
+		return y;
+	}
+
+	public int getRow() {
+		return x;
+	}
+
+	public int getCol() {
 		return y;
 	}
 

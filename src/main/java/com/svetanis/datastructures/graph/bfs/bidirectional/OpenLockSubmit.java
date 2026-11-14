@@ -1,8 +1,7 @@
 package com.svetanis.datastructures.graph.bfs.bidirectional;
 
-import static com.google.common.collect.Lists.newArrayList;
-
 import java.util.ArrayDeque;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -12,28 +11,28 @@ import java.util.Set;
 import java.util.StringJoiner;
 import java.util.stream.Collectors;
 
-// given a 4-wheel lock where each wheel
-// contains the numbers '0' through '9'
-// turning a wheel can either increase or
-// decrease its number by one, wrapping 
-// around from '9' to '0' or vice versa.
-// a single move involves rotating any one
-// of the wheels by one slot. 
-
-// the lock starts with the combination '0000'.
-// however, there are specific combinations termed
-// as "deadends". if the lock lands on any of these
-// deadend combinations, where wheels jam, making it
-// impossible to proceed.
-
-// find the least number of moves needed to reach 
-// a given target combination from the starting point
-// without hitting any deadend. if reaching the target
-// is impossible due to deadends, return -1.
-
+// 752. Open the Lock
+//
+// Input: dst -- the combination to reach; trappedCombos -- the deadends, combinations that jam the
+// lock. The lock has 4 wheels, each showing a digit 0-9, and starts at "0000"; one move turns one
+// wheel one slot, up or down, and 9 wraps to 0. Returns the least number of moves to reach dst
+// without landing on a deadend, or -1. On LeetCode: 1 <= deadends.length <= 500, every deadend and
+// the target is 4 digits, target is not a deadend.
+//
+// The one idea: one queue entry holds one combination of the lock, a 4-character string. The map
+// holds, for every combination seen, how many moves it took to first reach it. The queue hands out
+// combinations nearest-first, so the first time a combination is seen is also its shortest way
+// there, and the map doubles as the "seen" mark. The eight neighbours of a combination are built
+// when it is taken off the queue and the deadends are filtered out. Only neighbours are filtered,
+// so the start is the one combination never checked: a jammed "0000" is tested before the search.
+//
+// Time: O(10^d * d * k) -- d = 4 wheels, so at most 10,000 combinations; each builds 8 neighbours
+// of d characters and tests each against the deadend LIST, which costs up to k = deadends.length
+// Space: O(10^d) -- the queue and the map hold each combination at most once
+//
+// Siblings: OpenLock is the same search with the deadends in a set; OpenLockBidirectional,
+// OpenLockFrontiers and OpenLockRings are the other ways to search it.
 public final class OpenLockSubmit {
-	// Time Complexity: O(n)
-	// Space Complexity: O(n)
 
 	private static Map<Character, Character> nextDigit = nextDigit();
 	private static Map<Character, Character> prevDigit = nextDigit.entrySet().stream()
@@ -45,38 +44,41 @@ public final class OpenLockSubmit {
 	}
 
 	private static int bfs(String src, String dst, List<String> excluded) {
+		if (excluded.contains(src)) {
+			return -1; // BASE: the start is jammed, so no turn is possible
+		}
 		Queue<String> queue = new ArrayDeque<>();
 		Map<String, Integer> map = new HashMap<>();
 		queue.add(src);
-		map.put(src, 0);
+		map.put(src, 0); // RECORD: the start is 0 moves from itself
 		while (!queue.isEmpty()) {
 			String curr = queue.poll();
 			if (curr.equals(dst)) {
-				return map.get(curr);
+				return map.get(curr); // RETURN: first time dst comes off the queue is its shortest
 			}
 			Set<String> neighbors = neighbors(curr, excluded);
 			for (String neighbor : neighbors) {
-				if (!map.containsKey(neighbor)) {
+				if (!map.containsKey(neighbor)) { // SKIP: already reached by a route at least as short
 					queue.add(neighbor);
-					map.put(neighbor, map.get(curr) + 1);
+					map.put(neighbor, map.get(curr) + 1); // RECORD: one move more than its parent
 				}
 			}
 		}
-		return -1;
+		return -1; // RETURN: the queue ran dry, dst is walled off
 	}
 
 	private static Set<String> neighbors(String s, List<String> excluded) {
 		Set<String> set = new HashSet<>();
-		for (int i = 0; i < s.length(); i++) {
+		for (int i = 0; i < s.length(); i++) { // WALK: each wheel in turn
 			char c = s.charAt(i);
 			char nd = nextDigit.get(c);
 			char pd = prevDigit.get(c);
 			String next = nextCombo(i, nd, s);
-			if (!excluded.contains(next)) {
+			if (!excluded.contains(next)) { // SKIP: a deadend
 				set.add(next);
 			}
 			String prev = nextCombo(i, pd, s);
-			if (!excluded.contains(prev)) {
+			if (!excluded.contains(prev)) { // SKIP: a deadend
 				set.add(prev);
 			}
 		}
@@ -88,7 +90,7 @@ public final class OpenLockSubmit {
 		String suffix = s.substring(index + 1);
 		StringJoiner joiner = new StringJoiner("");
 		joiner.add(prefix).add(c + "").add(suffix);
-		return joiner.toString();
+		return joiner.toString(); // RETURN: s with the wheel at index set to c
 	}
 
 	private static Map<Character, Character> nextDigit() {
@@ -102,12 +104,22 @@ public final class OpenLockSubmit {
 		map.put('6', '7');
 		map.put('7', '8');
 		map.put('8', '9');
-		map.put('9', '0');
+		map.put('9', '0'); // 9 wraps to 0
 		return map;
 	}
 
 	public static void main(String[] args) {
-		List<String> set = newArrayList("0201", "0101", "0102", "1212", "2002");
-		System.out.println(countSteps("0202", set));
+		List<String> set = Arrays.asList("0201", "0101", "0102", "1212", "2002");
+		System.out.println(countSteps("0202", set)); // 6
+
+		List<String> one = Arrays.asList("8888");
+		System.out.println(countSteps("0009", one)); // 1
+
+		List<String> boxed = Arrays.asList("8887", "8889", "8878", "8898", "8788", "8988", "7888", "9888");
+		System.out.println(countSteps("8888", boxed)); // -1
+
+		// the lock starts jammed
+		List<String> jammed = Arrays.asList("0000");
+		System.out.println(countSteps("8888", jammed)); // -1
 	}
 }

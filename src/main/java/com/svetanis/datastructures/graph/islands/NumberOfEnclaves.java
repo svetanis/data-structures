@@ -1,10 +1,30 @@
 package com.svetanis.datastructures.graph.islands;
 
 // 1020. Number of Enclaves
+//
+// Input: g -- an m x n grid of 0 (sea) and 1 (land). A move goes from a land cell to a land cell
+// beside it (up, down, left or right), or off the edge of the grid. Returns the number of land
+// cells from which you cannot walk off the edge of the grid, however many moves you make. The grid
+// is changed by the call: the land cells that can reach the edge are turned to 0. On LeetCode:
+// 1 <= m, n <= 500, every cell is 0 or 1.
+//
+// The one idea: count the land that can escape and take it away. A land cell can walk off the edge
+// exactly when it is joined, through land, to a land cell on the edge of the grid. So the sweep
+// starts a walk from every land cell on the edge, and each walk turns all the land joined to it
+// into sea. What is still land afterwards cannot reach the edge, and adding up the 1s left in the
+// grid is the answer.
+//
+// Time: O(r * c) -- each cell is walked at most once, and the final count looks at each cell once.
+// Space: O(r * c) -- the recursion depth: the land joined to the edge can snake through every
+// cell.
+//
+// Known limit: the recursion overflows the default Java stack on a very large region of land.
+// LC allows 500 x 500, and a solid block of land that size throws StackOverflowError. It is left
+// as it is; NumberOfEnclavesIterative is the same algorithm with an explicit stack.
+//
+// Siblings: NumberOfEnclavesIterative.
 
 public final class NumberOfEnclaves {
-	// Time complexity: O(r * c)
-	// Space Complexity: O(r * c)
 
 	// horizontal + vertical moves
 	private static int[] dx = { -1, 0, 0, 1 };
@@ -16,7 +36,7 @@ public final class NumberOfEnclaves {
 		for (int r = 0; r < n; r++) {
 			for (int c = 0; c < m; c++) {
 				if (landOnBoundary(g, r, c)) {
-					dfs(g, r, c);
+					dfs(g, r, c); // WALK: sink all the land joined to this edge cell
 				}
 			}
 		}
@@ -27,7 +47,7 @@ public final class NumberOfEnclaves {
 		int count = 0;
 		for (int[] row : g) {
 			for (int val : row) {
-				count += val;
+				count += val; // TAKE: land is 1, sea is 0, so the sum is the land left
 			}
 		}
 		return count;

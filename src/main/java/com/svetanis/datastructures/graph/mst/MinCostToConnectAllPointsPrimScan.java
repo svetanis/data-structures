@@ -1,16 +1,34 @@
 package com.svetanis.datastructures.graph.mst;
 
 // 1584. Min Cost to Connect All Points
+//
+// Input: points, a list of [x, y] positions. On LeetCode: 1 <= points.length <= 1000,
+// -10^6 <= x, y <= 10^6, and all points are different.
+// Returns: the least total length of segments that joins every point to every other, directly or
+// through other points. The length of a segment is the Manhattan distance |x1 - x2| + |y1 - y2|.
+// A cheapest such set of segments is a minimum spanning tree (MST): n - 1 segments, no loops.
+//
 // Prim's Algorithm, array scan, distances computed on demand.
 // The one to write for this problem: fastest of the three, and the only one
 // that never holds an edge anywhere.
+//
+// The one idea: grow one tree from point 0. cheapestEdge[i] is the length of the CHEAPEST SINGLE
+// SEGMENT that joins point i (outside the tree) to any point already in the tree. Each round,
+// scan for the outside point with the smallest cheapestEdge, bring it in and pay for that one
+// segment; then, for every point still outside, a segment from the new point may be shorter than
+// what it had, so keep the smaller. The shortest segment leaving the tree is always safe to keep,
+// so no choice is undone. Do not add the route so far -- that is Dijkstra, which builds a
+// shortest-path tree and gives a different total.
+//
+// Time: O(n^2) -- n rounds, each scanning all n points twice. A complete graph has n(n-1)/2 edges,
+// so O(n^2) is constant work per edge and nothing can beat it here.
+// Space: O(n) -- two arrays, no matrix and no heap.
+//
+// Siblings: MinCostToConnectAllPointsPrimHeap only pays off when the inner loop walks a neighbour
+// list -- that is MstPrim; PrimMatrix stores all pair lengths first; the Kruskal pair sort an
+// edge list.
 
 public final class MinCostToConnectAllPointsPrimScan {
-	// Time Complexity: O(n^2) -- n rounds, each scanning all n points twice
-	// Space Complexity: O(n)  -- two arrays, no matrix and no heap
-	// A complete graph has n(n-1)/2 edges, so O(n^2) is constant work per edge
-	// and nothing can beat it here. The heap in MinCostToConnectAllPointsPrimHeap
-	// only pays off when the inner loop walks a neighbour list -- that is MstPrim.
 
 	public int minCost(int[][] points) {
 		int n = points.length;
@@ -18,20 +36,20 @@ public final class MinCostToConnectAllPointsPrimScan {
 		// Not a distance from point 0, and nothing accumulates -- a spanning tree has no
 		// source, and its cost is the sum of the edges chosen.
 		int[] cheapestEdge = new int[n];
-		boolean[] inMst = new boolean[n];
+		boolean[] inMst = new boolean[n]; // TREE: points already joined
 		// the tree starts as point 0 alone, so every other point's cheapest way in
 		// is simply its own edge to point 0
 		int[] start = points[0];
-		inMst[0] = true;
+		inMst[0] = true; // START: point 0 joins first, for free
 		for (int i = 0; i < n; i++) {
 			cheapestEdge[i] = mdist(start, points[i]);
 		}
 		int total = 0;
 		// n - 1 rounds: point 0 is already in, and a tree on n points has n - 1 edges
 		for (int i = 1; i < n; i++) {
-			int next = cheapest(cheapestEdge, inMst);
+			int next = cheapest(cheapestEdge, inMst); // PICK: the cheapest point outside the tree
 			// pay for the one edge that brings it in, not for a route
-			total += cheapestEdge[next];
+			total += cheapestEdge[next]; // TAKE: the segment that brought it in
 			inMst[next] = true;
 			// the tree just grew, so every point outside it has a new way in -- through next
 			int[] joined = points[next];
@@ -41,7 +59,7 @@ public final class MinCostToConnectAllPointsPrimScan {
 				// spanning tree, also plausible, and a different total.
 				int dist = mdist(joined, points[j]);
 				if (!inMst[j] && cheapestEdge[j] > dist) {
-					cheapestEdge[j] = dist;
+					cheapestEdge[j] = dist; // RELAX: a shorter way in
 				}
 			}
 		}
@@ -53,16 +71,16 @@ public final class MinCostToConnectAllPointsPrimScan {
 		int index = -1;
 		int min = Integer.MAX_VALUE;
 		for (int i = 0; i < cheapestEdge.length; i++) {
-			if (!inMst[i] && cheapestEdge[i] < min) {
+			if (!inMst[i] && cheapestEdge[i] < min) { // SCAN: smaller than every outside point so far
 				min = cheapestEdge[i];
 				index = i;
 			}
 		}
-		return index;
+		return index; // RETURN: the point to bring in next
 	}
 
 	private int mdist(int[] p1, int[] p2) {
-		return Math.abs(p1[0] - p2[0]) + Math.abs(p1[1] - p2[1]);
+		return Math.abs(p1[0] - p2[0]) + Math.abs(p1[1] - p2[1]); // RETURN: Manhattan distance
 	}
 
 	public static void main(String[] args) {

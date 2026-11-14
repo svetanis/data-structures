@@ -7,10 +7,23 @@ import java.util.List;
 import java.util.Map;
 
 // 721. Accounts Merge
+//
+// Input: accounts -- accounts[i][0] is the name on account i, the rest are its emails. Two
+// accounts belong to the same person when they share at least one email, and a person's accounts
+// all carry one name. Returns one list per person: the name, then every email of that person,
+// sorted and without repeats, in any order of the lists. On LeetCode: 1 <= accounts.length <= 1000,
+// 2 <= accounts[i].length <= 10, 1 <= accounts[i][j].length <= 30, accounts[i][0] is a name made
+// of letters, the other entries are valid emails.
+//
+// The one idea: union-find joins things that belong together, so first decide what one element
+// IS. In the account-node versions one element is one account (its index); account i joins
+// account j the first time an email appears in both. In the ByEmail version one element is one
+// email. After every join, all accounts (or emails) with the same root are one person.
+//
 // The three 721 files are a ladder, and the rungs differ by WHAT A NODE IS:
-//   1. MergeUserAccountsSubmit  -- accounts are nodes, int[] parent, self-contained
-//   2. MergeUserAccounts        -- accounts are nodes, Map<Integer,Integer> parent
-//   3. MergeUserAccountsByEmail -- EMAILS are nodes, shared DisjointSet
+//   1. MergeUserAccountsSubmit  -- accounts are nodes, int[] parent inlined, self-contained
+//   2. MergeUserAccounts        -- accounts are nodes, the shared DisjointSet
+//   3. MergeUserAccountsByEmail -- EMAILS are nodes, a DisjointSet nested in the file
 // All three return the same groups. Rung 3 is the one to write: an email shared by
 // two accounts is one node they both touch, so the merge across accounts happens
 // without anything ever comparing two accounts.
@@ -22,9 +35,11 @@ import java.util.Map;
 // because two accounts in the same row of the answer are joined THROUGH the email they
 // share -- it is one node that both of them touched.
 
+// Time: O(m log m) -- m emails in all; the log comes from sorting each person's emails, and the
+// unions and finds add a near-constant factor.
+// Space: O(m) -- the two email maps, the union-find and the grouped lists.
+
 public final class MergeUserAccountsByEmail {
-  // Time Complexity: O(m log m) -- m emails, the log from sorting each group
-  // Space Complexity: O(m)
 
   // email -> a small id, so the int[] parent array can be used unchanged.
   // a hash code will not do: it is negative, and far larger than any array.
@@ -55,8 +70,8 @@ public final class MergeUserAccountsByEmail {
         if (ids.containsKey(email)) {
           continue;
         }
-        ids.put(email, id++);
-        names.put(email, name);
+        ids.put(email, id++); // NUMBER: one id per distinct email
+        names.put(email, name); // NAME: the account it was first seen in
       }
     }
   }
@@ -68,7 +83,7 @@ public final class MergeUserAccountsByEmail {
     for (List<String> account : accounts) {
       int first = ids.get(account.get(1));
       for (int i = 2; i < account.size(); i++) {
-        ds.union(first, ids.get(account.get(i)));
+        ds.union(first, ids.get(account.get(i))); // JOIN: each email of the account to its first
       }
     }
   }
@@ -78,7 +93,7 @@ public final class MergeUserAccountsByEmail {
   private Map<Integer, List<String>> group() {
     Map<Integer, List<String>> grouped = new HashMap<>();
     for (String email : ids.keySet()) {
-      int root = ds.find(ids.get(email));
+      int root = ds.find(ids.get(email)); // ROOT: the person this email belongs to
       grouped.computeIfAbsent(root, key -> new ArrayList<>()).add(email);
     }
     return grouped;
@@ -89,7 +104,7 @@ public final class MergeUserAccountsByEmail {
     List<List<String>> merged = new ArrayList<>();
     for (List<String> emails : grouped.values()) {
       List<String> sorted = new ArrayList<>(emails);
-      Collections.sort(sorted);
+      Collections.sort(sorted); // SORT: the statement wants each person's emails in order
       List<String> row = new ArrayList<>();
       // any email of the group names the person: they all belong to one person,
       // and the statement guarantees that person's accounts carry one name
@@ -107,9 +122,10 @@ public final class MergeUserAccountsByEmail {
     accounts.add(List.of("Mary", "mary@mail.com"));
     accounts.add(List.of("John", "johnnybravo@mail.com"));
     MergeUserAccountsByEmail merger = new MergeUserAccountsByEmail();
-    // [John, john00, john_newyork, johnsmith] | [Mary, mary] | [John, johnnybravo]
+    // three rows: [John, john00@mail.com, john_newyork@mail.com, johnsmith@mail.com],
+    // [Mary, mary@mail.com] and [John, johnnybravo@mail.com]
     for (List<String> row : merger.accountsMerge(accounts)) {
-      System.out.println(row);
+      System.out.println(row); // one row per person
     }
     // two DIFFERENT names sharing an email. LC 721 merges them: a shared email
     // means one person, and the name is never consulted. A variant that refuses to
@@ -120,8 +136,7 @@ public final class MergeUserAccountsByEmail {
     List<List<String>> crossName = new ArrayList<>();
     crossName.add(new ArrayList<>(List.of("Alice", "shared@m.co", "a@m.co")));
     crossName.add(new ArrayList<>(List.of("Bob", "shared@m.co", "b@m.co")));
-    // one row: [Alice, a@m.co, b@m.co, shared@m.co]
-    System.out.println(new MergeUserAccountsByEmail().accountsMerge(crossName));
+    System.out.println(new MergeUserAccountsByEmail().accountsMerge(crossName)); // [[Alice, a@m.co, b@m.co, shared@m.co]]
   }
 
   private static final class DisjointSet {

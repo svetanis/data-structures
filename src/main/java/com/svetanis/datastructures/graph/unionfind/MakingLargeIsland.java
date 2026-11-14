@@ -4,6 +4,19 @@ import java.util.HashSet;
 import java.util.Set;
 
 // 827. Making A Large Island
+//
+// Input: grid -- an n x n grid of 0 (water) and 1 (land); an island is a group of land cells
+// joined up, down, left or right. Returns the size of the largest island there can be after
+// changing at most one 0 into a 1. On LeetCode: n == grid.length == grid[i].length,
+// 1 <= n <= 500, grid[i][j] is 0 or 1.
+//
+// The one idea: first build the islands as they are -- two touching land cells are put in one
+// group, and the group remembers its size. Then take each WATER cell and ask what island it
+// would make if it turned to land: itself (1 cell) plus every DIFFERENT island that touches it.
+// Nothing is really flipped; each zero is tried and none is kept, which is how "at most one" is
+// honoured without a budget counter. One element of the structure is one land cell, numbered
+// row * cols + col; the group's size is stored at its root.
+//
 // The three 827 files:
 //   1. MakingLargeIsland       -- union-find on the shared DisjointSet, three methods
 //   2. MakingLargeIslandSubmit -- the same, structure inlined, for pasting
@@ -17,10 +30,12 @@ import java.util.Set;
 // The move is 947's, one step harder. There a node was a row or a column; here the
 // nodes are land cells and the answer is asked of the WATER cells, which are not
 // nodes at all. Neither is a thing the statement names.
+//
+// Time: O(n^2) -- phase 1 makes at most two unions per land cell, phase 2 makes four finds per
+// water cell; each union or find is near-constant with path halving and union by size.
+// Space: O(n^2) -- one DisjointSet slot per cell.
 
 public final class MakingLargeIsland {
-	// Time Complexity: O(rows * cols)
-	// Space Complexity: O(rows * cols)
 
 	// phase 1 looks right and down only: every adjacent pair is then seen exactly
 	// once, because the other half of the pair was handled from the other cell
@@ -36,7 +51,7 @@ public final class MakingLargeIsland {
 	public int largestIsland(int[][] grid) {
 		int rows = grid.length, cols = grid[0].length;
 		this.ds = new DisjointSet(rows * cols);
-		buildIslands(grid);
+		buildIslands(grid); // BUILD: the islands as they are
 		int best = 0;
 		for (int row = 0; row < rows; row++) {
 			for (int col = 0; col < cols; col++) {
@@ -44,12 +59,12 @@ public final class MakingLargeIsland {
 				// the land branch is not decorative: drop it and a grid with no
 				// zeros at all returns 0, because nothing is ever recorded
 				int size = grid[row][col] == 0
-						? sizeIfFlipped(grid, row, col)
-						: ds.size(ds.find(k));
+						? sizeIfFlipped(grid, row, col) // TRY: this water cell as land
+						: ds.size(ds.find(k)); // TAKE: an island as it stands
 				best = Math.max(best, size);
 			}
 		}
-		return best;
+		return best; // RETURN: the biggest of all of them
 	}
 
 	// what the island would be if this water cell became land. NOTHING IS FLIPPED:
@@ -66,14 +81,14 @@ public final class MakingLargeIsland {
 			if (x >= 0 && x < rows && y >= 0 && y < cols && grid[x][y] == 1) {
 				// find on the NEIGHBOUR, never on the water cell -- that cell was
 				// never unioned with anything, so its own size is always 1
-				islands.add(ds.find(x * cols + y));
+				islands.add(ds.find(x * cols + y)); // COLLECT: one root per touching island
 			}
 		}
 		// 1 for the flipped cell itself, then the SIZE of each island -- not the
 		// number of islands, which is what islands.size() would give
 		int total = 1;
 		for (int root : islands) {
-			total += ds.size(root);
+			total += ds.size(root); // ADD: each island once
 		}
 		return total;
 	}
@@ -86,13 +101,13 @@ public final class MakingLargeIsland {
 				// the cell being STOOD ON has to be land too; checking only the
 				// neighbour joins a water cell to an island
 				if (grid[row][col] == 0) {
-					continue;
+					continue; // SKIP: water is not part of any island
 				}
 				int k = row * cols + col;
 				for (int d = 0; d < 2; d++) {
 					int x = row + DR[d], y = col + DC[d];
 					if (x >= 0 && x < rows && y >= 0 && y < cols && grid[x][y] == 1) {
-						ds.union(k, x * cols + y);
+						ds.union(k, x * cols + y); // JOIN: two touching land cells
 					}
 				}
 			}

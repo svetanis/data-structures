@@ -1,28 +1,40 @@
 package com.svetanis.datastructures.graph.unionfind;
 
-// Disjoint Set Union over the node ids 0..n-1.
-// parent + size, union by size, and find compressing the node it was asked about.
-// Derived in pages/20-union-find/the-parent-array-from-scratch.md.
+// Disjoint Set Union (union-find) over the node ids 0..n-1
 //
-// It carries nothing problem-specific. A problem with string keys maps them to ids
-// first (MergeUserAccountsByEmail); one whose pointer carries a ratio needs a different
-// structure, not a setting -- see WeightedDisjointSet.
+// Input: n, the number of nodes; then calls union(a, b), sameGroup(a, b), size(x) with ids in
+// 0..n-1. Every node starts alone in a group of its own.
+// union(a, b) joins the groups of a and b and says whether they were apart; sameGroup(a, b) says
+// whether a and b are in one group; size(x) is how many nodes share x's group.
 //
-// impl/QuickFind, impl/QuickUnion, impl/WeightedQuickUnion and impl/UF are deliberately
+// The one idea: every node holds one arrow, parent[x], pointing at another node of its group; a
+// node whose arrow points at itself is the ROOT, and the root names the group. To find a node's
+// group, follow arrows until one points at itself. Two nodes are together exactly when they reach
+// the same root. To join two groups, make one root point at the other. Two repairs keep the
+// arrow chains short: the smaller group goes UNDER the larger (so a node is never more than
+// log2(n) arrows from its root), and find shortens the chain it walks (path halving: each node it
+// passes is re-pointed at its grandparent).
+//
+// It carries nothing problem-specific. A problem with string keys maps them to ids first
+// (MergeUserAccountsByEmail); one whose arrow carries a ratio needs a different structure, not a
+// setting -- see WeightedDisjointSet.
+//
+// Time: O(alpha(n)) amortised per call -- union by size plus path halving; alpha(n) is below 5 for
+// any n that fits in memory.
+// Space: O(n) -- the parent and size arrays.
+//
+// Siblings: impl/QuickFind, impl/QuickUnion, impl/WeightedQuickUnion and impl/UF are deliberately
 // NOT this class: they are the four rungs, each missing one of the repairs here.
 
 public final class DisjointSet {
-	// Time Complexity: O(log n) per operation, amortised lower as the trees flatten
-	// Space Complexity: O(n)
-
-	private final int[] parent;
+	private final int[] parent; // CARDS: parent[x] -- the node above x; a root points at itself
 	// size[root] is the NUMBER OF ELEMENTS in that group, and it is read and written
 	// AT ROOTS ONLY -- size[find(x)], never size[x].
 	// The alternative is union by RANK, which stores an upper bound on the tree's
-	// HEIGHT instead. Both keep find short and neither is measurably faster, but
-	// they are not interchangeable to read: rank is not a count of anything, so
-	// there is no rank version of size(x). See MinCostToConnectAllPointsKruskalSubmit
-	// for the rank spelling, and pages/20-union-find/the-four-rungs.md trap 2.
+	// HEIGHT instead. Both keep find short with the same bound, but they are not
+	// interchangeable to read: rank is not a count of anything, so there is no
+	// rank version of size(x). See MinCostToConnectAllPointsKruskalSubmit for the
+	// rank spelling.
 	private final int[] size;
 
 	// everyone starts alone
@@ -39,15 +51,15 @@ public final class DisjointSet {
 	// false if they were already together. The caller counts with it:
 	// start at n and drop one per true -- see NumberOfConnectedComponents323.
 	public boolean union(int a, int b) {
-		int pa = find(a);
+		int pa = find(a); // FIND: the two roots
 		int pb = find(b);
 		if (pa == pb) {
-			return false;
+			return false; // SKIP: already together
 		}
 		// the smaller tree goes underneath, which is what keeps find short.
 		// the update is UNCONDITIONAL -- every merge changes the element count.
 		// (union by rank updates only when the two ranks were equal.)
-		if (size[pa] > size[pb]) {
+		if (size[pa] > size[pb]) { // JOIN: the smaller group goes under the larger
 			parent[pb] = pa;
 			size[pa] += size[pb];
 		} else {
@@ -59,7 +71,7 @@ public final class DisjointSet {
 
 	// iterative, so depth can never reach the call stack
 	public int find(int x) {
-		while (parent[x] != x) {
+		while (parent[x] != x) { // WALK: up to the root
 			// path halving: point at the grandparent on the way up. Every node on the
 			// route gets shortened, not just the one that was asked about, and it needs
 			// no second pass down.
@@ -70,14 +82,13 @@ public final class DisjointSet {
 	}
 
 	public boolean sameGroup(int a, int b) {
-		return find(a) == find(b);
+		return find(a) == find(b); // SAME ROOT == SAME GROUP
 	}
 
 	// how many nodes are in the group containing x
 	public int size(int x) {
-		return size[find(x)];
+		return size[find(x)]; // READ the size at the root
 	}
-
 
 	public static void main(String[] args) {
 		DisjointSet ds = new DisjointSet(5);

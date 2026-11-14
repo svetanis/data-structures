@@ -1,75 +1,82 @@
 package com.svetanis.datastructures.graph.directed.ts.schedule;
 
-import static com.google.common.collect.Lists.newArrayList;
-import static com.google.common.collect.Lists.newLinkedList;
-import static com.google.common.collect.Maps.filterValues;
-import static com.google.common.collect.Maps.newHashMap;
-import static com.svetanis.java.base.collect.Lists.newList;
-
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 
-import com.google.common.collect.ImmutableList;
-
-// there are n tasks, labeled from 0 to n - 1
-// each task can have some prerequisite tasks
-// which need to be completed before it can
-// be scheduled. given the number of tasks and
-// a list of prerequisite pairs, find the 
-// ordering of tasks 
+// Order of Tasks With Prerequisites (the same task as 210. Course Schedule II)
+//
+// Input: n tasks labelled 0..n-1 and int[][] m of pairs [a, b], meaning task a must be done
+// before task b. Assumes distinct pairs with a != b.
+// Returns one order that respects every pair, or an empty list when the pairs form a loop.
+// More than one order is usually correct; this returns the one the queue produces.
+//
+// The one idea: a task is READY when no pair still points at it (its in-degree is 0). Take a
+// ready task, append it to the answer, and cross off the pairs leaving it; any task whose count
+// just reached 0 is now ready. A task is appended only after all the tasks that must precede it,
+// so the answer is valid. If fewer than n tasks were appended, the rest wait on each other: a loop.
+//
+// Time: O(V + E) -- each task enters the queue once and each pair is crossed off once.
+// Space: O(V + E) -- the graph, the in-degree map and the queue.
+//
+// Siblings: IsTasksScheduling is the same walk returning only yes/no; AllTasksScheduleOrdering
+// returns every valid order; CourseScheduleSubmit is the array version for 210.
 
 public final class TasksScheduleOrdering {
-	// Time Complexity: O(V + E)
 
-	public static ImmutableList<Integer> schedulingTasks(int tasks, int[][] m) {
+	public static List<Integer> schedulingTasks(int tasks, int[][] m) {
 		Map<Integer, Integer> inDegree = inDegreeInit(tasks);
 		Map<Integer, List<Integer>> graph = graphInit(tasks);
 		buildGraph(tasks, m, inDegree, graph);
-		List<Integer> list = newArrayList();
+		List<Integer> list = new ArrayList<>(); // ORDER: the tasks taken so far
 		Queue<Integer> queue = sources(inDegree);
 		while (!queue.isEmpty()) {
 			int src = queue.poll();
-			list.add(src);
+			list.add(src); // TAKE
 			List<Integer> children = graph.get(src);
 			for (int child : children) {
-				int f = inDegree.getOrDefault(child, 0) - 1;
+				int f = inDegree.getOrDefault(child, 0) - 1; // CROSS OFF: one pair into child is used up
 				if (f == 0) {
-					queue.add(child);
+					queue.add(child); // READY
 				}
 				inDegree.put(child, f);
 			}
 		}
-		// if topological ordering doesn't contain all tasks
-		// then there is a cyclic dependency between tasks
-		// therefore it will not be possible to schedule all tasks
+		// RETURN: a topological order that misses some tasks means a loop between
+		// them, so there is no valid order
 		if (list.size() != tasks) {
-			return newList();
+			return new ArrayList<>();
 		}
-		return newList(list);
+		return list;
 	}
 
 	private static Queue<Integer> sources(Map<Integer, Integer> map) {
-		Queue<Integer> queue = newLinkedList();
+		Queue<Integer> queue = new ArrayDeque<>();
 		// all vertices with 0 in-degree
-		Map<Integer, Integer> filtered = filterValues(map, v -> v == 0);
-		queue.addAll(filtered.keySet());
+		for (int key : map.keySet()) {
+			if (map.get(key) == 0) {
+				queue.add(key);
+			}
+		}
 		return queue;
 	}
 
-	private static void buildGraph(int v, int[][] m, Map<Integer, Integer> inDegree, 
+	private static void buildGraph(int v, int[][] m, Map<Integer, Integer> inDegree,
 			Map<Integer, List<Integer>> map) {
 		for (int i = 0; i < m.length; i++) {
 			int parent = m[i][0];
 			int child = m[i][1];
-			map.get(parent).add(child);
+			map.get(parent).add(child); // ARROW: parent must come before child
 			int fc = inDegree.getOrDefault(child, 0);
 			inDegree.put(child, fc + 1);
 		}
 	}
 
 	private static Map<Integer, Integer> inDegreeInit(int v) {
-		Map<Integer, Integer> map = newHashMap();
+		Map<Integer, Integer> map = new HashMap<>();
 		for (int i = 0; i < v; i++) {
 			map.put(i, 0);
 		}
@@ -77,9 +84,9 @@ public final class TasksScheduleOrdering {
 	}
 
 	private static Map<Integer, List<Integer>> graphInit(int v) {
-		Map<Integer, List<Integer>> map = newHashMap();
+		Map<Integer, List<Integer>> map = new HashMap<>();
 		for (int i = 0; i < v; i++) {
-			map.put(i, newArrayList());
+			map.put(i, new ArrayList<>());
 		}
 		return map;
 	}
@@ -88,8 +95,8 @@ public final class TasksScheduleOrdering {
 		int[][] m0 = { { 0, 1 }, { 1, 2 } };
 		int[][] m1 = { { 0, 1 }, { 1, 2 }, { 2, 0 } };
 		int[][] m2 = { { 2, 5 }, { 0, 5 }, { 0, 4 }, { 1, 4 }, { 3, 2 }, { 1, 3 } };
-		System.out.println(schedulingTasks(3, m0)); // 0, 1, 2
-		System.out.println(schedulingTasks(3, m1)); // empty
-		System.out.println(schedulingTasks(6, m2)); // 0, 1, 4, 3, 2, 5
+		System.out.println(schedulingTasks(3, m0)); // [0, 1, 2]
+		System.out.println(schedulingTasks(3, m1)); // []
+		System.out.println(schedulingTasks(6, m2)); // [0, 1, 4, 3, 2, 5]
 	}
 }

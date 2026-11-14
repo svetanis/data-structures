@@ -4,9 +4,26 @@ import java.util.ArrayDeque;
 import java.util.Queue;
 
 // 1926. Nearest Exit from Entrance in Maze
+//
+// Input: a grid g of '.' (empty cell) and '+' (wall), and an entrance cell, which is empty. In one
+// step you move up, down, left or right onto an empty cell. An exit is an empty cell on the
+// border of the grid, other than the entrance. On LeetCode: 1 <= rows, cols <= 100.
+// Returns the fewest steps from the entrance to the nearest exit, or -1 if there is none. The
+// grid is changed: every cell reached is overwritten with '+'.
+//
+// The one idea: one queue entry is a cell that has just been reached. All cells that are the same
+// number of steps from the entrance wait in the queue together, so taking the queue out one batch
+// at a time counts the steps: batch 1 is everything one step away, batch 2 two steps away, and so
+// on. The first border cell found is therefore a nearest exit. A cell is turned into a wall the
+// moment it is queued, which both marks it as seen and keeps the entrance itself from counting
+// as an exit.
+//
+// Time: O(n * m) -- each cell is queued at most once, with 4 neighbours looked at.
+// Space: O(n * m) -- the queue.
+//
+// Siblings: none -- this is the only file for this problem.
 
 public final class NearestExitInMaze {
-	// Time & Space Complexity: O(n*m).
 
 	private static final char EMPTY = '.';
 	private static final char WALL = '+';
@@ -20,33 +37,33 @@ public final class NearestExitInMaze {
 		Node src = new Node(x, y);
 		Queue<Node> queue = new ArrayDeque<>();
 		queue.offer(src);
-		// mark as visited
+		// RECORD: mark as visited
 		g[x][y] = WALL;
 		int steps = 0;
 		while (!queue.isEmpty()) {
-			steps++;
-			for (int count = queue.size(); count > 0; count--) {
-				Node node = queue.poll();
+			steps++; // COUNT: every cell of this batch is one step further out
+			for (int count = queue.size(); count > 0; count--) { // LEVEL: only the cells of this batch
+				Node node = queue.poll(); // TAKE
 				for (int k = 0; k < dx.length; k++) {
 					int row = node.x + dx[k];
 					int col = node.y + dy[k];
 					if (safe(g, row, col)) {
 						if (boundary(g, row, col)) {
-							return steps;
+							return steps; // RETURN: the first border cell found is nearest
 						}
 						queue.offer(new Node(row, col));
-						g[row][col] = WALL;
+						g[row][col] = WALL; // RECORD: mark when queued
 					}
 				}
 			}
 		}
-		return -1;
+		return -1; // RETURN: every reachable cell tried, none on the border
 	}
 
 	private static boolean safe(char[][] g, int x, int y) {
 		boolean row = x >= 0 && x < g.length;
 		boolean col = y >= 0 && y < g[0].length;
-		return row && col && g[x][y] == EMPTY;
+		return row && col && g[x][y] == EMPTY; // SKIP: off the grid, a wall, or seen
 	}
 
 	private static boolean boundary(char[][] g, int x, int y) {

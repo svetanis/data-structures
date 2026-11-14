@@ -1,10 +1,8 @@
 package com.svetanis.datastructures.graph.directed.ts.reconstruct;
 
-import static com.google.common.collect.Lists.newArrayList;
-import static java.util.Arrays.asList;
-
 import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -12,20 +10,28 @@ import java.util.Map;
 import java.util.Queue;
 import java.util.Set;
 
-// A sequence s is a list of integers. 
-// Its subsequence is a new sequence that 
-// can be made up by deleting elements from s, 
-// without changing the order of integers.
-
-// We are given an original sequence and a list of subsequences seqs.
-
-// Determine whether original is the only sequence that 
-// can be reconstructed from seqs. 
-// Reconstruction means building the shortest sequence 
-// so that all sequences in seqs are subsequences of it.
+// 444. Sequence Reconstruction
+//
+// Input: a list `sequence` (LeetCode's nums, a permutation of 1..n) and a list of lists
+// `sequences`, each one a subsequence of it (delete some values, keep the order). On LeetCode:
+// 1 <= n <= 10^4, 1 <= sequences.length <= 10^4, 1 <= sum of the list lengths <= 10^5,
+// values 1..n.
+// Returns true when `sequence` is the ONLY shortest list that has every list as a subsequence.
+//
+// The one idea: two neighbours in a list, a then b, are a rule: a must come before b. One value
+// is one graph node; one rule is one arrow a -> b. A value is READY when no rule still waits on
+// it (in-degree 0). Take ready values one at a time. If two are ready at once, either could go
+// next, so two different lists fit and the answer is false. If exactly one is ready it is forced,
+// and it must be the value `sequence` holds at that position. A value that appears in no list has
+// no rule at all, so it is ready from the start and sits beside another ready value: false.
+//
+// Time: O(V + E) -- V values, E neighbour pairs; each value and each arrow is handled once.
+// Space: O(V + E) -- the arrows (as sets, so a repeated pair counts once) and the in-degrees.
+//
+// Siblings: SequenceReconstruction is the same method; ReconstructingSequence takes int[][];
+// SequenceReconstructionLeet indexes arrays by value - 1.
 
 public final class SequenceReconstructionSubmit {
-	// Time Complexity: O(V + E)
 
 	public static boolean reconstruct(List<Integer> sequence, List<List<Integer>> sequences) {
 		if (sequence.size() == 0) {
@@ -37,33 +43,27 @@ public final class SequenceReconstructionSubmit {
 
 	private static boolean topoSort(List<Integer> sequence, Map<Integer, Set<Integer>> graph) {
 		Map<Integer, Integer> inDegree = inDegree(graph);
-		// if we don't have ordering rules for
-		// all the elements, we'll not be able
-		// to uniquely reconstruct the sequence
+		// every value of `sequence` is a node, so this differs only if `sequence` repeats a value
 		if (inDegree.size() != sequence.size()) {
 			return false;
 		}
-		List<Integer> list = new ArrayList<>();
+		List<Integer> list = new ArrayList<>(); // TAKEN: the forced order so far
 		Queue<Integer> queue = sources(inDegree);
 		while (!queue.isEmpty()) {
-			// more than one source means
-			// there is more than one way
-			// to reconstruct the sequence
+			// TWO READY: either could go next, so more than one list fits
 			if (queue.size() > 1) {
 				return false;
 			}
-			// the next element is different
-			// from the original sequence
-			// both sides are Integer, so != would compare identity rather than
-			// value. Java caches the boxes for -128..127 only, so that spelling
-			// agrees with equals() on small inputs and silently stops agreeing
-			// above 127 -- and LC 444 allows values up to 10,000
+			// WRONG ONE: the forced value is not the one `sequence` holds here.
+			// Both sides are Integer, so != would compare identity rather than value:
+			// Java caches the boxes for -128..127 only, so that spelling agrees with
+			// equals() on small inputs and stops agreeing above 127
 			if (!sequence.get(list.size()).equals(queue.peek())) {
 				return false;
 			}
 			int src = queue.poll();
 			list.add(src);
-			for (int neighbor : graph.get(src)) {
+			for (int neighbor : graph.get(src)) { // RELEASE: this value's rules are satisfied
 				int ind = inDegree.get(neighbor) - 1;
 				inDegree.put(neighbor, ind);
 				if (ind == 0) {
@@ -71,13 +71,12 @@ public final class SequenceReconstructionSubmit {
 				}
 			}
 		}
-		return list.equals(sequence);
+		return list.equals(sequence); // RETURN: a loop of rules would leave `list` short
 	}
 
 	private static Queue<Integer> sources(Map<Integer, Integer> inDegree) {
 		Queue<Integer> queue = new ArrayDeque<>();
-		// all vertices with 0 in-degree
-		for (int key : inDegree.keySet()) {
+		for (int key : inDegree.keySet()) { // READY: every value with in-degree 0
 			if (inDegree.get(key) == 0) {
 				queue.add(key);
 			}
@@ -107,7 +106,7 @@ public final class SequenceReconstructionSubmit {
 		Map<Integer, Set<Integer>> map = graphInit(sequence);
 		for (List<Integer> s : sequences) {
 			for (int i = 0; i < s.size() - 1; i++) {
-				map.get(s.get(i)).add(s.get(i + 1));
+				map.get(s.get(i)).add(s.get(i + 1)); // ARROW: s[i] must come before s[i + 1]
 			}
 		}
 		return map;
@@ -122,36 +121,36 @@ public final class SequenceReconstructionSubmit {
 	}
 
 	public static void main(String[] args) {
-		List<Integer> s1 = newArrayList(1, 2, 3);
-		List<List<Integer>> list1 = newArrayList();
-		list1.add(asList(1, 2));
-		list1.add(asList(1, 3));
+		List<Integer> s1 = new ArrayList<>(Arrays.asList(1, 2, 3));
+		List<List<Integer>> list1 = new ArrayList<>();
+		list1.add(Arrays.asList(1, 2));
+		list1.add(Arrays.asList(1, 3));
 		System.out.println(reconstruct(s1, list1)); // false
 
-		List<List<Integer>> list2 = newArrayList();
-		list2.add(asList(1, 2));
+		List<List<Integer>> list2 = new ArrayList<>();
+		list2.add(Arrays.asList(1, 2));
 		System.out.println(reconstruct(s1, list2)); // false
 
-		List<List<Integer>> list3 = newArrayList();
-		list3.add(asList(1, 2));
-		list3.add(asList(1, 3));
-		list3.add(asList(2, 3));
+		List<List<Integer>> list3 = new ArrayList<>();
+		list3.add(Arrays.asList(1, 2));
+		list3.add(Arrays.asList(1, 3));
+		list3.add(Arrays.asList(2, 3));
 		System.out.println(reconstruct(s1, list3)); // true
 
-		List<Integer> s2 = newArrayList(4, 1, 5, 2, 6, 3);
-		List<List<Integer>> list4 = newArrayList();
-		list4.add(asList(5, 2, 6, 3));
-		list4.add(asList(4, 1, 5, 2));
+		List<Integer> s2 = new ArrayList<>(Arrays.asList(4, 1, 5, 2, 6, 3));
+		List<List<Integer>> list4 = new ArrayList<>();
+		list4.add(Arrays.asList(5, 2, 6, 3));
+		list4.add(Arrays.asList(4, 1, 5, 2));
 		System.out.println(reconstruct(s2, list4)); // true
 
-		// case 3 again with every value pushed above 127, where Java stops
-		// handing out the same Integer box for the same number. The answer
-		// must not depend on how large the numbers are
-		List<Integer> s3 = newArrayList(200, 201, 202);
-		List<List<Integer>> list5 = newArrayList();
-		list5.add(asList(200, 201));
-		list5.add(asList(200, 202));
-		list5.add(asList(201, 202));
+		// case 3 again with every value pushed above 127, where Java stops handing out
+		// the same Integer box for the same number. The answer must not depend on how
+		// large the numbers are
+		List<Integer> s3 = new ArrayList<>(Arrays.asList(200, 201, 202));
+		List<List<Integer>> list5 = new ArrayList<>();
+		list5.add(Arrays.asList(200, 201));
+		list5.add(Arrays.asList(200, 202));
+		list5.add(Arrays.asList(201, 202));
 		System.out.println(reconstruct(s3, list5)); // true
 	}
 }

@@ -1,23 +1,36 @@
 package com.svetanis.datastructures.graph.unionfind;
 
 // 990. Satisfiability of Equality Equations
+//
+// Input: String[] equations, each of length 4 and shaped "a==b" or "a!=b" with single lowercase
+// letters for variables. On LeetCode: 1 <= equations.length <= 500.
+// Returns true when whole numbers can be given to the letters so every equation holds.
+//
+// The one idea: "==" is a rule that two letters carry the same number, and equal-to is
+// transitive (a==b and b==c force a==c). So first use every "==" equation to glue letters into
+// groups with union-find: letters in one group must all be equal. Then check every "!=": it
+// fails exactly when its two letters ended up in the SAME group. If none does, give each group
+// its own number and all equations hold. The order matters: all gluing first, then all checking,
+// because a later "==" can join groups that an earlier "!=" already looked at.
+//
+// Time: O(n) -- two passes over the n equations; each find is close to constant on 26 letters.
+// Space: O(1) -- one array of 26 parents, whatever n is.
 
 public final class EquationEquality {
-	// Time Complexity: O(n)
 
-	private int[] parent;
+	private int[] parent; // CARDS: parent[c] -- the letter above letter c in its group
 
 	public boolean equationsPossible(String[] equations) {
 		// per call, not in the constructor -- unions from an earlier
 		// call would otherwise still be joined for this one
 		this.parent = init();
-		merge(equations);
+		merge(equations); // GLUE: every "==" first
 		for (String equation : equations) {
-			if (equation.charAt(1) == '!') {
+			if (equation.charAt(1) == '!') { // CHECK: every "!=" against the finished groups
 				int x = equation.charAt(0) - 'a';
 				int y = equation.charAt(3) - 'a';
 				if (find(x) == find(y)) {
-					return false;
+					return false; // RETURN: told apart but forced equal
 				}
 			}
 		}
@@ -29,7 +42,7 @@ public final class EquationEquality {
 			if (equation.charAt(1) == '=') {
 				int x = equation.charAt(0) - 'a';
 				int y = equation.charAt(3) - 'a';
-				parent[find(x)] = find(y);
+				parent[find(x)] = find(y); // JOIN
 			}
 		}
 	}
@@ -38,7 +51,7 @@ public final class EquationEquality {
 		int y = parent[x];
 		if (y != x) {
 			y = find(y);
-			parent[x] = y;
+			parent[x] = y; // COMPRESS
 		}
 		return y;
 	}

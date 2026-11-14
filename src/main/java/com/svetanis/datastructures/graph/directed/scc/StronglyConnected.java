@@ -6,44 +6,50 @@ import static java.util.Arrays.fill;
 
 import com.svetanis.datastructures.graph.directed.Graph;
 
-// A directed graph is strongly connected if there is a path between any two pair of vertices. 
+// Is a directed graph strongly connected? (two depth-first walks)
+//
+// Input: g -- a directed graph on the vertices 0 .. n - 1, n >= 1. A directed graph is strongly
+// connected if every vertex can be reached from every other vertex by following edges. Returns:
+// true if it is.
+//
+// The one idea: if vertex 0 reaches every vertex, and every vertex reaches vertex 0, then any
+// vertex a reaches any vertex b by going through 0. And that is also necessary. "Vertex 0 reaches
+// every vertex" is one walk from 0. "Every vertex reaches 0" is one walk from 0 in the graph with
+// every edge turned around (Kosaraju's idea).
+//
+// Time: O(V + E) -- two walks and one reversal.
+// Space: O(V + E) -- the reversed graph, the marks and the recursion, up to V deep.
+//
+// Siblings: SccKosarajuBfs is the same test with queues instead of recursion; SccKosarajuDfs prints
+// the components.
 
-// Kosaraju-based Algorithm
 public final class StronglyConnected {
 
-  // Time Complexity: O(V + E)
   public static boolean isStronglyConnected(Graph g) {
 
     int size = g.size();
-    // Step 1: mark all the vertices
-    // as not visited (for first DFS)
     boolean[] visited = new boolean[size];
 
-    // Step 2: do DFS traversal
-    // starting from first vertex
+    // FORWARD: what 0 reaches
     dfs(g, 0, visited);
 
-    // if DFS traversal doesn't visit
+    // if the walk doesn't reach
     // all vertices, then return false
     if (!isVisited(visited)) {
       return false;
     }
 
-    // Step 3: Create a reversed graph
+    // create a reversed graph
     Graph reversed = transpose(g);
 
-    // Step 4: Mark all the vertices
-    // as not visited (for second DFS);
+    // clear the marks for the second walk
     fill(visited, false);
 
-    // Step 5: Do DFS for reversed graph
-    // starting from first vertex.
-    // Starting vertex must be same
-    // starting point of first DFS
+    // BACKWARD: what reaches 0 -- the same start vertex as the first walk
     dfs(reversed, 0, visited);
 
-    // If all vertices are not visited
-    // in second DFS, then return false
+    // if the second walk doesn't reach
+    // all vertices, then return false
     return isVisited(visited);
   }
 
@@ -64,12 +70,12 @@ public final class StronglyConnected {
     g.addEdge(3, 0);
     g.addEdge(2, 4);
     g.addEdge(4, 2);
-    System.out.println(isStronglyConnected(g));
+    System.out.println(isStronglyConnected(g)); // true
 
     Graph g2 = new Graph(4);
     g2.addEdge(0, 1);
     g2.addEdge(1, 2);
     g2.addEdge(2, 3);
-    System.out.println(isStronglyConnected(g2));
+    System.out.println(isStronglyConnected(g2)); // false -- 0 is not reachable from 3
   }
 }

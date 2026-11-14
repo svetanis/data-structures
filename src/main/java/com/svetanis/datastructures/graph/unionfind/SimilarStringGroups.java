@@ -1,23 +1,37 @@
 package com.svetanis.datastructures.graph.unionfind;
 
 // 839. Similar String Groups
+//
+// Input: strs -- words that are all anagrams of each other. Two words are SIMILAR when they are
+// equal or when swapping two letters of one gives the other. Similar words, directly or through
+// other words, form a group. Returns the number of groups. On LeetCode: 1 <= strs.length <= 300,
+// 1 <= strs[i].length <= 300, lowercase letters, all words the same length and anagrams of each
+// other.
+//
+// The one idea: the words are the nodes and "similar" is a wire between two words; the answer is the
+// number of groups of wired words. One element is one word (its index). Compare every pair, join the
+// similar ones, then count the roots: an index that is its own parent is the head of one group.
+// Whether two words are similar is decided by the places where they differ: none, or exactly two,
+// and in those two places each word must hold the other's letter.
+//
+// Time: O(n^2 * L) -- n^2 / 2 pairs, each compared letter by letter over L letters; the finds are
+// near-constant after compression.
+// Space: O(n) -- the parent array.
 
 public final class SimilarStringGroups {
-	// Time Complexity: O(n^2 * length)
-	// Space Complexity: O(n)
 
 	private int[] parent;
 
 	public int similarGroups(String[] a) {
 		this.parent = init(a.length);
-		merge(a);
-		return countGroups();
+		merge(a); // JOIN: every similar pair
+		return countGroups(); // RETURN: one per group
 	}
 
 	private int countGroups() {
 		int count = 0;
 		for (int i = 0; i < parent.length; i++) {
-			if (i == find(i)) {
+			if (i == find(i)) { // a root is the head of one group
 				count++;
 			}
 		}
@@ -33,25 +47,24 @@ public final class SimilarStringGroups {
 		int second = -1;
 		for (int i = 0; i < s1.length(); i++) {
 			if (s1.charAt(i) == s2.charAt(i)) {
-				continue;
+				continue; // SKIP: the letters agree here
 			}
 			if (first == -1) {
-				first = i;
+				first = i; // RECORD: the first place they differ
 			} else if (second == -1) {
-				second = i;
+				second = i; // RECORD: the second place
 			} else {
-				return false;
+				return false; // a third difference: no single swap fixes it
 			}
 		}
 		if (first == -1) {
-			return true;
+			return true; // equal words
 		}
 		if (second == -1) {
-			// one position apart. impossible for the anagrams LC 839
-			// promises, which is why the count-only test survived there
+			// one position apart. impossible for the anagrams LC 839 promises
 			return false;
 		}
-		return s1.charAt(first) == s2.charAt(second) //
+		return s1.charAt(first) == s2.charAt(second) // CROSSED: each holds the other's letter
 				&& s1.charAt(second) == s2.charAt(first);
 	}
 
@@ -61,7 +74,7 @@ public final class SimilarStringGroups {
 				if (isSimilar(a[i], a[j])) {
 					int p1 = find(i);
 					int p2 = find(j);
-					parent[p1] = p2;
+					parent[p1] = p2; // JOIN the two groups
 				}
 			}
 		}
@@ -70,8 +83,8 @@ public final class SimilarStringGroups {
 	private int find(int x) {
 		int y = parent[x];
 		if (y != x) {
-			y = find(y);
-			parent[x] = y;
+			y = find(y); // WALK up to the root
+			parent[x] = y; // COMPRESS: point straight at it
 		}
 		return y;
 	}
@@ -87,24 +100,22 @@ public final class SimilarStringGroups {
 	public static void main(String[] args) {
 		SimilarStringGroups ssg = new SimilarStringGroups();
 		String[] a1 = { "tars", "rats", "arts", "star" };
-		System.out.println(ssg.similarGroups(a1)); // 2
+		System.out.println(ssg.similarGroups(a1)); // 2 -- {tars, rats, arts} and {star}
 		SimilarStringGroups ssg2 = new SimilarStringGroups();
 		String[] a2 = { "omv", "ovm" };
-		System.out.println(ssg2.similarGroups(a2)); // 1
+		System.out.println(ssg2.similarGroups(a2)); // 1 -- one swap
 
 		// one position apart, so no single swap turns either into the
-		// other. these are not anagrams, which is why LC 839 never
-		// shows them -- diff <= 2 called them similar and printed 1
+		// other. these are not anagrams, which is why LC 839 never shows them
 		String[] a3 = { "bb", "ba" };
-		System.out.println(new SimilarStringGroups().similarGroups(a3)); // 2
+		System.out.println(new SimilarStringGroups().similarGroups(a3)); // 2 -- two groups
 
 		// two positions apart but not crossed -- no swap of "ab" gives
-		// "cd". counting the differing positions cannot tell this pair
-		// from "ab" and "ba", and the count-only test printed 1
+		// "cd", so the letters at the two places must also be each other's
 		String[] a4 = { "ab", "cd" };
-		System.out.println(new SimilarStringGroups().similarGroups(a4)); // 2
+		System.out.println(new SimilarStringGroups().similarGroups(a4)); // 2 -- two groups
 
 		String[] a5 = { "ab", "ba" };
-		System.out.println(new SimilarStringGroups().similarGroups(a5)); // 1
+		System.out.println(new SimilarStringGroups().similarGroups(a5)); // 1 -- crossed, one swap
 	}
 }

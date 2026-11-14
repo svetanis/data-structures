@@ -7,19 +7,36 @@ import java.util.HashSet;
 import java.util.Set;
 
 // 752. Open the Lock
-
-// One-way, counting rings: a frozen size marks each ring's edge and one shared
-// `moves` counter advances at the ring boundary. OpenLock.java solves the same
-// problem the other way, giving every code its own depth in a map -- so it
-// needs no ring loop at all, and reads the answer back out of the map instead
-// of off a counter. Both are correct; this one keeps the shape used everywhere
-// else in graph/bfs, and needs one structure fewer
+//
+// Input: dst -- the combination to reach; deadends -- combinations that jam the lock. The lock has
+// 4 wheels, each showing a digit 0-9, and starts at "0000"; one move turns one wheel one slot, up
+// or down, and 9 wraps to 0. Returns the least number of moves to reach dst without landing on a
+// deadend, or -1. On LeetCode: 1 <= deadends.length <= 500, every deadend and the target is 4
+// digits, target is not a deadend.
+//
+// The one idea: one queue entry holds one combination of the lock, a 4-character string, and the
+// queue holds it together with every other combination the same number of moves from "0000" -- one
+// ring at a time. A frozen size marks where the current ring ends, and one shared `moves`
+// counter goes up by one at each ring boundary, so no combination needs a depth of its own. The
+// first time the target comes off the queue, it is on the ring that equals its shortest distance.
+// Deadends are filtered as the neighbours are built, so the one combination never filtered is
+// the start; a jammed "0000" is tested first.
+//
+// One-way, counting rings. OpenLock.java solves the same problem the other way, giving every code
+// its own depth in a map -- so it needs no ring loop at all, and reads the answer back out of
+// the map instead of off a counter. Both are correct; this one keeps the shape used everywhere
+// else in graph/bfs, and needs one structure fewer.
+//
+// Time: O(10^d * d) -- d = 4 wheels, so at most 10,000 combinations, each building 8 neighbours
+// of d characters
+// Space: O(10^d) -- the queue and the visited set hold each combination at most once
+//
+// Siblings: OpenLock (one-way, a depth per combination), OpenLockBidirectional and
+// OpenLockFrontiers (searches from both ends), OpenLockSubmit (the LeetCode submission).
 public final class OpenLockRings {
 
 	private static final String SRC = "0000";
 
-	// Time Complexity: O(10^d * d) -- d = 4 wheels, so at most 10,000 codes
-	// Space Complexity: O(10^d)
 	public int openLock(String dst, String[] deadends) {
 		Set<String> excluded = new HashSet<>();
 		Collections.addAll(excluded, deadends);
@@ -30,7 +47,7 @@ public final class OpenLockRings {
 		// runs out and answers -1 on its own. The two-ended version in
 		// OpenLockFrontiers cannot rely on that, because it seeds the target
 		if (excluded.contains(SRC)) {
-			return -1;
+			return -1; // BASE: the start is jammed
 		}
 		return bfs(dst, excluded);
 	}
@@ -47,24 +64,24 @@ public final class OpenLockRings {
 			// as "i < queue.size()" the bound grows as children are offered
 			// and the ring boundary lands in the wrong place
 			int size = queue.size();
-			for (int i = 0; i < size; i++) {
+			for (int i = 0; i < size; i++) { // WALK: one whole ring
 				String code = queue.poll();
 				// tested on the POLLED code, whose distance is exactly `moves`.
 				// Testing each neighbour instead costs a + 1 and a separate
 				// case for the target being the start
 				if (code.equals(dst)) {
-					return moves;
+					return moves; // RETURN: the ring number is the distance
 				}
 				for (String neighbor : neighbors(code, excluded)) {
 					// asks and marks in one call, so the two cannot drift
-					if (visited.add(neighbor)) {
-						queue.offer(neighbor);
+					if (visited.add(neighbor)) { // SKIP: seen before; the add is also the mark
+						queue.offer(neighbor); // TAKE: it belongs to the next ring
 					}
 				}
 			}
-			moves++;
+			moves++; // the ring is finished
 		}
-		return -1;
+		return -1; // RETURN: the queue ran dry, dst is walled off
 	}
 
 	// the eight codes one turn away, minus the deadends. Nothing holds this
@@ -72,22 +89,22 @@ public final class OpenLockRings {
 	private Set<String> neighbors(String src, Set<String> excluded) {
 		Set<String> set = new HashSet<>();
 		char[] chars = src.toCharArray();
-		for (int i = 0; i < chars.length; i++) {
+		for (int i = 0; i < chars.length; i++) { // WALK: each wheel in turn
 			char old = chars[i];
 			int digit = old - '0';
 			// + 10 before the %, because Java's % keeps the sign of its left
 			// operand: (0 - 1) % 10 is -1, and '0' + -1 is the character '/'
-			chars[i] = (char) ('0' + (digit - 1 + 10) % 10);
+			chars[i] = (char) ('0' + (digit - 1 + 10) % 10); // the digit one slot down
 			addIfAllowed(set, new String(chars), excluded);
-			chars[i] = (char) ('0' + (digit + 1) % 10);
+			chars[i] = (char) ('0' + (digit + 1) % 10); // the digit one slot up
 			addIfAllowed(set, new String(chars), excluded);
-			chars[i] = old;
+			chars[i] = old; // restore the wheel
 		}
 		return set;
 	}
 
 	private void addIfAllowed(Set<String> set, String combo, Set<String> excluded) {
-		if (!excluded.contains(combo)) {
+		if (!excluded.contains(combo)) { // SKIP: a deadend
 			set.add(combo);
 		}
 	}

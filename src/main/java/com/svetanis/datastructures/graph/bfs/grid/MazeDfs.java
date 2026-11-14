@@ -1,9 +1,28 @@
 package com.svetanis.datastructures.graph.bfs.grid;
 
 // 490. The Maze
+//
+// Input: a grid of 0 (empty) and 1 (wall), a start cell src and a destination cell dst, both
+// empty and different. A ball placed on src rolls in one of the four directions and does not stop
+// until it hits a wall or the edge of the grid; only then may it be rolled again. On LeetCode:
+// 1 <= rows, cols <= 100.
+// Returns true if the ball can come to rest exactly on dst. Passing over dst while rolling does
+// not count.
+//
+// The one idea: one call of dfs is one place where the ball has come to REST, not any cell it
+// passed over. From a resting place the ball has at most four moves, one per direction, and each
+// move ends at the next resting place in that direction, which is the next call. A resting place
+// is marked on its first visit, so no place is explored twice and the search ends. The first
+// branch that reaches dst makes every call above it return true at once.
+//
+// Time: O(n * m * (n + m)) -- at most n * m resting places, each tries 4 rolls, and a roll crosses
+// at most max(n, m) cells.
+// Space: O(n * m) -- the visited table; the recursion can be as deep as the number of resting
+// places.
+//
+// Siblings: MazeBfs solves the same problem breadth first, with a queue instead of a recursion.
 
 public final class MazeDfs {
-	// Time & Space Complexity: O(n*m).
 
 	private static final int[] dx = { -1, 0, 1, 0 };
 	private static final int[] dy = { 0, -1, 0, 1 };
@@ -26,31 +45,31 @@ public final class MazeDfs {
 	private boolean dfs(int[] curr) {
 		int x = curr[0], y = curr[1];
 		if (visited[x][y]) {
-			return false;
+			return false; // SKIP: this resting place was explored already
 		}
 		if (x == dst[0] && y == dst[1]) {
-			return true;
+			return true; // RETURN: the ball rests on dst
 		}
-		visited[x][y] = true;
+		visited[x][y] = true; // RECORD: mark on entry
 		for (int k = 0; k < 4; k++) {
 			int row = x, col = y;
-			// move ball in the chosen dir until it can
+			// ROLL: move ball in the chosen dir until it can't
 			while (safe(row, col)) {
 				row += dx[k];
 				col += dy[k];
 			}
-			// revert last move
+			// BACK: revert last move; that cell is where the ball rests
 			if (dfs(new int[] { row - dx[k], col - dy[k] })) {
 				return true;
 			}
 		}
-		return false;
+		return false; // RETURN: no direction led to dst
 	}
 
 	private boolean safe(int x, int y) {
 		boolean row = x >= 0 && x < g.length;
 		boolean col = y >= 0 && y < g[0].length;
-		return row && col && g[x][y] == 0;
+		return row && col && g[x][y] == 0; // SKIP: off the grid or a wall
 	}
 
 	public static void main(String[] args) {

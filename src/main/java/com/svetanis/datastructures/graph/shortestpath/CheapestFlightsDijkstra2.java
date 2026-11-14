@@ -9,11 +9,30 @@ import java.util.Map;
 import java.util.PriorityQueue;
 
 // 787. Cheapest Flights Within K Stops
-// Dijkstra's Algorithm 
+//
+// Input: n -- the number of cities, labelled 0 to n - 1; flights[i] = { from, to, price } -- a
+// one-way flight; src and dst -- where the trip starts and ends; k -- the most cities the trip may
+// pass through between them, so at most k + 1 flights. Returns the cheapest price from src to dst
+// with at most k stops, or -1 if there is no such trip. On LeetCode: 1 <= n <= 100,
+// 0 <= flights.length <= n * (n - 1) / 2, from != to, 1 <= price <= 10^4, no two flights share the
+// same (from, to), 0 <= src, dst, k < n, src != dst.
+//
+// The one idea: one heap entry is one trip so far -- the city it has reached, what it has cost and
+// how many flights it used. Trips come off the heap cheapest first, so the first trip to pop at
+// dst is the cheapest one that fits. The state worth remembering is the pair (city, flights used),
+// not the city alone: minCost holds, per pair, the cheapest price at which that pair has been
+// expanded, and a later trip to the same pair is dropped because it costs no less and has the same
+// number of flights left.
+//
+// Time: O(E * k * log(E * k)) -- each (city, stops) pair expands once, so at most E * (k + 1) heap
+// entries.
+// Space: O(V * k + E * k) -- the map of pairs, the lists of flights and the heap entries.
+//
+// Siblings: CheapestFlightsDijkstra keeps only the fewest stops per city, in an int array instead
+// of a map keyed by a String; CheapestFlightsBFS and CheapestFlightsBellmanFord walk the trips by
+// number of flights instead of by price.
 
 public final class CheapestFlightsDijkstra2 {
-	// Time Complexity: O(k * E * (E + log(E*K)))
-	// Space Complexity: O(V + E * k)
 
 	public static int cheapestFlight(int n, int[][] flights, int src, int dst, int k) {
 		Map<Integer, List<int[]>> g = graph(flights);
@@ -28,20 +47,20 @@ public final class CheapestFlightsDijkstra2 {
 			int cost = node[1];
 			int stops = node[2];
 			if (city == dst) {
-				return cost;
+				return cost; // RETURN: cheapest first, so the first arrival at dst wins
 			}
 			if (stops > k) {
-				continue;
+				continue; // SKIP: no flight left to take
 			}
 			String key = city + "," + stops;
 			if (minCost.containsKey(key) && minCost.get(key) <= cost) {
-				continue;
+				continue; // SKIP: this (city, stops) was expanded at least as cheaply
 			}
-			minCost.put(key, cost);
+			minCost.put(key, cost); // RECORD: the cheapest price for this (city, stops)
 			for (int[] neighbor : g.getOrDefault(city, new ArrayList<>())) {
 				int next = neighbor[0];
 				int newCost = cost + neighbor[1];
-				pq.offer(new int[] { next, newCost, stops + 1 });
+				pq.offer(new int[] { next, newCost, stops + 1 }); // WALK: one more flight
 			}
 		}
 		return -1;
@@ -53,7 +72,7 @@ public final class CheapestFlightsDijkstra2 {
 			int src = flight[0];
 			int dst = flight[1];
 			int cost = flight[2];
-			g.computeIfAbsent(src, k -> new ArrayList<>()).add(new int[] { dst, cost });
+			g.computeIfAbsent(src, k -> new ArrayList<>()).add(new int[] { dst, cost }); // BUILD: city -> flights out
 		}
 		return g;
 	}
@@ -70,6 +89,5 @@ public final class CheapestFlightsDijkstra2 {
 
 		int[][] g4 = { { 0, 1, 5 }, { 1, 2, 5 }, { 0, 3, 2 }, { 3, 1, 2 }, { 1, 4, 1 }, { 4, 2, 1 } };
 		System.out.println(cheapestFlight(5, g4, 0, 2, 2)); // 7
-
 	}
 }

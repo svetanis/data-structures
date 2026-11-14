@@ -5,21 +5,36 @@ import java.util.HashSet;
 import java.util.Set;
 
 // 752. Open the Lock
-
-// The same meet-in-the-middle search as OpenLockBidirectional, holding each
-// frontier as a SET rather than as a queue plus a map. A whole level is
-// replaced at once, so the set IS the level and no size snapshot is needed;
-// and because every turn advances one full level of one side, a single shared
-// counter already holds the total number of turns when the two sides touch.
-// OpenLockBidirectional makes the other choice -- a depth per code -- and so
-// has to add three numbers at the meeting: its own depth, the step just taken,
-// and the other side's depth
+//
+// Input: dst -- the combination to reach; deadends -- combinations that jam the lock. The lock has
+// 4 wheels, each showing a digit 0-9, and starts at "0000"; one move turns one wheel one slot, up
+// or down, and 9 wraps to 0. Returns the least number of moves to reach dst without landing on a
+// deadend, or -1. On LeetCode: 1 <= deadends.length <= 500, every deadend and the target is 4
+// digits, target is not a deadend.
+//
+// The one idea: one frontier is the set of combinations exactly as many moves from one end as
+// that end has turned so far -- the whole ring, and nothing older. Start one frontier at "0000"
+// and one at the target. Each turn replaces the smaller frontier with the ring one move further
+// out, and counts one move. As soon as a combination built from one frontier is already in the
+// other, the halves of a path have met, and because every turn advanced one full ring of one
+// side, the shared counter already equals the total number of moves.
+//
+// The same meet-in-the-middle search as OpenLockBidirectional, holding each frontier as a SET
+// rather than as a queue plus a map. A whole level is replaced at once, so the set IS the level
+// and no size snapshot is needed. OpenLockBidirectional makes the other choice -- a depth per
+// code -- and so has to add three numbers at the meeting: its own depth, the step just taken,
+// and the other side's depth.
+//
+// Time: O(10^d * d) -- d = 4 wheels, so at most 10,000 combinations, each built and marked once,
+// each building 8 neighbours of d characters
+// Space: O(10^d) -- the visited set is capped at the 10,000 combinations that exist
+//
+// Siblings: OpenLockBidirectional (two queues, two depth maps), OpenLock and OpenLockRings
+// (one-way searches), OpenLockSubmit (the LeetCode submission).
 public final class OpenLockFrontiers {
 
 	private static final String SRC = "0000";
 
-	// Time Complexity: O(n^d * d * 10) over reachable codes; d = 4 wheels
-	// Space Complexity: O(n^d) -- capped at the 10,000 codes that exist
 	public int openLock(String dst, String[] deadends) {
 		Set<String> excluded = new HashSet<>();
 		Collections.addAll(excluded, deadends);
@@ -28,10 +43,10 @@ public final class OpenLockFrontiers {
 		// filter ever sees are the ones a search STARTS on. A one-way search
 		// has one of those and needs one guard; this has two
 		if (excluded.contains(SRC) || excluded.contains(dst)) {
-			return -1;
+			return -1; // BASE: a jammed start or a jammed target
 		}
 		if (SRC.equals(dst)) {
-			return 0;
+			return 0; // BASE: already open
 		}
 		return bidirBfs(dst, excluded);
 	}
@@ -56,15 +71,15 @@ public final class OpenLockFrontiers {
 				// ladder
 				Set<String> swap = begin;
 				begin = end;
-				end = swap;
+				end = swap; // SWAP: grow the smaller side
 			}
-			moves++;
+			moves++; // one ring of one side
 			begin = expand(begin, end, visited, excluded);
 			if (begin == null) {
-				return moves;
+				return moves; // RETURN: the two sides touched
 			}
 		}
-		return -1;
+		return -1; // RETURN: one side ran dry, no route
 	}
 
 	// returns the next level, or null once a generated code is found sitting
@@ -74,20 +89,19 @@ public final class OpenLockFrontiers {
 	// `visited` here buys SPEED, not correctness. Drop the marking and the
 	// answers are unchanged -- re-added codes cannot forge a shorter path,
 	// because the other side's frontier is a superset in the same way -- but
-	// reaching "5555" generates 95,922 neighbours instead of 59,922. That is
-	// unlike every one-way search in this folder, where losing the mark loses
-	// the answer or the termination
+	// far more neighbours get generated. That is unlike every one-way search
+	// in this folder, where losing the mark loses the answer or the termination
 	private Set<String> expand(Set<String> begin, Set<String> end, Set<String> visited,
 			Set<String> excluded) {
 		// built separately because `begin` is being iterated
 		Set<String> next = new HashSet<>();
-		for (String code : begin) {
+		for (String code : begin) { // WALK: every code of the ring
 			for (String neighbor : neighbors(code, excluded)) {
 				if (end.contains(neighbor)) {
-					return null;
+					return null; // RETURN: the other side already holds it, the halves meet
 				}
-				if (visited.add(neighbor)) {
-					next.add(neighbor);
+				if (visited.add(neighbor)) { // SKIP: seen before; the add is also the mark
+					next.add(neighbor); // RECORD: part of the next ring
 				}
 			}
 		}
@@ -99,22 +113,22 @@ public final class OpenLockFrontiers {
 	private Set<String> neighbors(String src, Set<String> excluded) {
 		Set<String> set = new HashSet<>();
 		char[] chars = src.toCharArray();
-		for (int i = 0; i < chars.length; i++) {
+		for (int i = 0; i < chars.length; i++) { // WALK: each wheel in turn
 			char old = chars[i];
 			int digit = old - '0';
 			// + 10 before the %, because Java's % keeps the sign of its left
 			// operand: (0 - 1) % 10 is -1, and '0' + -1 is the character '/'
-			chars[i] = (char) ('0' + (digit - 1 + 10) % 10);
+			chars[i] = (char) ('0' + (digit - 1 + 10) % 10); // the digit one slot down
 			addIfAllowed(set, new String(chars), excluded);
-			chars[i] = (char) ('0' + (digit + 1) % 10);
+			chars[i] = (char) ('0' + (digit + 1) % 10); // the digit one slot up
 			addIfAllowed(set, new String(chars), excluded);
-			chars[i] = old;
+			chars[i] = old; // restore the wheel
 		}
 		return set;
 	}
 
 	private void addIfAllowed(Set<String> set, String combo, Set<String> excluded) {
-		if (!excluded.contains(combo)) {
+		if (!excluded.contains(combo)) { // SKIP: a deadend
 			set.add(combo);
 		}
 	}

@@ -5,30 +5,42 @@ import static java.util.Arrays.fill;
 
 import com.svetanis.datastructures.graph.directed.Graph;
 
-// A mother vertex in a graph G = (V, E) is a vertex v such that all other vertices in G can be reached by a path from v.
-// If there exist mother vertex (or vertices), then one of the mother vertices is the last finished vertex in DFS. 
-// (Or a mother vertex has the maximum finish time in DFS traversal).
-
-// A vertex is said to be finished in DFS if a recursive call for its DFS is over, i.e., all descendants of the vertex have been visited. 
+// Find a mother vertex of a directed graph.
+//
+// Input: g -- a directed graph on the vertices 0 .. n - 1, n >= 1. A mother vertex is a vertex from
+// which every other vertex can be reached by following edges. Returns: a mother vertex, or -1 if
+// there is none. (If there are several, any one of them may come back.)
+//
+// The one idea: sweep the vertices in order 0, 1, 2, ..., and from each one not yet reached start a
+// fresh walk that reaches everything it can. Remember the vertex of the LAST walk started. If a
+// mother vertex exists, that last vertex is one: consider the walk that first reached any mother
+// vertex m; it started at some u that reaches m, and m reaches everything, so u reaches everything
+// too -- u is a mother vertex, and since that walk reached all vertices no later walk was started,
+// making u the last. So there is one candidate, and a single second walk from it settles whether it
+// really reaches every vertex.
+//
+// Time: O(V + E) -- two sweeps, each vertex and edge handled once per sweep.
+// Space: O(V) -- the marks and the recursion, up to V deep.
+//
+// Siblings: StronglyConnected asks a stronger question (every vertex reaches every other); a graph
+// that passes it has every vertex as a mother vertex.
 
 public final class MotherVertex {
 
   public static int motherVertex(Graph g) {
-    // Time Complexity: O(V + E)
-
     int size = g.size();
     boolean[] visited = new boolean[size];
 
-    // mother vertex
+    // the only candidate: the vertex of the last walk started
     int vertex = motherVertex(g, visited);
 
-    // check if v is a motherVertex
+    // check whether the candidate really reaches every vertex
     fill(visited, false);
     dfs(g, vertex, visited);
 
     for (int i = 0; i < size; i++) {
       if (!visited[i]) {
-        return -1;
+        return -1; // RETURN: the candidate misses a vertex, so no mother vertex exists
       }
     }
     return vertex;
@@ -38,9 +50,9 @@ public final class MotherVertex {
     int size = g.size();
     int vertex = 0;
     for (int v = 0; v < size; ++v) {
-      if (!visited[v]) {
+      if (!visited[v]) { // START a fresh walk from a vertex nothing so far reaches
         dfs(g, v, visited);
-        vertex = v;
+        vertex = v; // CANDIDATE: remember the latest start
       }
     }
     return vertex;
@@ -56,6 +68,11 @@ public final class MotherVertex {
     g.addEdge(5, 6);
     g.addEdge(5, 2);
     g.addEdge(6, 0);
-    System.out.println(motherVertex(g));
+    System.out.println(motherVertex(g)); // 5 -- 5 -> 6 -> 4 -> 1 -> 3, 6 -> 0 -> 2
+
+    Graph none = new Graph(3);
+    none.addEdge(0, 1);
+    none.addEdge(2, 1);
+    System.out.println(motherVertex(none)); // -1 -- neither 0 nor 2 reaches the other
   }
 }

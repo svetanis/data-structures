@@ -9,34 +9,27 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-// given an n x m 2D binary grid 
-// where each cell in the grid can
-// either contain 1 (which represents
-// the home of a fried) or a 0 (which
-// signifies an empty space). the goal
-// is to find the minimal total travel
-// distance to a single meeting point.
-
-// the total travel distance is defined
-// as the sum of all distances from the
-// homes of each friend (cell with 1) to
-// a meeting point. when calculating 
-// distances, we use the Manhattan Distance
-// which means the distance between two 
-// points is the sum of the absolute 
-// differences of their coordinates. 
-// for two points p1 and p2, the 
-// Manhattan Distance is |p2.x - p1.x| + |p2.y - p1.y|
-
-// the challenge of the problem lies in finding
-// the optimal meeting point that minimizes
-// the total travel distance for all friends.
-
 // 296. Best Meeting Point
+//
+// Input: an m x n grid of 0 and 1; a 1 is a friend's home, a 0 is empty ground. All friends walk
+// to one meeting point, one step up, down, left or right at a time (the Manhattan distance:
+// |r1 - r2| + |c1 - c2|). Returns the smallest possible total of the friends' steps. On
+// LeetCode: 1 <= m, n <= 200, grid[i][j] is 0 or 1, at least two friends.
+//
+// The one idea: try every cell as the meeting point, and measure it with a breadth-first walk.
+// One queue entry is one cell, and the map says how many steps it is from the cell being tried.
+// The walk spreads outward one step at a time, so the first time it reaches a cell is the
+// shortest way there; each friend's cell adds its step count to the total. The best total over
+// all the cells tried is the answer. This is the slow, direct method: the walk itself is not
+// needed, because on an open grid the steps are just the Manhattan distance.
+//
+// Time: O((r * c)^2) -- one walk over all r * c cells for each of the r * c cells tried.
+// Space: O(r * c) -- the visited set, the step map and the queue of one walk.
+//
+// Siblings: BestMeetingPoint and BestMeetingPointSort find the answer in O(r * c) by taking the
+// middle row and the middle column of the friends.
 
 public final class BestMeetingPointBfs {
-	// Time complexity: O(r * c)
-	// Space Complexity: O(r + c)
 
 	// horizontal + vertical moves
 	private static int[] dx = { -1, 0, 0, 1 };
@@ -52,18 +45,18 @@ public final class BestMeetingPointBfs {
 		this.cols = grid[0].length;
 		this.grid = grid;
 		for (int r = 0; r < rows; r++) {
-			for (int c = 0; c < cols; c++) {
-				min = Math.min(min, bfs(new int[] { r, c }));
+			for (int c = 0; c < cols; c++) { // WALK: every cell is tried as the meeting point
+				min = Math.min(min, bfs(new int[] { r, c })); // RECORD: the best total so far
 			}
 		}
-		return min;
+		return min; // RETURN: smallest total over all cells
 	}
 
 	private int bfs(int[] src) {
 		String key = src[0] + "_" + src[1];
-		Set<String> set = new HashSet<>();
+		Set<String> set = new HashSet<>(); // cells already queued
 		Deque<int[]> queue = new ArrayDeque<>();
-		Map<String, Integer> map = new HashMap<>();
+		Map<String, Integer> map = new HashMap<>(); // cell -> steps from src
 		queue.add(src);
 		map.put(key, 0);
 		set.add(key);
@@ -74,14 +67,14 @@ public final class BestMeetingPointBfs {
 			String currKey = x + "_" + y;
 			int dist = map.get(currKey);
 			if (grid[x][y] == 1) {
-				total += dist;
+				total += dist; // TAKE: this friend's steps to src
 			}
 			List<int[]> neighbors = neighbors(curr);
 			for (int[] next : neighbors) {
 				String nextKey = next[0] + "_" + next[1];
-				if (!set.contains(nextKey)) {
+				if (!set.contains(nextKey)) { // SKIP: already queued
 					queue.add(next);
-					map.put(nextKey, dist + 1);
+					map.put(nextKey, dist + 1); // RECORD: one step farther than curr
 				}
 				set.add(nextKey);
 			}
@@ -96,7 +89,7 @@ public final class BestMeetingPointBfs {
 		for (int dist = 0; dist < dx.length; ++dist) {
 			int x = src[0] + dx[dist];
 			int y = src[1] + dy[dist];
-			if (valid(x, y)) {
+			if (valid(x, y)) { // SKIP: off the grid
 				list.add(new int[] { x, y });
 			}
 		}

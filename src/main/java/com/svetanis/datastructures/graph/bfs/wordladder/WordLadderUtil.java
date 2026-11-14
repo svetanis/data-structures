@@ -1,78 +1,85 @@
 package com.svetanis.datastructures.graph.bfs.wordladder;
 
-import static com.google.common.collect.Sets.newHashSet;
-import static com.svetanis.java.base.collect.Lists.newList;
-
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
-import com.google.common.collect.ImmutableList;
+// Helper for WordLadder: the words in the dictionary that are one letter
+// away from a given word, found in one of two ways.
+//
+// Input: a word src, the dictionary words, and a flag saying which way to use.
+// Returns the dictionary words that differ from src in exactly one position.
+//
+// The one idea: there are two ways to find the neighbours, and each is cheap when the other is
+// expensive. MUTATE changes each of the m letters of src to each of the 26 letters and keeps
+// the results that are in the dictionary: 26 * m candidates, however big the dictionary is.
+// SCAN compares src with every dictionary word and keeps those one letter away: one comparison
+// per dictionary word, however long the word is. So when the dictionary holds more than
+// 26 * m words, mutating is cheaper (largeDictionary), and otherwise scanning is.
+//
+// Time: neighbors with MUTATE is O(26 * m * m) -- 26 * m candidates, each built and looked up in
+// O(m); with SCAN it is O(n * m) -- n dictionary words compared in O(m) each.
+// Space: O(k) -- k is the number of neighbours found.
 
 public final class WordLadderUtil {
-
-	// m = len of the word
-	// how many options m * 26
-	// 26+26+26
-
-	// dictionary/hashmap: O(n^2*m)
-
-	// permutation O(n * m * m ) *26
-
-	// num of words in dict < m*26 -> dict/hashmap check if there exist a word
-	// oneCharaway
-
-	// num of words in dict > (*26 -> permutation
 
 	public static boolean largeDictionary(String src, Set<String> words) {
 		int size = words.size();
 		int len = src.length();
 		int charComparisons = len * 26;
-		return size > charComparisons;
+		return size > charComparisons; // RETURN: true when mutating beats scanning
 	}
 
-	public static ImmutableList<String> neighbors(String src, Set<String> words, boolean largeDict) {
+	public static List<String> neighbors(String src, Set<String> words, boolean largeDict) {
 		if (largeDict) {
-			return neighbors(src, words);
+			return neighbors(src, words); // MUTATE
 		}
-		return oneCharAway(src, words);
+		return oneCharAway(src, words); // SCAN
 	}
 
-	private static ImmutableList<String> neighbors(String src, Set<String> words) {
-		Set<String> set = newHashSet();
-		for (int i = 0; i < src.length(); ++i) {
-			for (char c = 'a'; c <= 'z'; ++c) {
-				if (src.charAt(i) != c) {
-					String str = src.substring(0, i) + c + src.substring(i + 1);
-					if (!src.equals(str) && words.contains(str)) {
-						set.add(str);
-					}
+	private static List<String> neighbors(String src, Set<String> words) {
+		List<String> out = new ArrayList<>();
+		char[] letters = src.toCharArray(); // a char[] can be changed; a String cannot
+		for (int pos = 0; pos < letters.length; pos++) { // MUTATE: each position
+			char letter = letters[pos]; // SAVE: the letter now at pos
+			for (char c = 'a'; c <= 'z'; c++) { // MUTATE: each letter
+				if (c == letter) { // SKIP: that candidate is the word itself
+					continue;
+				}
+				letters[pos] = c; // SWAP
+				String candidate = new String(letters);
+				if (words.contains(candidate)) { // TAKE: only real words
+					out.add(candidate);
 				}
 			}
+			letters[pos] = letter; // RESTORE: before the next position
 		}
-		return newList(set);
+		return out;
 	}
 
-	private static ImmutableList<String> oneCharAway(String src, Set<String> words) {
-		Set<String> set = newHashSet();
-		for (String word : words) {
+	private static List<String> oneCharAway(String src, Set<String> words) {
+		Set<String> set = new HashSet<>();
+		for (String word : words) { // SCAN: every dictionary word
 			if (!word.equals(src)) {
-				if (oneCharAway(word, src)) {
+				if (oneCharAway(word, src)) { // TAKE: exactly one letter different
 					set.add(word);
 				}
 			}
 		}
-		return newList(set);
+		return new ArrayList<>(set);
 	}
 
 	private static boolean oneCharAway(String src, String dst) {
 		if (src.length() != dst.length() || src.equals(dst)) {
-			return false;
+			return false; // SKIP: different length or the same word
 		}
 		int count = 0;
 		for (int i = 0; i < src.length(); i++) {
 			if (src.charAt(i) != dst.charAt(i)) {
 				count++;
 				if (count > 1) {
-					return false;
+					return false; // SKIP: two letters differ
 				}
 			}
 		}
