@@ -4,35 +4,49 @@ import java.util.ArrayDeque;
 import java.util.Deque;
 
 // 1650. Lowest Common Ancestor of a Binary Tree III
-// given two nodes in a BT, find LCA
-// assume each Node has a parent pointer
-// the tree has n nodes and height h
+//
+// Input: root -- the root of the tree; u, v -- two nodes of the tree, each holding a pointer to its
+// parent (null at the root). Returns their lowest common ancestor, a node counting as an ancestor
+// of itself. On LeetCode: 2 <= nodes <= 10^5, -10^9 <= Node.val <= 10^9, all values distinct,
+// u != v, and both exist in the tree.
+//
+// The one idea: a node's path from the root is found by climbing its parent pointers up to the root
+// and pushing each node on a stack as it is passed, so the root ends on top and the node at the
+// bottom. Two such stacks start with the same node (the root) on top. Pop both while their top nodes
+// are the same node; the last pair that was the same is the last node the two root paths share,
+// which is the LCA.
+//
+// Time: O(h) -- each stack takes one climb, and the comparison pops at most h from each.
+// Space: O(h) -- the two stacks.
+//
+// Siblings: LcaBtParent needs no stack (O(1) space) and LcaBtParentLevel lifts the deeper node
+// level with the other. The three share the package's Node.
 
 public final class LcaBtParentStack {
 
 	public static Node lca(Node root, Node u, Node v) {
-		Deque<Node> s1 = stack(root, u);
+		Deque<Node> s1 = stack(root, u); // PATH: root on top, u at the bottom
 		Deque<Node> s2 = stack(root, v);
 		return lca(s1, s2);
 	}
 
 	private static Node lca(Deque<Node> s1, Deque<Node> s2) {
 		Node lca = null;
-		while (!s1.isEmpty() && !s2.isEmpty() && s1.peek() == s2.peek()) {
-			lca = s1.peek();
+		while (!s1.isEmpty() && !s2.isEmpty() && s1.peek() == s2.peek()) { // WALK: down while the paths agree
+			lca = s1.peek(); // RECORD: the last shared node so far
 			s1.pop();
 			s2.pop();
 		}
-		return lca;
+		return lca; // RETURN: the deepest node on both paths
 	}
 
 	private static Deque<Node> stack(Node root, Node node) {
 		Deque<Node> stack = new ArrayDeque<>();
-		while (node != root) {
+		while (node != root) { // CLIMB: from the node up to the root by parent pointers
 			stack.push(node);
 			node = node.parent;
 		}
-		stack.push(root);
+		stack.push(root); // the root goes in last, so it is on top
 		return stack;
 	}
 
@@ -65,28 +79,8 @@ public final class LcaBtParentStack {
 		root.right.right = node8;
 		root.right.right.parent = node2;
 
-		System.out.println(lca(root, root.left, root.right));
-		System.out.println(lca(root, root.left, root.left.right.right));
-	}
-
-	private static final class Node {
-
-		public int data;
-		public Node left;
-		public Node right;
-		public Node parent;
-
-		public Node(int data) {
-			this.data = data;
-			this.left = null;
-			this.right = null;
-			this.parent = null;
-		}
-
-		@Override
-		public String toString() {
-			return Integer.toString(data);
-		}
+		System.out.println(lca(root, root.left, root.right)); // 3
+		System.out.println(lca(root, root.left, root.left.right.right)); // 5
 	}
 
 }

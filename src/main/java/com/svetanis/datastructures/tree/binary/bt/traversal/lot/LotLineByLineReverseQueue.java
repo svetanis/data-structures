@@ -1,60 +1,67 @@
 package com.svetanis.datastructures.tree.binary.bt.traversal.lot;
 
-import static com.google.common.collect.Lists.newArrayList;
-import static com.google.common.collect.Lists.newLinkedList;
-import static com.svetanis.datastructures.tree.binary.model.mutable.primitive.Nodes.isNotNull;
-import static com.svetanis.datastructures.tree.binary.model.mutable.primitive.Nodes.isNull;
-import static com.svetanis.java.base.collect.Lists.newList;
-import static com.svetanis.java.base.utils.Print.printLists;
-
+import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 
-import com.google.common.collect.ImmutableList;
-import com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node;
+import com.svetanis.datastructures.tree.binary.model.mutable.primitive.TreeNode;
 
-// Given a binary tree, populate an array to represent its level-by-level  
-// traversal in reverse order, i.e., the lowest level comes first. 
-// Populate the values of all nodes in each level from left to right in separate sub-arrays.
+// 107. Binary Tree Level Order Traversal II
+//
+// Input: root of a binary tree. Returns the values level by level, deepest level first, each
+// level left to right, as a list of lists. On LeetCode: 0 <= number of nodes <= 2000,
+// -1000 <= node value <= 1000.
+//
+// The one idea: it is the ordinary level-by-level queue walk with one change. One queue entry is
+// one node waiting to be read; at the start of each round the queue holds exactly one whole
+// level, so its size is that level's node count. The levels come out top first, so each finished
+// level is put at the FRONT of the result (index 0) instead of the end, which leaves the deepest
+// level first. The values inside a level stay left to right.
+//
+// Plain Java, so the method pastes into LeetCode as it is.
+//
+// Time: O(n) -- each node is queued and taken off once; a front insert into a LinkedList is O(1).
+// Space: O(n) -- the output; the queue holds one level at a time, up to n / 2 nodes.
+//
+// Siblings: LotLineByLineQueue is the top-first version (problem 102).
 
 public final class LotLineByLineReverseQueue {
-	// Time Complexity: O(n)
-	// Space Complexity: O(n)
 
-	public static ImmutableList<ImmutableList<Integer>> lot(Node root) {
-		if (isNull(root)) {
-			return newList();
+	public static List<List<Integer>> lot(TreeNode root) {
+		if (root == null) {
+			return new ArrayList<>();
 		}
 
-		Queue<Node> queue = newLinkedList();
+		Queue<TreeNode> queue = new LinkedList<>();
 		queue.offer(root);
-		List<ImmutableList<Integer>> lists = newLinkedList();
+		List<List<Integer>> lists = new LinkedList<>();
 
 		while (!queue.isEmpty()) {
-			int size = queue.size();
-			List<Integer> list = newArrayList();
+			int size = queue.size(); // SIZE: the queue holds exactly one level
+			List<Integer> list = new ArrayList<>();
 			for (int i = 0; i < size; i++) {
-				Node node = queue.poll();
-				list.add(node.data);
-				if (isNotNull(node.left)) {
-					queue.offer(node.left);
+				TreeNode node = queue.poll(); // TAKE: one node of this level
+				list.add(node.val); // RECORD: its value
+				if (node.left != null) {
+					queue.offer(node.left); // QUEUE: the next level, left to right
 				}
-				if (isNotNull(node.right)) {
+				if (node.right != null) {
 					queue.offer(node.right);
 				}
 			}
-			lists.add(0, newList(list));
+			lists.add(0, list); // FRONT: a deeper level goes before every level found so far
 		}
-		return newList(lists);
+		return lists;
 	}
 
 	public static void main(String[] args) {
-		Node root = new Node(1);
-		root.left = new Node(2);
-		root.right = new Node(3);
-		root.left.left = new Node(4);
-		root.left.right = new Node(5);
-		root.right.right = new Node(6);
-		printLists(lot(root)); // 4 5 6 / 2 3 / 1 -- deepest level first
+		TreeNode root = new TreeNode(1);
+		root.left = new TreeNode(2);
+		root.right = new TreeNode(3);
+		root.left.left = new TreeNode(4);
+		root.left.right = new TreeNode(5);
+		root.right.right = new TreeNode(6);
+		System.out.println(lot(root)); // [[4, 5, 6], [2, 3], [1]] -- deepest level first
 	}
 }

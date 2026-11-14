@@ -1,71 +1,67 @@
 package com.svetanis.datastructures.tree.binary.bt.path;
 
-import static com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node.newNode;
+import static com.svetanis.datastructures.tree.binary.model.mutable.primitive.TreeNode.newNode;
 
+import com.svetanis.datastructures.tree.binary.model.mutable.primitive.TreeNode;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node;
-
 // 437. Path Sum III
-
-// Given a binary tree and a number ‘S’, 
-// find all paths in the tree such that 
-// the sum of all the node values of each path equals ‘S’. 
-// Please note that the paths can start or end at any node 
-// but all paths must follow direction from parent to child (top to bottom).
-
+//
+// Input: the root of a binary tree and an integer targetSum. A path starts at any node and goes
+// down to one of its descendants. Returns how many such paths have values adding up to
+// targetSum. On LeetCode: 0 <= n <= 1000, -10^9 <= val <= 10^9, -10^9 <= targetSum <= 10^9.
+//
+// The one idea: give every node its prefix sum, the total of the values from the root down to
+// and including that node. A downward path from just below node A to node B has sum
+// prefix(B) - prefix(A). So at node B, the number of paths ending at B with sum targetSum is the
+// number of ancestors A (or the empty start above the root) whose prefix equals
+// prefix(B) - targetSum. The map holds, for the ancestors of the current node only, how many
+// times each prefix sum occurs; a node adds its own prefix before going down and takes it back
+// out when leaving, so the map never mixes in another branch.
+//
+// Time: O(n) -- one map lookup and two updates per node.
+// Space: O(n) -- the recursion stack plus the map; a count that drops back to 0 stays in the map.
+//
+// Siblings: CountAllPathSum adds each tail of the root path up again at every node, O(n * h);
+// AllPathSum lists the paths instead of counting them.
 public final class CountAllPathSumHashing {
-	// Time Complexity: O(n)
-	// Space Complexity: O(n)
 
-	public static int pathCount(Node root, int target) {
-		Map<Long, Integer> map = new HashMap<>();
+	public static int pathCount(TreeNode root, int target) {
+		Map<Long, Integer> map = new HashMap<>(); // MAP: prefix sum -> how often it occurs above
 		return pathCount(root, target, 0, map);
 	}
 
-	private static int pathCount(Node node, int target, long sum, Map<Long, Integer> map) {
-		if (node == null) {
+	private static int pathCount(TreeNode node, int target, long sum, Map<Long, Integer> map) {
+		if (node == null) { // BASE: nothing below
 			return 0;
 		}
 		int count = 0;
-		// prefix sum: sum of all node
-		// values from root to current node
-		sum += node.data;
-
-		// base case
-		if (sum == target) {
+		sum += node.val; // PREFIX: root-to-current total; long, since 1000 values reach 10^12
+		if (sum == target) { // COUNT: the path from the root itself
 			count++;
 		}
-		// if within the root to current node path
-		// there is a valid path, then
-		// sum - old = target or
-		// sum - target = old
+		// COUNT: each earlier prefix equal to sum - target starts a path that ends here
 		count += map.getOrDefault(sum - target, 0);
-		// store the number of times the prefix
-		// sum has occurred so far
-		map.put(sum, map.getOrDefault(sum, 0) + 1);
+		map.put(sum, map.getOrDefault(sum, 0) + 1); // TAKE: this node's prefix joins the map
 
-		// traverse the left subtree
-		count += pathCount(node.left, target, sum, map);
-		// traverse the right subtree
-		count += pathCount(node.right, target, sum, map);
-		// backtrack: remove the current path sum from the map
-		// while going up the recursive call stack
-		map.put(sum, map.getOrDefault(sum, 1) - 1);
+		count += pathCount(node.left, target, sum, map); // WALK: left subtree
+		count += pathCount(node.right, target, sum, map); // WALK: right subtree
+		map.put(sum, map.getOrDefault(sum, 1) - 1); // UNDO: leave the node
 		return count;
 	}
 
 	public static void main(String[] args) {
-		Node root = newNode(12);
+		TreeNode root = newNode(12);
 		root.left = newNode(7);
 		root.right = newNode(1);
 		root.left.left = newNode(4);
 		root.right.left = newNode(10);
 		root.right.right = newNode(5);
-		System.out.println(pathCount(root, 11));
+		System.out.println(pathCount(root, 11)); // 2
 
-		Node root2 = newNode(10);
+		// LeetCode example 1
+		TreeNode root2 = newNode(10);
 		root2.left = newNode(5);
 		root2.right = newNode(-3);
 		root2.left.left = newNode(3);
@@ -75,5 +71,18 @@ public final class CountAllPathSumHashing {
 		root2.left.right.right = newNode(1);
 		root2.right.right = newNode(11);
 		System.out.println(pathCount(root2, 8)); // 3
+
+		// LeetCode example 2
+		TreeNode root3 = newNode(5);
+		root3.left = newNode(4);
+		root3.right = newNode(8);
+		root3.left.left = newNode(11);
+		root3.right.left = newNode(13);
+		root3.right.right = newNode(4);
+		root3.left.left.left = newNode(7);
+		root3.left.left.right = newNode(2);
+		root3.right.right.left = newNode(5);
+		root3.right.right.right = newNode(1);
+		System.out.println(pathCount(root3, 22)); // 3
 	}
 }

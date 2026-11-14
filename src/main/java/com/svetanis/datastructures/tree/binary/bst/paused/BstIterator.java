@@ -1,54 +1,59 @@
 package com.svetanis.datastructures.tree.binary.bst.paused;
 
-import static com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node.newNode;
+import static com.svetanis.datastructures.tree.binary.model.mutable.primitive.TreeNode.newNode;
 import static com.svetanis.datastructures.tree.binary.model.mutable.primitive.Nodes.isNotNull;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
 
-import com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node;
+import com.svetanis.datastructures.tree.binary.model.mutable.primitive.TreeNode;
 
 // 173. Binary Search Tree Iterator
-
-// implement an iterator over a BST
-// iterator initialized with the root node
-// next() returns the next smallest num in BST
-
-// PAIRED WITH bt/iterator/BtIterator, ON PURPOSE.
-// next()/hasNext()/pushLeft below never read a value to
-// decide anything -- pushLeft follows left links, next()
-// follows right links, and nothing is compared. So that
-// class runs the identical code on a tree with no ordering
-// at all, and neither version can be made faster than the
-// other. What the BST buys is not the iteration; it is what
-// the emitted sequence MEANS, which is: sorted.
-
-// seek(int) below is what that meaning is worth, and it is
-// the one method the binary-tree version cannot have.
+//
+// Input: the root of a binary search tree. Provides next(), which returns the next smallest
+// value not yet returned, and hasNext(), which says whether there is one. (seek(x) below is an
+// addition to LeetCode's interface.) On LeetCode: 1 to 10^5 nodes, 0 <= node.val <= 10^6, at
+// most 10^5 calls, and next() is only called when a next value exists.
+//
+// The one idea: an in-order walk, paused after every value. A walk keeps the nodes whose
+// left subtree it has gone into and not yet come back from; the iterator keeps exactly those
+// nodes in a stack, the next value to return on top. One stack entry is one node that is
+// waiting for its turn. next() pops the top node (the smallest remaining), then pushes the
+// left spine of that node's right subtree, which holds the values that come next.
+//
+// next(), hasNext() and pushLeft() never compare values: pushLeft follows left links and
+// next() follows right links. So bt/iterator/BtIterator runs the identical code on a tree
+// with no ordering at all, and neither version can be faster than the other. What the BST
+// adds is the meaning of the sequence -- it is sorted -- and seek(int) below is what that
+// meaning is worth: a method the binary-tree version cannot have.
+//
+// Time: next() is amortized O(1) and O(h) for a single call -- every node is pushed once and
+// popped once across the whole iteration, so n calls do O(n) work between them. hasNext() is
+// O(1). seek(x) is O(h).
+// Space: O(h) -- the stack holds one root-to-node path at most.
+//
+// Siblings: bt/iterator/BtIterator is the same iterator over a tree with no order;
+// KthSmallestIterative and KClosestToTargetIterator use the same stack walk.
 
 public final class BstIterator {
-	// next(): amortized O(1), worst case O(h) for a single call --
-	// every node is pushed once and popped once across the whole
-	// iteration, so n calls do O(n) work between them
-	// Space Complexity: O(h)
 
-	private final Node root;
-	private Deque<Node> dq;
+	private final TreeNode root;
+	private Deque<TreeNode> dq;
 
-	public BstIterator(Node root) {
+	public BstIterator(TreeNode root) {
 		this.root = root;
 		this.dq = new ArrayDeque<>();
 		pushLeft(root);
 	}
 
 	public boolean hasNext() {
-		return !dq.isEmpty();
+		return !dq.isEmpty(); // a node is waiting for its turn
 	}
 
 	public int next() {
-		Node node = dq.pop();
-		pushLeft(node.right);
-		return node.data;
+		TreeNode node = dq.pop(); // TAKE: the smallest value not yet returned
+		pushLeft(node.right); // PREPARE: the values that come after it
+		return node.val;
 	}
 
 	// reposition so that the next call to next() returns the
@@ -66,13 +71,13 @@ public final class BstIterator {
 	// which is why the iterator carries on correctly afterwards.
 	public void seek(int x) {
 		dq.clear();
-		Node node = root;
+		TreeNode node = root;
 		while (isNotNull(node)) {
-			if (node.data >= x) {
-				dq.push(node);
-				node = node.left;
+			if (node.val >= x) {
+				dq.push(node); // KEEP: a candidate, and a node still waiting for its turn
+				node = node.left; // a smaller one may still qualify
 			} else {
-				node = node.right;
+				node = node.right; // SKIP: this node and its left subtree are all below x
 			}
 		}
 	}
@@ -80,15 +85,15 @@ public final class BstIterator {
 	// the loop, not the recursion: the deque already costs O(h), and
 	// recursing here spends a second O(h) on the call stack to walk the
 	// same spine
-	private void pushLeft(Node root) {
+	private void pushLeft(TreeNode root) {
 		while (isNotNull(root)) {
-			dq.push(root);
+			dq.push(root); // PUSH: wait for the left side to be returned first
 			root = root.left;
 		}
 	}
 
 	public static void main(String[] args) {
-		Node root = newNode(10);
+		TreeNode root = newNode(10);
 		root.left = newNode(1);
 		root.right = newNode(11);
 		root.left.right = newNode(6);

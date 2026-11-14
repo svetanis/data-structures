@@ -1,42 +1,53 @@
 package com.svetanis.datastructures.tree.binary.bt.dimension;
 
-import static com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node.newNode;
+import static com.svetanis.datastructures.tree.binary.model.mutable.primitive.TreeNode.newNode;
 import static java.lang.Math.max;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
-import com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node;
+import com.svetanis.datastructures.tree.binary.model.mutable.primitive.TreeNode;
 
-// Given a binary tree, find the length of its diameter. 
-// The diameter of a tree is the number of nodes on 
-// the longest path between any two leaf nodes. 
-// The diameter of a tree may or may not pass through the root.
+// Diameter of a Binary Tree, counted in nodes (543 asks for the same path counted in edges;
+// this answer is that one plus 1, and 0 for an empty tree).
+//
+// Input: the root of a binary tree. Returns the number of nodes on the longest path between
+// any two nodes. The path may or may not pass through the root.
+//
+// The one idea: the longest path has a highest node, the one where it turns. So try every node
+// as the turning point. height(node) returns how many nodes are on the longest path that starts
+// at node and only goes down (0 for an empty subtree). A path that turns at node holds the
+// longest drop on the left, node itself, and the longest drop on the right: 1 + left + right
+// nodes. Every node reports that candidate into a one-cell counter and the biggest wins.
+//
+// Time: O(n) -- each node is visited once and does constant work.
+// Space: O(h) -- the recursion stack, h is the height of the tree (up to n on a chain).
+//
+// Siblings: DiameterCountEdges and DiameterSubmit are the LeetCode 543 versions (edges).
 
 public final class DiameterCountNodes {
-	// Time complexity: O(n)
 
-	public static int diameter(Node root) {
-		AtomicInteger diameter = new AtomicInteger();
+	public static int diameter(TreeNode root) {
+		AtomicInteger diameter = new AtomicInteger(); // BEST: one cell shared by the whole walk
 		height(root, diameter);
 		return diameter.get();
 	}
 
-	private static int height(Node root, AtomicInteger diameter) {
+	private static int height(TreeNode root, AtomicInteger diameter) {
 		if (root == null) {
-			return 0;
+			return 0; // BASE: an empty subtree has no nodes on any path
 		}
 
-		int left = height(root.left, diameter);
-		int right = height(root.right, diameter);
+		int left = height(root.left, diameter); // WALK: longest drop on the left
+		int right = height(root.right, diameter); // WALK: longest drop on the right
 
-		int d = 1 + left + right;
+		int d = 1 + left + right; // TURN: a path that bends at this node, node included
 		int max = max(diameter.get(), d);
-		diameter.set(max);
-		return 1 + max(left, right);
+		diameter.set(max); // RECORD: best turn so far
+		return 1 + max(left, right); // RETURN: this node plus the longer drop
 	}
 
 	public static void main(String[] args) {
-		Node root = newNode(1);
+		TreeNode root = newNode(1);
 		root.left = newNode(2);
 		root.right = newNode(3);
 		root.left.left = newNode(4);

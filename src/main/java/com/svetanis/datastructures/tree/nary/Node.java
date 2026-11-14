@@ -15,6 +15,26 @@ import com.google.common.collect.ComparisonChain;
 import com.google.common.collect.ImmutableList;
 import com.svetanis.java.base.ProvidingBuilder;
 
+// An immutable node of an N-ary tree: a value and an immutable list of child nodes. Not a
+// LeetCode problem. This file keeps Guava and the java-base library on purpose: the builder, the
+// reflective no-null check, the ImmutableList and the ordering are what the class is made of.
+//
+// Input: a Node is made from a Builder (Node.builder(), or Node.build(data, childBuilders)); the
+// builder takes the value and the child builders, and build() builds the whole subtree. Every
+// field must be non-null. Nodes compare by value: data first, then the children one by one, so
+// two nodes with the same data and the same children are equal, wherever they sit in a tree.
+//
+// The one idea: a tree that cannot change after it is built can cache its hash code and be
+// compared by value, so a node can be a key in a map or a set; the builders carry the mutable
+// stage that the finished nodes leave out.
+//
+// Time: build O(size of the subtree) -- each node is built, checked and hashed once.
+// compareTo and equals O(size of the smaller subtree). hashCode O(1) -- computed once, in the
+// constructor.
+// Space: O(size of the subtree).
+//
+// Siblings: Nodes adds a child to a builder; DefaultNTreeTraverser walks a built tree.
+
 public final class Node<T extends Comparable<? super T>> implements Comparable<Node<T>> {
 
   private final T data;
@@ -23,14 +43,14 @@ public final class Node<T extends Comparable<? super T>> implements Comparable<N
 
   private Node(Builder<T> builder) {
     this.data = builder.data;
-    this.children = transform(builder.children, b -> b.build());
-    this.hash = hash(data, children);
+    this.children = transform(builder.children, b -> b.build()); // BUILD: every child first
+    this.hash = hash(data, children); // HASH: once, from the data and the finished children
   }
 
   public static <T extends Comparable<? super T>> Node<T> build(T data) {
     return build(data, newArrayList());
   }
-  
+
   public static <T extends Comparable<? super T>> Node<T> build(T data, List<Node.Builder<T>> children) {
     Builder<T> builder = builder();
     builder.withData(data);
@@ -80,7 +100,7 @@ public final class Node<T extends Comparable<? super T>> implements Comparable<N
 
     @Override
     public Node<T> build() {
-      return checkNoBlanks(new Node<T>(this));
+      return checkNoBlanks(new Node<T>(this)); // CHECK: no null field
     }
   }
 
@@ -99,14 +119,14 @@ public final class Node<T extends Comparable<? super T>> implements Comparable<N
 
   @Override
   public boolean equals(Object object) {
-    return equalByComparison(this, object, true);
+    return equalByComparison(this, object, true); // EQUAL: same class, same hash, compareTo is 0
   }
 
   @Override
   public int compareTo(Node<T> other) {
     ComparisonChain chain = ComparisonChain.start();
-    chain = chain.compare(data, other.data);
-    chain = chain.compare(children, other.children, natural().lexicographical());
+    chain = chain.compare(data, other.data); // COMPARE: data first
+    chain = chain.compare(children, other.children, natural().lexicographical()); // then the children
     return chain.result();
   }
 

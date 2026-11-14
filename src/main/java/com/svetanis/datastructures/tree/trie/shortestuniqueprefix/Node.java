@@ -1,8 +1,17 @@
 package com.svetanis.datastructures.tree.trie.shortestuniqueprefix;
 
-import static com.google.common.collect.Maps.newHashMap;
-
+import java.util.HashMap;
 import java.util.Map;
+
+// One node of the trie in this package.
+//
+// A node is a prefix: the letters on the path from the root. key is the letter on the edge into
+// the node, freq is how many inserted words pass through it (a node with freq 1 is a prefix that
+// only one word has, which is what the shortest unique prefix looks for), and children maps each
+// next letter to its node. The root is built by newNode() with freq 0; every other node starts at
+// freq 1 and Trie raises it once for each further word that passes through.
+//
+// Siblings: tree.trie.Node is the plain version with no freq, used by the other tries.
 
 public final class Node {
   protected char key;
@@ -27,7 +36,7 @@ public final class Node {
   public Node(char letter, int freq) {
     this.key = letter;
     this.freq = freq;
-    this.children = newHashMap();
+    this.children = new HashMap<>();
     this.endOfWord = false;
   }
 

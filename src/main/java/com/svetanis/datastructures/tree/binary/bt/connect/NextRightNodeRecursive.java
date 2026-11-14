@@ -1,61 +1,73 @@
 package com.svetanis.datastructures.tree.binary.bt.connect;
 
-import static com.google.common.base.Optional.absent;
-import static com.google.common.base.Optional.of;
 import static com.svetanis.datastructures.tree.binary.model.mutable.primitive.Nodes.isNull;
-import static com.svetanis.java.base.utils.IntWrapper.newIntWrapper;
 
-import com.google.common.base.Optional;
-import com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node;
-import com.svetanis.java.base.utils.IntWrapper;
+import java.util.Optional;
 
-// given a binary tree and a node in it, write an efficient algorithm
-// to find its next node in same level as given node
+import com.svetanis.datastructures.tree.binary.model.mutable.primitive.TreeNode;
+
+// Next Right Node of a Given Key (not a LeetCode problem)
+//
+// Input: root -- the root of a binary tree, possibly null; k -- the key to look for. Keys are
+// assumed distinct: with repeated keys this file answers for the first k in preorder, while
+// NextRightNodeIterative answers for the first k in level order. Returns the node immediately to
+// the right of the node holding k on the same level, or empty when k is the last node of its level
+// or is not in the tree.
+//
+// The one idea: a preorder walk reaches the nodes of one level in left to right order. So when the
+// node holding k is found, write down its level and stop going below it; from then on, the first
+// node reached at that same level is its right neighbour, and it is passed back up. Nothing is
+// returned for a node on any other level, and nothing is returned at all when k is the last node of
+// its level or is absent.
+//
+// Time: O(n) -- each node is visited at most once.
+// Space: O(h) -- the call stack and the one remembered level; h is lg n on a balanced tree and n on
+// a skewed one.
+//
+// Siblings: NextRightNodeIterative takes the tree level by level with a queue (O(n) space).
 
 public final class NextRightNodeRecursive {
 
-  public static Optional<Node> nextRight(Node root, int k) {
-    IntWrapper i = newIntWrapper();
-    Node nextRight = nextRight(root, k, 1, i);
-    return isNull(nextRight) ? absent() : of(nextRight);
+  public static Optional<TreeNode> nextRight(TreeNode root, int k) {
+    int[] foundLevel = { 0 }; // LEVEL: level of k once seen, 0 until then
+    TreeNode nextRight = nextRight(root, k, 1, foundLevel);
+    return isNull(nextRight) ? Optional.empty() : Optional.of(nextRight);
   }
 
-  private static Node nextRight(Node root, int k, int level, IntWrapper i) {
-    // Time complexity: O(n)
-
-    if (isNull(root)) {
+  private static TreeNode nextRight(TreeNode root, int k, int level, int[] foundLevel) {
+    if (isNull(root)) { // BASE: nothing here
       return null;
     }
 
-    if (root.data == k) {
-      i.value = level;
+    if (root.val == k) { // FOUND: remember its level, do not go below it
+      foundLevel[0] = level;
       return null;
-    } else if (i.value != 0) {
-      if (i.value == level) {
+    } else if (foundLevel[0] != 0) {
+      if (foundLevel[0] == level) { // ANSWER: first node on k's level after k
         return root;
       }
     }
 
-    Node left = nextRight(root.left, k, level + 1, i);
+    TreeNode left = nextRight(root.left, k, level + 1, foundLevel); // LEFT first: preorder order
     if (left != null) {
       return left;
     }
-    return nextRight(root.right, k, level + 1, i);
+    return nextRight(root.right, k, level + 1, foundLevel);
   }
 
   public static void main(String[] args) {
-    Node root = new Node(10);
-    root.left = new Node(2);
-    root.right = new Node(6);
-    root.left.left = new Node(8);
-    root.left.right = new Node(4);
-    root.right.right = new Node(5);
+    TreeNode root = new TreeNode(10);
+    root.left = new TreeNode(2);
+    root.right = new TreeNode(6);
+    root.left.left = new TreeNode(8);
+    root.left.right = new TreeNode(4);
+    root.right.right = new TreeNode(5);
 
-    System.out.println(nextRight(root, 10)); // absent
-    System.out.println(nextRight(root, 2)); // 6
-    System.out.println(nextRight(root, 6)); // absent
-    System.out.println(nextRight(root, 5)); // absent
-    System.out.println(nextRight(root, 8)); // 4
-    System.out.println(nextRight(root, 4)); // 5
+    System.out.println(nextRight(root, 10)); // Optional.empty
+    System.out.println(nextRight(root, 2)); // Optional[6]
+    System.out.println(nextRight(root, 6)); // Optional.empty
+    System.out.println(nextRight(root, 5)); // Optional.empty
+    System.out.println(nextRight(root, 8)); // Optional[4]
+    System.out.println(nextRight(root, 4)); // Optional[5]
   }
 }

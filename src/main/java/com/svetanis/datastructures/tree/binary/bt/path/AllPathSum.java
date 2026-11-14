@@ -1,77 +1,81 @@
 package com.svetanis.datastructures.tree.binary.bt.path;
 
-import static com.google.common.base.Verify.verify;
-import static com.google.common.collect.Lists.newArrayList;
-import static com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node.newNode;
 import static com.svetanis.datastructures.tree.binary.model.mutable.primitive.Nodes.isNull;
-import static com.svetanis.java.base.collect.Lists.newList;
+import static com.svetanis.datastructures.tree.binary.model.mutable.primitive.TreeNode.newNode;
 
+import com.svetanis.datastructures.tree.binary.model.mutable.primitive.TreeNode;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
 
-import com.google.common.collect.ImmutableList;
-import com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node;
-
-// Given a binary tree and a number ‘S’, 
-// find all paths in the tree such that 
-// the sum of all the node values of each path equals ‘S’. 
-// Please note that the paths can start or end at any node 
-// but all paths must follow direction from parent to child (top to bottom).
-
+// All Downward Paths With a Given Sum -- not a LeetCode problem; the counting version is
+// 437. Path Sum III
+//
+// Input: the root of a binary tree and a number k. A path starts at any node and goes down to
+// one of its descendants. Returns every such path whose values add up to k, each listed from its
+// lowest node up to its highest. The tree has no stated size limit.
+//
+// The one idea: walk the tree depth first and keep the values from the root down to the
+// current node in a list. Every downward path that ends at the current node is a tail of that
+// list, so add the values up from the end of the list one at a time: each running total is the
+// sum of one such path, and it is an answer when it equals k. Leaving a node removes its value
+// from the list again. Every downward path ends at exactly one node, so every path is seen once.
+//
+// Time: O(n * h) plus the size of the answer -- each node adds up at most h values (h = height,
+//   so O(n^2) on a chain); each answer is copied once.
+// Space: O(h) -- the list; the answer is extra.
+//
+// Siblings: CountAllPathSum counts the same paths without listing them; CountAllPathSumHashing
+// counts them in O(n) with a map of prefix sums.
 public final class AllPathSum {
 
-	public static ImmutableList<ImmutableList<Integer>> pathCount(Node root, int k) {
-		// Worst Case Time Complexity (skewed tree) : O(n^2)
-		// Best Case Time Complexity (balanced tree): O(n log n)
+	private static final String MISMATCH = "count and list disagree";
 
-		List<ImmutableList<Integer>> paths = newArrayList();
-		List<Integer> path = new LinkedList<>();
+	public static List<List<Integer>> pathCount(TreeNode root, int k) {
+		List<List<Integer>> paths = new ArrayList<>();
+		List<Integer> path = new LinkedList<>(); // PATH: values from the root to the current node
 		int count = pathCount(root, k, path, paths);
-		verify(count == paths.size());
-		return newList(paths);
+		if (count != paths.size()) { // CHECK: the count and the list are two views of one answer
+			throw new IllegalStateException(MISMATCH);
+		}
+		return paths;
 	}
 
-	private static int pathCount(Node node, int k, List<Integer> path, List<ImmutableList<Integer>> paths) {
-		if (isNull(node)) {
+	private static int pathCount(
+			TreeNode node, int k, List<Integer> path, List<List<Integer>> paths) {
+		if (isNull(node)) { // BASE: nothing below
 			return 0;
 		}
 		int sum = 0;
 		int count = 0;
-		// add current node to the path
-		path.add(node.data);
-		// find the sums of all sub-paths in the current path
-		List<Integer> list = newArrayList();
+		path.add(node.val); // TAKE: the current node joins the path
+
+		List<Integer> list = new ArrayList<>(); // LIST: the stretch added up so far, lowest node first
 		ListIterator<Integer> iter = path.listIterator(path.size());
-		while (iter.hasPrevious()) {
+		while (iter.hasPrevious()) { // WALK: up from the current node toward the root
 			int prev = iter.previous();
 			list.add(prev);
 			sum += prev;
-			// if the sum of any sub-path equals
-			// target increment the path count
-			if (sum == k) {
+			if (sum == k) { // RECORD: this stretch is a path with sum k; keep going, longer ones may hit
 				count++;
-				paths.add(newList(list));
-				list.clear();
+				paths.add(new ArrayList<>(list));
 			}
 		}
-		// traverse the left subtree
-		count += pathCount(node.left, k, path, paths);
-		// traverse the right subtree
-		count += pathCount(node.right, k, path, paths);
-		// backtrack: remove the current node from the path
-		// while going up the recursive call stack
-		path.remove(path.size() - 1);
+
+		count += pathCount(node.left, k, path, paths); // WALK: left subtree
+		count += pathCount(node.right, k, path, paths); // WALK: right subtree
+		path.remove(path.size() - 1); // UNDO: leave the node
 		return count;
 	}
 
 	public static void main(String[] args) {
-		Node root = newNode(12);
+		TreeNode root = newNode(12);
 		root.left = newNode(7);
 		root.right = newNode(1);
 		root.left.left = newNode(4);
 		root.right.left = newNode(10);
 		root.right.right = newNode(5);
-		System.out.println(pathCount(root, 11));
+		System.out.println(pathCount(root, 11)); // [[4, 7], [10, 1]]
 	}
 }

@@ -1,41 +1,57 @@
 package com.svetanis.datastructures.tree.binary.bt.cousins;
 
-import static com.google.common.collect.Lists.newArrayList;
-import static com.google.common.collect.Lists.newLinkedList;
-import static com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node.newNode;
+import static com.svetanis.datastructures.tree.binary.model.mutable.primitive.TreeNode.newNode;
 import static com.svetanis.datastructures.tree.binary.model.mutable.primitive.Nodes.isNotNull;
-import static com.svetanis.java.base.collect.Lists.newList;
-import static com.svetanis.java.base.utils.Print.print;
 
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Queue;
 
-import com.google.common.collect.ImmutableList;
-import com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node;
+import com.svetanis.datastructures.tree.binary.model.mutable.primitive.TreeNode;
+
+// Print All Cousins of a Given Node (no LeetCode number)
+//
+// Input: the root of a binary tree and a node of that tree. The cousins of the node are the nodes
+// on its level that do not share its parent; its sibling and itself are not cousins. Returns the
+// values of the cousins from left to right, as a list that cannot be changed. The root, and a
+// node that is not in the tree, have no cousins.
+//
+// The one idea: go level by level, and stop on the level whose nodes include the given node's
+// parent. On that level each node is taken off the queue and its children are queued -- except
+// for the parent, whose children are left out. What is then in the queue is the whole next level
+// minus the parent's children, the node and its sibling: exactly the cousins, already in left-to-
+// right order. The nodes are compared by reference, so equal values elsewhere in the tree do not
+// matter.
+//
+// Time: O(n) -- each node is queued and taken off at most once.
+// Space: O(w) -- the queue holds one level or two; w is the widest level, up to n / 2.
+//
+// Siblings: PrintCousinsRecursive finds the level first and then collects it with a recursion; it
+// finds the level by value, so it needs unique values.
 
 public final class PrintCousinsIterative {
 
-  public static ImmutableList<Integer> cousins(Node root, Node node) {
-    // Time complexity: O(n)
-
-    if (root.equals(node)) {
-      return newList();
+  public static List<Integer> cousins(TreeNode root, TreeNode node) {
+    List<Integer> list = new ArrayList<>();
+    if (root == node) {
+      return Collections.unmodifiableList(list); // BASE: the root has no cousins
     }
 
     boolean found = false;
-    List<Integer> list = newArrayList();
-    Queue<Node> queue = newLinkedList();
+    Queue<TreeNode> queue = new ArrayDeque<>();
     queue.offer(root);
 
     while (!queue.isEmpty() && !found) {
-      int size = queue.size();
+      int size = queue.size(); // LEVEL: the nodes now in the queue are one level
       for (int i = 0; i < size; i++) {
-        Node front = queue.poll();
-        if (node.equals(front.left) || node.equals(front.right)) {
-          found = true;
+        TreeNode front = queue.poll();
+        if (node == front.left || node == front.right) {
+          found = true; // PARENT: leave its children out of the queue
         } else {
           if (isNotNull(front.left)) {
-            queue.offer(front.left);
+            queue.offer(front.left); // QUEUE: the next level
           }
           if (isNotNull(front.right)) {
             queue.offer(front.right);
@@ -44,16 +60,16 @@ public final class PrintCousinsIterative {
       }
 
       if (found) {
-        for (int i = 0; i < size; i++) {
-          list.add(queue.poll().data);
+        while (!queue.isEmpty()) { // COLLECT: everything left in the queue, however many there are
+          list.add(queue.poll().val);
         }
       }
     }
-    return newList(list);
+    return Collections.unmodifiableList(list); // RETURN: the cousins, left to right
   }
 
   public static void main(String[] args) {
-    Node root = newNode(1);
+    TreeNode root = newNode(1);
     root.left = newNode(2);
     root.right = newNode(3);
     root.left.left = newNode(4);
@@ -62,6 +78,6 @@ public final class PrintCousinsIterative {
     root.right.left = newNode(6);
     root.right.right = newNode(7);
     root.right.left.right = newNode(8);
-    print(cousins(root, root.left.right));
+    System.out.println(cousins(root, root.left.right)); // [6, 7]
   }
 }

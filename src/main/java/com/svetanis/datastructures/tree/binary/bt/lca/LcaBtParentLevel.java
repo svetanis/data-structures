@@ -1,38 +1,50 @@
 package com.svetanis.datastructures.tree.binary.bt.lca;
 
 // 1650. Lowest Common Ancestor of a Binary Tree III
-// given two nodes in a BT, find LCA
-// assume each Node has a parent pointer
-// the tree has n nodes and height h
+//
+// Input: root -- the root of the tree; u, v -- two nodes of the tree, each holding a pointer to its
+// parent (null at the root). Returns their lowest common ancestor, a node counting as an ancestor
+// of itself. On LeetCode: 2 <= nodes <= 10^5, -10^9 <= Node.val <= 10^9, all values distinct,
+// u != v, and both exist in the tree.
+//
+// The one idea: two nodes at the same depth reach their LCA by climbing the same number of steps, so
+// first lift the deeper one until both are at the same depth, then climb both together until they
+// are the same node. Depth is found by searching for the node's value down from root, so the
+// method does not need the nodes to know their depth.
+//
+// Time: O(n * h) -- every comparison in the lifting loops runs two searches from root, each O(n),
+// and there are up to h comparisons; the final loop takes at most h steps. With 10^5 nodes on a
+// skewed tree this is the slow one of the three siblings.
+// Space: O(h) -- the recursion stack of the depth search; the climbing needs only the two pointers.
+//
+// Siblings: LcaBtParent does it in O(h) with two pointers and no depth search; LcaBtParentStack
+// compares the two root paths from the top in O(h). The three share the package's Node.
 
 public final class LcaBtParentLevel {
-	// Time Complexity: O(h)
-	// Space Complexity: O(1)
 
-	// LCA Level Based
 	public static Node lca(Node root, Node u, Node v) {
-		while (level(root, u.data) > level(root, v.data)) {
+		while (level(root, u.val) > level(root, v.val)) { // LIFT: the deeper node up to the other's depth
 			u = u.parent;
 		}
-		while (level(root, v.data) > level(root, u.data)) {
+		while (level(root, v.val) > level(root, u.val)) {
 			v = v.parent;
 		}
-		while (u.data != v.data) {
+		while (u.val != v.val) { // CLIMB: both together until they are the same node
 			u = u.parent;
 			v = v.parent;
 		}
-		return u;
+		return u; // RETURN: the first shared ancestor
 	}
 
 	private static int level(Node root, int data) {
 		return level(root, data, 1);
 	}
 
-	private static int level(Node node, int data, int level) {
+	private static int level(Node node, int data, int level) { // DEPTH: search from the root by value
 		if (node == null) {
 			return 0;
 		}
-		if (node.data == data) {
+		if (node.val == data) {
 			return level;
 		}
 		int left = level(node.left, data, level + 1);
@@ -71,27 +83,7 @@ public final class LcaBtParentLevel {
 		root.right.right = node8;
 		root.right.right.parent = node2;
 
-		System.out.println(lca(root, root.left, root.right));
-		System.out.println(lca(root, root.left, root.left.right.right));
-	}
-
-	private static final class Node {
-
-		public int data;
-		public Node left;
-		public Node right;
-		public Node parent;
-
-		public Node(int data) {
-			this.data = data;
-			this.left = null;
-			this.right = null;
-			this.parent = null;
-		}
-
-		@Override
-		public String toString() {
-			return Integer.toString(data);
-		}
+		System.out.println(lca(root, root.left, root.right)); // 3
+		System.out.println(lca(root, root.left, root.left.right.right)); // 5
 	}
 }

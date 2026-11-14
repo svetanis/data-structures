@@ -1,39 +1,47 @@
 package com.svetanis.datastructures.tree.binary.bst.candidate;
 
-import static com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node.newNode;
+import static com.svetanis.datastructures.tree.binary.model.mutable.primitive.TreeNode.newNode;
 import static com.svetanis.datastructures.tree.binary.model.mutable.primitive.Nodes.inOrder;
 import static com.svetanis.datastructures.tree.binary.model.mutable.primitive.Nodes.isNotNull;
 
-import com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node;
+import com.svetanis.datastructures.tree.binary.model.mutable.primitive.TreeNode;
 
-// given a BST and a number k
-// find the greatest number 
-// that is less than or equal to k
+// Floor of k in a BST (no LeetCode number; LC 2476, Closest Nodes Queries in a Binary Search
+// Tree, asks for this and its mirror, the ceiling, together)
+//
+// Input: root of a BST and an int key. The key need not be in the tree. Returns the node holding
+// the largest value that is less than or equal to key, or null when every value is larger.
+//
+// The one idea: walk down as a search for key would. At a node with value <= key, that node
+// qualifies; anything larger that still qualifies is on its right, so remember it and go right.
+// At a node above key, nothing on its right qualifies: go left. The last node remembered is the
+// largest one that is at or below key. An exact match is itself the answer, so the test is <=; a
+// strict < would walk past it and answer the strict predecessor. The candidate starts as null, not
+// the root: a tree whose every value is above key must answer null, not a value larger than key.
+//
+// Time: O(h) -- one step down per level, h <= n.
+// Space: O(1) -- one variable.
+//
+// Siblings: LargestNodeLessOrEqualKRecursive is this loop as recursion.
+// FirstNodeLargerOrEqualKIterative is the mirror, the ceiling.
 
 public final class LargestNodeLessOrEqualKIterative {
-	// Time Complexity: O(h)
 
-	public static Node largestLessOrEqual(Node root, int key) {
-		// null, not root: with the root as the starting candidate, a tree
-		// whose every value is above key returns the root -- a number
-		// larger than the one it was asked for, and no way to tell it
-		// apart from a real answer
-		Node node = null;
+	public static TreeNode largestLessOrEqual(TreeNode root, int key) {
+		TreeNode node = null; // the best qualifying node so far; null when none was met
 		while (isNotNull(root)) {
-			// <=, so an exact match is the answer. a strict < walks past
-			// it and answers the strict predecessor instead
-			if (root.data <= key) {
-				node = root;
+			if (root.val <= key) {
+				node = root; // RECORD: it qualifies; a larger one may be on the right
 				root = root.right;
 			} else {
-				root = root.left;
+				root = root.left; // SKIP: too large, and so is everything on its right
 			}
 		}
 		return node;
 	}
 
 	public static void main(String[] args) {
-		Node root = newNode(5);
+		TreeNode root = newNode(5);
 		root.left = newNode(2);
 		root.right = newNode(12);
 		root.left.left = newNode(1);
@@ -43,14 +51,14 @@ public final class LargestNodeLessOrEqualKIterative {
 		root.right.right.left = newNode(19);
 		root.right.right.right = newNode(25);
 
-		inOrder(root);
+		inOrder(root); // prints 1 2 3 5 9 12 19 21 25
 		System.out.println();
 		System.out.println(largestLessOrEqual(root, 24)); // 21
 		System.out.println(largestLessOrEqual(root, 4)); // 3
 
-		// key present in the tree. a strict < printed 9 here
+		// key present in the tree
 		System.out.println(largestLessOrEqual(root, 12)); // 12
-		// below every value. seeded with the root this printed 5
+		// below every value
 		System.out.println(largestLessOrEqual(root, 0)); // null
 	}
 }

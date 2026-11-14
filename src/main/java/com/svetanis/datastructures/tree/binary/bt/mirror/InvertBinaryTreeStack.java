@@ -1,6 +1,6 @@
 package com.svetanis.datastructures.tree.binary.bt.mirror;
 
-import static com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node.newNode;
+import static com.svetanis.datastructures.tree.binary.model.mutable.primitive.TreeNode.newNode;
 import static com.svetanis.datastructures.tree.binary.model.mutable.primitive.Nodes.inOrder;
 import static com.svetanis.datastructures.tree.binary.model.mutable.primitive.Nodes.isNotNull;
 import static com.svetanis.datastructures.tree.binary.model.mutable.primitive.Nodes.isNull;
@@ -8,31 +8,42 @@ import static com.svetanis.datastructures.tree.binary.model.mutable.primitive.No
 import java.util.ArrayDeque;
 import java.util.Deque;
 
-import com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node;
+import com.svetanis.datastructures.tree.binary.model.mutable.primitive.TreeNode;
 
 // 226. Invert Binary Tree
-
-// given a binary tree, invert it and
-// return the new value. you may invert
-// it in-place. to invert a binary tree,
-// switch the left subtree and the right
-// subtree, and invert them both. inverting
-// an empty tree does nothing.
+//
+// Input: root -- the root of a binary tree, possibly null. Swaps the left and right subtree of
+// every node, in place. An empty tree stays empty. On LeetCode: 0 <= nodes <= 100,
+// -100 <= Node.val <= 100.
+//
+// The one idea: inverting a tree means swapping the two children of every node, and swapping the
+// children of one node never touches the links below it, so the nodes can be visited in any order.
+// Take a node from the deque, swap its children, and put the children back for their own swap. The
+// children are read from the node taken out -- not from root, which never changes.
+//
+// The deque is used with add (at the back) and poll (from the front), so it is first in, first out:
+// a queue, not a stack, and it visits level by level, right to left. Any visiting order inverts
+// the tree; a real stack (push and pop at the same end) would keep only one chain in memory.
+//
+// Time: O(n) -- every node is put in, taken out and swapped once.
+// Space: O(n) -- first in, first out, so the deque holds a whole level, up to about n / 2 nodes.
+//
+// Siblings: InvertBinaryTreeQueue is the same loop with the children added left first.
+// InvertBinaryTree226 and InvertBinaryTreeRecursiveInPlace do it by recursion.
+// InvertBinaryTreeRecursive builds a new tree.
 
 public final class InvertBinaryTreeStack {
-	// Time Complexity: O(n)
-	// Space Complexity: O(h) -- the stack holds one root-to-node chain
 
-	public static void invert(Node root) {
-		if (isNull(root)) {
+	public static void invert(TreeNode root) {
+		if (isNull(root)) { // BASE: empty tree
 			return;
 		}
-		Deque<Node> stack = new ArrayDeque<>();
+		Deque<TreeNode> stack = new ArrayDeque<>();
 		stack.add(root);
 		while (!stack.isEmpty()) {
-			Node node = stack.poll();
-			swap(node);
-			if (isNotNull(node.right)) {
+			TreeNode node = stack.poll(); // TAKE: the oldest node still waiting
+			swap(node); // SWAP: its two children
+			if (isNotNull(node.right)) { // ADD: the children, right first, for their own swap
 				stack.add(node.right);
 			}
 			if (isNotNull(node.left)) {
@@ -41,27 +52,26 @@ public final class InvertBinaryTreeStack {
 		}
 	}
 
-	private static void swap(Node root) {
-		// swap the nodes
-		Node temp = root.left;
+	private static void swap(TreeNode root) {
+		TreeNode temp = root.left;
 		root.left = root.right;
 		root.right = temp;
 	}
 
 	public static void main(String[] args) {
-		Node root = newNode(1);
+		TreeNode root = newNode(1);
 		root.left = newNode(2);
 		root.right = newNode(3);
 		root.left.left = newNode(4);
 		root.left.right = newNode(5);
 		root.right.left = newNode(6);
 		root.right.right = newNode(7);
-		inOrder(root); // 4 2 5 1 6 3 7
+		inOrder(root); // prints 4 2 5 1 6 3 7
 		System.out.println();
 
 		invert(root);
 
-		inOrder(root); // 7 3 6 1 5 2 4
+		inOrder(root); // prints 7 3 6 1 5 2 4
 		System.out.println();
 	}
 }

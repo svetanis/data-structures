@@ -1,5 +1,14 @@
 package com.svetanis.datastructures.tree.binary.bt.connect;
 
+// The node of the next-pointer problems in this package: LC 116 and 117 (Populating Next Right
+// Pointers in Each Node), ConnectSameLevelNodes, ConnectSameLevelNodesMemoryOptimized and
+// ConnectAllLevelOrderSiblings. next starts out null and is set by those solutions.
+//
+// printTree follows next pointers from this node and prints the values on one line.
+// printLevelOrder prints one line per level: it follows next along a level and takes the first
+// child it meets as the start of the line below. It needs the next pointers of each level to be
+// set, and prints the whole tree only when each level is linked.
+
 public class Node {
 
 	public int data;

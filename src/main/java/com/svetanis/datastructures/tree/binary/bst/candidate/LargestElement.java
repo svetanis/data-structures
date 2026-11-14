@@ -1,43 +1,52 @@
 package com.svetanis.datastructures.tree.binary.bst.candidate;
 
-import static com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node.newNode;
+import static com.svetanis.datastructures.tree.binary.model.mutable.primitive.TreeNode.newNode;
 import static com.svetanis.datastructures.tree.binary.model.mutable.primitive.Nodes.inOrder;
 import static com.svetanis.datastructures.tree.binary.model.mutable.primitive.Nodes.isNotNull;
 import static com.svetanis.datastructures.tree.binary.model.mutable.primitive.Nodes.isNull;
 
-import com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node;
+import com.svetanis.datastructures.tree.binary.model.mutable.primitive.TreeNode;
 
-// given a BST and a number k
-// find the greatest number 
-// that is less than or equal to k
+// Largest element in a BST (no LeetCode number)
+//
+// Input: root of a BST, possibly empty. Returns the node holding the largest value, or null for an
+// empty tree. Two versions: largest is a loop, largestRecursive is the same walk as recursion.
+//
+// The one idea: in a BST everything in a node's right subtree is larger than the node, so the
+// largest value is reached by always going right. The node with no right child is the largest.
+//
+// Time: O(h) -- one step down per level, h <= n.
+// Space: O(1) for largest; O(h) for largestRecursive, which is as deep as the right edge is long.
+//
+// Siblings: SecondLargestIterative and SecondLargestRecursive find the node one place before this
+// one in order.
 
 public final class LargestElement {
 
-	public static Node largestRecursive(Node root) {
-		// an empty tree has no largest element. without this the very
-		// first read of root.right throws, while SecondLargestIterative
-		// and SecondLargestRecursive both answer null for the same input
+	public static TreeNode largestRecursive(TreeNode root) {
+		// an empty tree has no largest element; SecondLargestIterative and
+		// SecondLargestRecursive also answer null for the same input
 		if (isNull(root)) {
-			return null;
+			return null; // BASE: empty tree
 		}
 		if (isNull(root.right)) {
-			return root;
+			return root; // RETURN: no right child, this is the largest
 		}
-		return largestRecursive(root.right);
+		return largestRecursive(root.right); // WALK: the right subtree holds the larger values
 	}
 
-	public static Node largest(Node root) {
+	public static TreeNode largest(TreeNode root) {
 		if (isNull(root)) {
-			return null;
+			return null; // BASE: empty tree
 		}
 		while (isNotNull(root.right)) {
-			root = root.right;
+			root = root.right; // WALK: always right
 		}
 		return root;
 	}
 
 	public static void main(String[] args) {
-		Node root = newNode(5);
+		TreeNode root = newNode(5);
 		root.left = newNode(3);
 		root.right = newNode(8);
 		root.left.left = newNode(1);
@@ -48,24 +57,24 @@ public final class LargestElement {
 		root.right.right.left.left = newNode(9);
 		root.right.right.left.right = newNode(11);
 
-		inOrder(root);
+		inOrder(root); // prints 1 3 4 5 7 8 9 10 11 12
 		System.out.println();
-		System.out.println(largest(root));
-		System.out.println(largestRecursive(root));
+		System.out.println(largest(root)); // 12
+		System.out.println(largestRecursive(root)); // 12
 
-		Node root1 = newNode(5);
+		TreeNode root1 = newNode(5);
 		root1.left = newNode(3);
 		root1.right = newNode(8);
 		root1.left.left = newNode(1);
 		root1.left.right = newNode(4);
 		root1.right.left = newNode(7);
 		root1.right.right = newNode(9);
-		inOrder(root1);
+		inOrder(root1); // prints 1 3 4 5 7 8 9
 		System.out.println();
 		System.out.println(largest(root1)); // 9
 		System.out.println(largestRecursive(root1)); // 9
 
-		// the empty tree. largestRecursive threw here
+		// the empty tree
 		System.out.println(largest(null)); // null
 		System.out.println(largestRecursive(null)); // null
 	}

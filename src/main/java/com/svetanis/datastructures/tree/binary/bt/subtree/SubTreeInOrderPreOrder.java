@@ -1,78 +1,88 @@
 package com.svetanis.datastructures.tree.binary.bt.subtree;
 
-import static com.google.common.collect.Lists.newArrayList;
-import static com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node.newNode;
 import static com.svetanis.datastructures.tree.binary.model.mutable.primitive.Nodes.isNull;
+import static com.svetanis.datastructures.tree.binary.model.mutable.primitive.TreeNode.newNode;
 
-import java.util.List;
+import com.svetanis.datastructures.tree.binary.model.mutable.primitive.TreeNode;
 
-import com.google.common.base.Joiner;
-import com.svetanis.datastructures.tree.binary.model.mutable.primitive.Node;
+// Is tree S a subtree of tree T? (LeetCode 572, Subtree of Another Tree, asks the same question
+// with integer values; SubTreeOfAnotherTree holds that version.)
+//
+// Input: the roots of two binary trees T and S; either may be empty. Each node value is read as one
+// character, (char) node.val, so values must fit in 0..65535, and '$' is kept for "no child" so no
+// node may hold it. Returns true when S matches some node of T together with everything below that
+// node, shape and values alike; an empty S always matches.
+//
+// The one idea: write each tree down as a string of characters, then ask whether S's string occurs
+// inside T's. Walking a tree and writing each node's character, and a '$' for every missing child,
+// gives a string in which every node's whole subtree is one unbroken stretch. The '$' marks are what
+// make the stretch exact: without them, a leaf "a" would be found inside a node "a" that has
+// children, since the characters of its children come after it. The strings are built twice, once
+// left-node-right (in-order) and once node-left-right (pre-order); the pre-order string alone
+// decides the answer; the in-order test is a condition any match must also meet, so it can only
+// return false early.
+//
+// Time: O(n + m) to build the four strings, then O(n * m) in the worst case for each String.contains
+// -- n and m are the node counts of T and S.
+// Space: O(n + m) -- the four strings; the recursion is as deep as the taller tree.
 
 public final class SubTreeInOrderPreOrder {
 
-  public static boolean isSubTree(Node rootT, Node rootS) {
-    // Time Complexity: O(n)
+  private static final char NO_CHILD = '$';
 
+  public static boolean isSubTree(TreeNode rootT, TreeNode rootS) {
     // base case
     if (isNull(rootS)) {
-      return true;
+      return true; // BASE: an empty S matches anywhere
     }
 
     if (isNull(rootT)) {
-      return false;
+      return false; // BASE: a non-empty S cannot sit inside an empty T
     }
 
     // store inorder traversal of T and S
-    List<Character> inT = newArrayList();
-    List<Character> inS = newArrayList();
+    StringBuilder inT = new StringBuilder();
+    StringBuilder inS = new StringBuilder();
 
-    inorder(rootT, inT);
-    inorder(rootS, inS);
+    inorder(rootT, inT); // WALK: write T left-node-right
+    inorder(rootS, inS); // WALK: write S left-node-right
 
-    
-    String str1 = Joiner.on("").join(inT);
-    String str2 = Joiner.on("").join(inS);
-    
-    if (!str1.contains(str2)) {
-      return false;
+    if (!inT.toString().contains(inS)) {
+      return false; // FILTER: S's in-order string is not inside T's
     }
 
     // store preorder traversal of T and S
-    List<Character> preT = newArrayList();
-    List<Character> preS = newArrayList();
+    StringBuilder preT = new StringBuilder();
+    StringBuilder preS = new StringBuilder();
 
-    preorder(rootT, preT);
-    preorder(rootS, preS);
+    preorder(rootT, preT); // WALK: write T node-left-right
+    preorder(rootS, preS); // WALK: write S node-left-right
 
-    String str3 = Joiner.on("").join(preT);
-    String str4 = Joiner.on("").join(preS);
-
-    return str3.contains(str4);
+    return preT.toString().contains(preS); // RETURN: S's pre-order string is inside T's
   }
 
-  private static void inorder(Node node, List<Character> list) {
+  private static void inorder(TreeNode node, StringBuilder sb) {
     if (isNull(node)) {
+      sb.append(NO_CHILD); // MARK: a missing child
       return;
     }
-    inorder(node.left, list);
-    char c = (char) node.data;
-    list.add(c);
-    inorder(node.right, list);
+    inorder(node.left, sb);
+    sb.append((char) node.val); // WRITE: the node, between its two sides
+    inorder(node.right, sb);
   }
 
-  private static void preorder(Node node, List<Character> list) {
+  private static void preorder(TreeNode node, StringBuilder sb) {
     if (isNull(node)) {
+      sb.append(NO_CHILD); // MARK: a missing child
       return;
     }
-    char c = (char) node.data;
-    list.add(c);
-    preorder(node.left, list);
-    preorder(node.right, list);
+    sb.append((char) node.val); // WRITE: the node, before its two sides
+    preorder(node.left, sb);
+    preorder(node.right, sb);
   }
 
   public static void main(String[] args) {
-    Node tree1 = newNode('z');
+    TreeNode tree1 = newNode('z');
     tree1.left = newNode('x');
     tree1.right = newNode('e');
     tree1.left.left = newNode('a');
@@ -80,24 +90,24 @@ public final class SubTreeInOrderPreOrder {
     tree1.right.right = newNode('k');
     tree1.left.left.right = newNode('c');
 
-    Node tree2 = newNode('x');
+    TreeNode tree2 = newNode('x');
     tree2.left = newNode('a');
     tree2.right = newNode('b');
     tree2.left.right = newNode('c');
 
-    System.out.println(isSubTree(tree1, tree2));
+    System.out.println(isSubTree(tree1, tree2)); // true
 
-    Node root1 = newNode('a');
+    TreeNode root1 = newNode('a');
     root1.left = newNode('b');
     root1.right = newNode('d');
     root1.left.left = newNode('c');
     root1.right.right = newNode('e');
 
-    Node root2 = newNode('a');
+    TreeNode root2 = newNode('a');
     root2.left = newNode('b');
     root2.right = newNode('d');
     root2.left.left = newNode('c');
 
-    System.out.println(isSubTree(root2, root1));
+    System.out.println(isSubTree(root2, root1)); // false
   }
 }
