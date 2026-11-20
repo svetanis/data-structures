@@ -9,36 +9,41 @@ package com.svetanis.datastructures.stack.parentheses;
 // is the number of characters inserted so far. A ')' is read together with the next ')'
 // when there is one; a lone ')' needs one more ')' inserted, and a ')' pair with no '('
 // open needs one '(' inserted. Each '(' still open at the end needs two ')'.
+//
+// Siblings:
+//   MinNumParenthesesToBalanceExpression -- 921: one ')' closes a '(', so one counter of
+//                                           unmatched ')' is enough
+//   MinSwapsToBalanceStr                 -- 1963: swaps instead of insertions, '[' and ']'
 
 public final class MinInsertionsToBalanceParentheses {
 	// Time Complexity: O(n), each character is read once
 	// Space Complexity: O(1), two counters
 
 	public static int minInsertions(String s) {
-		int count = 0;
-		int opened = 0;
+		int count = 0; // ANSWER: characters inserted so far
+		int opened = 0; // COUNT: '(' still waiting for their "))"
 		int n = s.length();
-		for (int index = 0; index < n; index++) {
+		for (int index = 0; index < n; index++) { // WALK: one '(' or one ')' pair at a time
 			char c = s.charAt(index);
 			if (c == '(') {
-				opened++;
+				opened++; // OPEN: it waits for "))"
 			} else {
 				if (index < n - 1 && s.charAt(index + 1) == ')') {
-					index++; // the next ')' is the second half of this pair
+					index++; // PAIR: the next ')' is the second half of this pair
 				} else {
-					count++; // a lone ')': insert its second ')'
+					count++; // INSERT: a lone ')': insert its second ')'
 				}
 				if (opened == 0) {
-					count++; // no '(' open for this pair: insert one
+					count++; // INSERT: no '(' open for this pair: insert one
 				} else {
-					opened--;
+					opened--; // CLOSE: the pair closes one waiting '('
 				}
 			}
 		}
 		if (opened > 0) {
-			count += 2 * opened;
+			count += 2 * opened; // INSERT: "))" for every '(' still open
 		}
-		return count;
+		return count; // RETURN: the fewest insertions
 	}
 
 	public static void main(String[] args) {

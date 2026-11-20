@@ -12,6 +12,11 @@ import java.util.Map;
 //
 // The map sends each opening bracket to its closer. The stack holds the opening brackets
 // still waiting, innermost on top; a closer is accepted only if it is the one the top expects.
+//
+// Siblings -- 20 and its neighbours:
+//   BalancedParentheses       -- 20 again: helper methods instead of a map; a non-bracket is skipped
+//   BalancedParenthesesSimple -- round brackets only, so a counter can replace the stack
+//   ValidParenthesisString    -- 678: round brackets plus '*', which may stand for either or nothing
 
 public final class BalancedParenthesesMap {
 	// Time Complexity: O(n), each character is pushed and popped at most once
@@ -27,28 +32,28 @@ public final class BalancedParenthesesMap {
 	// brackets only -- read the else before reusing this for input with text in it.
 
 	public static boolean isBalanced(String s) {
-		Map<Character, Character> map = parentheses();
-		Deque<Character> dq = new ArrayDeque<>();
-		for (char c : s.toCharArray()) {
+		Map<Character, Character> map = parentheses(); // PAIRS: opener to its closer
+		Deque<Character> dq = new ArrayDeque<>(); // STACK: openers still waiting, innermost on top
+		for (char c : s.toCharArray()) { // WALK: one character at a time
 			if (map.containsKey(c)) {
-				dq.push(c); // an opener: cannot be resolved yet, so park it
+				dq.push(c); // OPEN: an opener: cannot be resolved yet, so park it
 			} else {
 				if (!dq.isEmpty() && map.get(dq.peek()) == c) {
-					dq.pop(); // the innermost opener's expected closer arrived
+					dq.pop(); // MATCH: the innermost opener's expected closer arrived
 				} else {
-					return false; // empty, or the wrong closer
+					return false; // FAIL: empty, or the wrong closer
 				}
 			}
 		}
-		return dq.isEmpty(); // leftover openers. "(((" fails ONLY here
+		return dq.isEmpty(); // RETURN: leftover openers. "(((" fails ONLY here
 	}
 
 	private static Map<Character, Character> parentheses() {
-		Map<Character, Character> map = new HashMap<>();
-		map.put('(', ')');
-		map.put('[', ']');
-		map.put('{', '}');
-		return map;
+		Map<Character, Character> map = new HashMap<>(); // PAIRS: one entry per bracket kind
+		map.put('(', ')'); // PAIRS: round
+		map.put('[', ']'); // PAIRS: square
+		map.put('{', '}'); // PAIRS: curly
+		return map; // RETURN: the three pairs
 	}
 
 	public static void main(String[] args) {

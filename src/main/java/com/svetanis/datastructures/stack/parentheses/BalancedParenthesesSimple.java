@@ -13,40 +13,48 @@ import java.util.Deque;
 // and they agree on every input; the point of the file is the SPACE they use.
 // With two or more bracket types the counter dies: it cannot tell "([)]" from
 // "([])" because it counts three opens and three closes either way.
+//
+// Siblings:
+//   BalancedParentheses / BalancedParenthesesMap -- 20 with three bracket types, where only the
+//                                                   stack works
+//   MaxDepth / MaxDepthStack                     -- the same counter-or-stack pair, returning
+//                                                   the deepest nesting instead of true or false
+//   MinNumParenthesesToBalanceExpression         -- 921: the same counter, counting what to add
 
 public final class BalancedParenthesesSimple {
 
-	// valid():      Time O(n), Space O(1)   -- the counter
-	// isBalanced(): Time O(n), Space O(n)   -- the stack, kept for comparison
+	// Time: O(n) -- both methods read every character once
+	// Space: valid() O(1) -- the counter; isBalanced() O(n) -- the stack, kept for comparison.
+	// valid()'s O(1) is the counting: toCharArray still copies s, O(n) extra space, in both.
 
 	public static boolean valid(String s) {
-		int count = 0;
-		for (char c : s.toCharArray()) {
+		int count = 0; // COUNT: '(' open right now
+		for (char c : s.toCharArray()) { // WALK: one character at a time
 			if (c == '(') {
-				count++;
+				count++; // OPEN: one more '(' waits
 			} else if (c == ')') {
-				count--;
+				count--; // CLOSE: it closes one waiting '('
 			}
 			if (count < 0) {
-				return false; // a closer with nothing open. WITHOUT this check ")(" counts
+				return false; // FAIL: a closer with nothing open. WITHOUT this check ")(" counts
 			}                 // down to -1 and back to 0 and is declared valid
 		}
-		return count == 0; // leftover openers: "(((" never fails inside the loop
+		return count == 0; // RETURN: leftover openers: "(((" never fails inside the loop
 	}
 
 	public static boolean isBalanced(String s) {
-		Deque<Character> dq = new ArrayDeque<>();
-		for (char c : s.toCharArray()) {
+		Deque<Character> dq = new ArrayDeque<>(); // STACK: '(' still open
+		for (char c : s.toCharArray()) { // WALK: one character at a time
 			if (c == '(') {
-				dq.push(c);
+				dq.push(c); // OPEN: one more '(' waits
 			} else if (c == ')') {
 				if (dq.isEmpty()) {
-					return false; // a ')' with no open '(' to close
+					return false; // FAIL: a ')' with no open '(' to close
 				}
-				dq.pop();
+				dq.pop(); // CLOSE: it closes the innermost '('
 			}
 		}
-		return dq.isEmpty();
+		return dq.isEmpty(); // RETURN: a '(' left open fails here
 	}
 
 	public static void main(String[] args) {
