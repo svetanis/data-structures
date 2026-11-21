@@ -16,45 +16,51 @@ import java.util.Deque;
 // the top at once. The last number has nothing after it, so it is applied at i == n - 1 -- which
 // is why spaces are not skipped with a continue: a trailing space would skip that last step.
 // BasicCalculatorIIApply is the same algorithm with the last step after the loop.
+//
+// Siblings -- the same family of calculators:
+//   BasicCalculatorIIApply    -- 227 again: skips spaces, and applies the last number after the loop
+//   BasicCalculator224        -- 224: + - and brackets; the stack saves the result and sign per bracket
+//   BasicCalculatorIII        -- 772: brackets as well; a stack of numbers and one of operators
+//   ClumsyFactorial           -- 1006: this stack with the operators known in advance
 
 public final class BasicCalculatorII {
 	// Time Complexity: O(n), each character is read once
 	// Space Complexity: O(n), one stack entry per number
 
 	public static int calculate(String s) {
-		int val = 0;
-		char operator = '+';
+		int val = 0; // READ: the number being read right now
+		char operator = '+'; // HOLD: the operator before val; '+' for the first number
 		int n = s.length();
-		Deque<Integer> stack = new ArrayDeque<>();
-		for (int i = 0; i < n; i++) {
+		Deque<Integer> stack = new ArrayDeque<>(); // STACK: signed numbers waiting to be added
+		for (int i = 0; i < n; i++) { // WALK: one character at a time
 			char curr = s.charAt(i);
 			if (isDigit(curr)) {
-				val = val * 10 + (curr - '0');
+				val = val * 10 + (curr - '0'); // READ: one more digit
 			}
-			if (isOperator(curr) || i == n - 1) { // val just ended, or s ends here
-				switch (operator) { // the STORED operator decides, not curr
+			if (isOperator(curr) || i == n - 1) { // END: val just ended, or s ends here
+				switch (operator) { // APPLY: the STORED operator decides, not curr
 				case '+':
-					stack.push(val);
+					stack.push(val); // WAIT: added at the end
 					break;
 				case '-':
-					stack.push(-1 * val);
+					stack.push(-1 * val); // WAIT: added at the end, as a negative number
 					break;
 				case '*':
-					stack.push(stack.pop() * val);
+					stack.push(stack.pop() * val); // APPLY: at once, to the number before it
 					break;
 				case '/':
-					stack.push(stack.pop() / val);
+					stack.push(stack.pop() / val); // APPLY: at once; Java's / truncates toward zero
 					break;
 				}
-				operator = curr; // curr belongs to the NEXT number
-				val = 0;
+				operator = curr; // HOLD: curr belongs to the NEXT number
+				val = 0; // READ: the next number starts empty
 			}
 		}
-		int result = 0;
-		while (!stack.isEmpty()) {
-			result += stack.pop();
+		int result = 0; // SUM: only + is left
+		while (!stack.isEmpty()) { // SUM: empty the stack
+			result += stack.pop(); // SUM: every waiting number, with its sign
 		}
-		return result;
+		return result; // RETURN: the value of s
 	}
 
 	public static void main(String[] args) {

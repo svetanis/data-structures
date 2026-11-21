@@ -12,37 +12,41 @@ import java.util.Deque;
 // The stack holds the values of the finished expressions to the right, nearest on top. At a
 // condition, the top two are the value after its '?' and the value after its ':'; the condition
 // keeps one of them, and that one value stands for the whole expression from then on.
+//
+// Siblings: none in this package. The nearest are the postfix evaluators
+// (ReversePolishNotation150, PostfixExpressionEvaluation), where an operator also finds its
+// operands already on the stack -- here the reading goes right to left to make that true.
 
 public final class TernaryExpressionParser {
 	// Time Complexity: O(n), each character is read once
 	// Space Complexity: O(n) for the stack
 
 	public static String parseTernary(String s) {
-		boolean condition = false;
-		Deque<Character> dq = new ArrayDeque<>();
-		for (int i = s.length() - 1; i >= 0; i--) {
+		boolean condition = false; // HOLD: true when the next character to the left is a condition
+		Deque<Character> dq = new ArrayDeque<>(); // STACK: values of the finished expressions to the right
+		for (int i = s.length() - 1; i >= 0; i--) { // WALK: right to left
 			char c = s.charAt(i);
 			if (c == ':') {
-				continue;
+				continue; // SKIP: the two values on top already say which is which
 			}
 			if (c == '?') {
-				condition = true; // the next character to the left is a condition
+				condition = true; // HOLD: the next character to the left is a condition
 				continue;
 			}
 			if (condition) {
 				if (c == 'T') {
-					char top = dq.pop(); // T: keep the value after '?', drop the one after ':'
-					dq.pop();
-					dq.push(top);
+					char top = dq.pop(); // PICK: T: keep the value after '?', drop the one after ':'
+					dq.pop(); // DROP: the value after ':'
+					dq.push(top); // PUSH: the kept value stands for the whole expression
 				} else {
-					dq.pop(); // F: drop the value after '?', keep the one after ':'
+					dq.pop(); // PICK: F: drop the value after '?', keep the one after ':'
 				}
-				condition = false;
+				condition = false; // HOLD: the condition is used up
 			} else {
-				dq.push(c);
+				dq.push(c); // PUSH: a value waits for its condition
 			}
 		}
-		return dq.peek() + "";
+		return dq.peek() + ""; // RETURN: the one value left
 	}
 
 	public static void main(String[] args) {
