@@ -1,7 +1,5 @@
 package com.svetanis.datastructures.stack.design;
 
-import static com.svetanis.java.base.Exceptions.illegalState;
-
 import java.util.ArrayDeque;
 import java.util.Deque;
 
@@ -32,14 +30,19 @@ import java.util.Deque;
 // price for arithmetic that has to be argued about. MinStack.java next door
 // keeps a Pair<value, min> per entry: same O(n), obviously correct, nothing to
 // prove. Reach for that one unless someone asks for this.
+//
+// Siblings, same problem:
+//   MinStack        a (value, min) record per entry, nothing to decode
+//   MinStackAux     the minima on a second stack, pushed only on a new minimum
+//   MinStackSubmit  a second stack pushed on every push, the LeetCode submission
 
 public final class MinStackMemoryOptimized {
-  // Time Complexity: O(1)
+  // Time Complexity: O(1), each operation reads or writes the top slot and min only
   // Space Complexity: O(n) for the stack itself; O(1) EXTRA, which is the
   // actual claim -- no per-entry minimum is stored alongside the values.
 
-  private int min;
-  private Deque<Long> stack;
+  private int min; // MIN: the true minimum of everything held
+  private Deque<Long> stack; // SLOTS: x, or 2*x - min when x was a new minimum
 
   public MinStackMemoryOptimized() {
     this.stack = new ArrayDeque<>();
@@ -55,44 +58,44 @@ public final class MinStackMemoryOptimized {
 
   public void push(int x) {
     if (stack.isEmpty()) {
-      stack.push((long) x);
+      stack.push((long) x); // FIRST: nothing to encode, x is the minimum
       min = x;
     } else if (x > min) {
-      stack.push((long) x);
+      stack.push((long) x); // PLAIN: not a new minimum, stored as is
     } else {
-      stack.push(2L * x - min);
+      stack.push(2L * x - min); // ENCODE: below x when x < min, and carries the old min
       min = x;
     }
   }
 
   public int pop() {
     if (stack.isEmpty()) {
-      throw illegalState("stack underflow");
+      throw new IllegalStateException("stack underflow");
     }
     long top = stack.pop();
     int result = 0;
-    if (top < min) {
+    if (top < min) { // DECODE: only an encoded slot sits below min
       // the slot was encoded, so it is holding the previous minimum.
       // 2 * min - top is a value that was really pushed, so it fits an int
       result = min;
-      min = (int) (2L * min - top);
+      min = (int) (2L * min - top); // RESTORE: the minimum before this one
     } else {
-      result = (int) top;
+      result = (int) top; // PLAIN: the slot is the value
     }
     return result;
   }
 
   public int peek() {
     if (stack.isEmpty()) {
-      throw illegalState("stack underflow");
+      throw new IllegalStateException("stack underflow");
     }
     long top = stack.peek();
-    return top < min ? min : (int) top;
+    return top < min ? min : (int) top; // DECODE: an encoded top means the value is min
   }
 
   public int min() {
     if (stack.isEmpty()) {
-      throw illegalState("stack underflow");
+      throw new IllegalStateException("stack underflow");
     }
     return min;
   }

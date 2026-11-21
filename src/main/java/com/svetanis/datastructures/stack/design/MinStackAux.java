@@ -1,7 +1,5 @@
 package com.svetanis.datastructures.stack.design;
 
-import static com.svetanis.java.base.Exceptions.illegalState;
-
 import java.util.ArrayDeque;
 import java.util.Deque;
 
@@ -18,10 +16,15 @@ import java.util.Deque;
 // MinStackSubmit pushes to aux on every push instead: it spends one int per entry
 // and both comparisons disappear. Prefer that one under pressure; this file is
 // worth reading for the trap.
+//
+// Siblings, same problem:
+//   MinStack                 one entry per push carrying (value, minimum at or below it)
+//   MinStackSubmit           aux pushed on EVERY push, so no comparison on push or pop
+//   MinStackMemoryOptimized  one long per entry, a new minimum encoded as 2*x - min
 
 public final class MinStackAux {
-  // push, pop, peek, min: O(1)
-  // Space: O(n) for the stack, plus O(n) worst case for aux -- a strictly
+  // Time: O(1) for push, pop, peek and min -- each touches only the tops of the two stacks
+  // Space: O(n) -- the stack, plus O(n) worst case for aux: a strictly
   // decreasing sequence of pushes makes every element a new minimum
 
   private Deque<Integer> stack;
@@ -41,7 +44,7 @@ public final class MinStackAux {
   }
 
   public void push(int x) {
-    stack.push(x);
+    stack.push(x); // PUSH: every value goes on the main stack
     // THE >= IS LOAD-BEARING, and > is the classic bug here. With >=, pushing 3
     // twice puts two 3s on aux, so popping one leaves the other and min() is still
     // 3. With >, only one 3 goes on, the first pop removes it, and min() reports a
@@ -50,34 +53,34 @@ public final class MinStackAux {
     //
     // Whenever a structure holds "the winners so far", duplicates are a DECISION,
     // not a typo. Same decision in QueueWithMin's eviction and in the histogram's.
-    if (aux.isEmpty() || aux.peek() >= x) {
+    if (aux.isEmpty() || aux.peek() >= x) { // TIE: >= so a repeated minimum is kept twice
       aux.push(x);
     }
   }
 
   public int pop() {
     if (stack.isEmpty()) {
-      throw illegalState("stack underflow");
+      throw new IllegalStateException("stack underflow");
     }
-    int top = stack.pop();
+    int top = stack.pop(); // POP: from the main stack
     if (top == aux.peek()) {
-      aux.pop(); // this element WAS a minimum, so its aux copy goes too
+      aux.pop(); // FOLLOW: this element WAS a minimum, so its aux copy goes too
     }
     return top;
   }
 
   public int peek() {
     if (stack.isEmpty()) {
-      throw illegalState("stack underflow");
+      throw new IllegalStateException("stack underflow");
     }
     return stack.peek();
   }
 
   public int min() {
     if (aux.isEmpty()) {
-      throw illegalState("stack underflow");
+      throw new IllegalStateException("stack underflow");
     } else {
-      return aux.peek();
+      return aux.peek(); // MIN: the latest minimum still held
     }
   }
 

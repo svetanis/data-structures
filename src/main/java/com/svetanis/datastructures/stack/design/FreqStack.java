@@ -1,7 +1,5 @@
 package com.svetanis.datastructures.stack.design;
 
-import static com.svetanis.java.base.Exceptions.illegalState;
-
 import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.HashMap;
@@ -21,9 +19,9 @@ public final class FreqStack {
 	// Time Complexity: push, pop: O(1), hash map lookups and the top of one stack
 	// Space Complexity: O(n), each push adds one entry to one stack in fsm
 
-	private int max;
-	private Map<Integer, Integer> fmap;
-	private Map<Integer, Deque<Integer>> fsm;
+	private int max; // HIGHEST: the largest count any value has now
+	private Map<Integer, Integer> fmap; // COUNT: value -> copies in the stack
+	private Map<Integer, Deque<Integer>> fsm; // LEVELS: count f -> values that reached f, latest on top
 
 	public FreqStack() {
 		this.max = 0;
@@ -32,20 +30,20 @@ public final class FreqStack {
 	}
 
 	public void push(int val) {
-		int freq = fmap.getOrDefault(val, 0) + 1;
+		int freq = fmap.getOrDefault(val, 0) + 1; // COUNT: one more copy
 		fmap.put(val, freq);
-		fsm.computeIfAbsent(freq, k -> new ArrayDeque<>()).push(val); // under its new count
-		max = Math.max(max, freq);
+		fsm.computeIfAbsent(freq, k -> new ArrayDeque<>()).push(val); // LEVEL: under its new count
+		max = Math.max(max, freq); // HIGHEST: a new count may top the others
 	}
 
 	public int pop() {
-		if (max == 0) { // no value has any copies left
-			throw illegalState("stack underflow");
+		if (max == 0) { // EMPTY: no value has any copies left
+			throw new IllegalStateException("stack underflow");
 		}
-		int val = fsm.get(max).pop();
-		fmap.put(val, fmap.get(val) - 1);
+		int val = fsm.get(max).pop(); // PICK: most copies, latest pushed among the ties
+		fmap.put(val, fmap.get(val) - 1); // COUNT: one copy fewer
 		if (fsm.get(max).isEmpty()) {
-			max--; // every value counted max times also sits in the stack for max - 1
+			max--; // DROP: every value counted max times also sits in the stack for max - 1
 		}
 		return val;
 	}

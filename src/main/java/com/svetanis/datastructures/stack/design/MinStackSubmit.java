@@ -4,6 +4,9 @@ import java.util.ArrayDeque;
 import java.util.Deque;
 
 // 155. Min Stack
+//
+// A stack of ints with push, pop, peek and min, each in constant time; min returns the
+// smallest value currently held.
 
 // aux[i] holds the minimum of everything at depth <= i, so pop needs NO work: the
 // entry underneath already recorded the answer, back when it was pushed and the
@@ -17,9 +20,14 @@ import java.util.Deque;
 //
 // This file is self-contained on purpose: it is the version pasted into LeetCode,
 // so it must not import anything from java-base.
+//
+// Siblings, same problem:
+//   MinStack                 one (value, min) entry per push on a single stack
+//   MinStackAux              aux pushed only on a new minimum: >= on push, == on pop
+//   MinStackMemoryOptimized  one long per entry, a new minimum encoded as 2*x - min
 
 public final class MinStackSubmit {
-	// Time Complexity: O(1)
+	// Time Complexity: O(1), each operation touches only the tops of the two stacks
 	// Space Complexity: O(n) -- two stacks, one entry each per push
 
 	private static final String UNDERFLOW = "stack underflow";
@@ -37,7 +45,7 @@ public final class MinStackSubmit {
 		// empty stack returns 2147483647, indistinguishable from a real
 		// push(Integer.MAX_VALUE), and LC 155 never catches it because the problem
 		// promises min() is only called on a non-empty stack.
-		aux.push(Integer.MAX_VALUE);
+		aux.push(Integer.MAX_VALUE); // SENTINEL: a fake bottom, never returned
 	}
 
 	public int size() {
@@ -49,16 +57,16 @@ public final class MinStackSubmit {
 	}
 
 	public void push(int x) {
-		stack.push(x);
-		aux.push(Math.min(x, aux.peek())); // no branch: duplicates handle themselves
+		stack.push(x); // PUSH: the value
+		aux.push(Math.min(x, aux.peek())); // MIN: no branch: duplicates handle themselves
 	}
 
 	public void pop() {
 		if (stack.isEmpty()) {
 			throw new IllegalStateException(UNDERFLOW);
 		}
-		stack.pop();
-		aux.pop(); // always in lockstep, so no comparison either
+		stack.pop(); // POP: the value
+		aux.pop(); // LOCKSTEP: always in lockstep, so no comparison either
 	}
 
 	public int peek() {
@@ -70,9 +78,9 @@ public final class MinStackSubmit {
 
 	public int min() {
 		if (stack.isEmpty()) {
-			throw new IllegalStateException(UNDERFLOW); // never return the fake bottom
+			throw new IllegalStateException(UNDERFLOW); // GUARD: never return the fake bottom
 		}
-		return aux.peek();
+		return aux.peek(); // MIN: the minimum at or below the top
 	}
 
 	public static void main(String[] args) {

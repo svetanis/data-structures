@@ -1,11 +1,7 @@
 package com.svetanis.datastructures.stack.design;
 
-import static com.svetanis.java.base.Exceptions.illegalState;
-
 import java.util.ArrayDeque;
 import java.util.Deque;
-
-import com.svetanis.java.base.Pair;
 
 // 155. Min Stack
 //
@@ -30,12 +26,23 @@ import com.svetanis.java.base.Pair;
 // prove. MinStackMemoryOptimized next door gets to O(1) extra by encoding the old
 // minimum into the value, and pays for it with arithmetic that has to be argued
 // about and a long to stop it overflowing.
+//
+// Siblings, same problem:
+//   MinStackAux              the minima on a second stack, pushed only on a new minimum:
+//                            needs >= on push and == on pop
+//   MinStackSubmit           a second stack pushed on EVERY push, so the two stay level;
+//                            self-contained, the version pasted into LeetCode
+//   MinStackMemoryOptimized  one long per entry, a new minimum encoded as 2*x - min
 
 public final class MinStack {
-  // push, pop, peek, min: O(1)
-  // Space: O(n), with a second int per entry
+  // Time: O(1) for push, pop, peek and min -- each reads or writes only the top entry
+  // Space: O(n) -- a second int per entry
 
-  private Deque<Pair<Integer, Integer>> stack;
+  // ENTRY: one value and the minimum at or below it
+  private record Pair(int value, int min) {
+  }
+
+  private Deque<Pair> stack;
 
   public MinStack() {
     this.stack = new ArrayDeque<>();
@@ -50,29 +57,29 @@ public final class MinStack {
   }
 
   public void push(int x) {
-    int min = empty() ? x : Math.min(x, stack.peek().getRight());
-    stack.push(Pair.build(x, min)); // (value, minimum at or below this entry)
+    int min = empty() ? x : Math.min(x, stack.peek().min()); // MIN: x against the minimum beneath
+    stack.push(new Pair(x, min)); // PUSH: (value, minimum at or below this entry)
   }
 
   public int pop() {
     if (empty()) {
-      throw illegalState("stack underflow");
+      throw new IllegalStateException("stack underflow");
     }
-    return stack.pop().getLeft();
+    return stack.pop().value(); // POP: the entry beneath already holds its own minimum
   }
 
   public int peek() {
     if (empty()) {
-      throw illegalState("stack underflow");
+      throw new IllegalStateException("stack underflow");
     }
-    return stack.peek().getLeft();
+    return stack.peek().value(); // TOP: the value half
   }
 
   public int min() {
     if (empty()) {
-      throw illegalState("stack underflow");
+      throw new IllegalStateException("stack underflow");
     } else {
-      return stack.peek().getRight();
+      return stack.peek().min(); // MIN: the top entry's minimum covers the whole stack
     }
   }
 

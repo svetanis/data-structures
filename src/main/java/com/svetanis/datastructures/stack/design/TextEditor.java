@@ -16,8 +16,8 @@ public final class TextEditor {
 	//   cursorLeft, cursorRight O(min(k, n)), one character per step, taken from the end
 	// Space Complexity: O(n) for the n characters in the text
 
-	private StringBuilder left;
-	private StringBuilder right;
+	private StringBuilder left; // BEFORE: text left of the cursor, in reading order
+	private StringBuilder right; // AFTER: text right of the cursor, reversed
 
 	public TextEditor() {
 		this.left = new StringBuilder();
@@ -25,31 +25,31 @@ public final class TextEditor {
 	}
 
 	public void addText(String text) {
-		left.append(text);
+		left.append(text); // TYPE: lands just left of the cursor
 	}
 
 	public int deleteText(int k) {
-		int min = Math.min(left.length(), k);
-		left.setLength(left.length() - min);
+		int min = Math.min(left.length(), k); // CLAMP: no more than the text before the cursor
+		left.setLength(left.length() - min); // ERASE: cut from the cursor end
 		return min;
 	}
 
 	public String cursorLeft(int k) {
-		int min = Math.min(k, left.length());
+		int min = Math.min(k, left.length()); // CLAMP: stop at the start of the text
 		for (int i = 0; i < min; i++) {
-			right.append(left.charAt(left.length() - 1)); // right's end is the cursor
-			left.deleteCharAt(left.length() - 1); // the last index, so nothing shifts
+			right.append(left.charAt(left.length() - 1)); // MOVE: right's end is the cursor
+			left.deleteCharAt(left.length() - 1); // MOVE: the last index, so nothing shifts
 		}
-		return left.substring(Math.max(left.length() - 10, 0)); // at most the last 10
+		return left.substring(Math.max(left.length() - 10, 0)); // SHOW: at most the last 10
 	}
 
 	public String cursorRight(int k) {
-		int min = Math.min(k, right.length());
+		int min = Math.min(k, right.length()); // CLAMP: stop at the end of the text
 		for (int i = 0; i < min; i++) {
-			left.append(right.charAt(right.length() - 1));
+			left.append(right.charAt(right.length() - 1)); // MOVE: the character just right of the cursor
 			right.deleteCharAt(right.length() - 1);
 		}
-		return left.substring(Math.max(left.length() - 10, 0));
+		return left.substring(Math.max(left.length() - 10, 0)); // SHOW: at most the last 10
 	}
 
 	public static void main(String[] args) {

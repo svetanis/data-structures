@@ -13,13 +13,17 @@ import java.util.Deque;
 // position i counted from the bottom. increment walks the bottom k positions and adds val to
 // each. pop finds the top element's position, size - 1, adds that total to the value it
 // returns, and clears the slot for the next element pushed there.
+//
+// Siblings, same problem:
+//   CustomStack  writes val once at the highest index reached and passes it down on pop,
+//                so increment is O(1)
 
 public class CustomStackSimple {
 	// Time Complexity: push, pop O(1); increment O(min(k, size)), one slot per element it reaches
 	// Space Complexity: O(maxSize) for the deque and the array
 
 	private int maxSize;
-	private int[] increments;
+	private int[] increments; // ADDED: total added to the element at this position from the bottom
 	private Deque<Integer> dq;
 
 	public CustomStackSimple(int maxSize) {
@@ -29,24 +33,24 @@ public class CustomStackSimple {
 	}
 
 	public void push(int x) {
-		if (dq.size() < maxSize) {
+		if (dq.size() < maxSize) { // FULL: a push to a full stack is ignored
 			dq.push(x);
 		}
 	}
 
 	public int pop() {
 		if (dq.isEmpty()) {
-			return -1;
+			return -1; // EMPTY: nothing to pop
 		}
-		int index = dq.size() - 1; // the top element's position, counted from the bottom
-		int result = dq.pop() + increments[index];
-		increments[index] = 0; // the next push to this position starts from 0
+		int index = dq.size() - 1; // POSITION: the top element's position, counted from the bottom
+		int result = dq.pop() + increments[index]; // PAY: the value plus what was added to it
+		increments[index] = 0; // CLEAR: the next push to this position starts from 0
 		return result;
 	}
 
 	public void increment(int k, int val) {
-		for (int i = 0; i < Math.min(dq.size(), k); i++) {
-			increments[i] += val;
+		for (int i = 0; i < Math.min(dq.size(), k); i++) { // WALK: the bottom k positions held
+			increments[i] += val; // ADD: val to each
 		}
 	}
 
