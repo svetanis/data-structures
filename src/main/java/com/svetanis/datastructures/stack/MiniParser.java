@@ -12,40 +12,43 @@ import java.util.Deque;
 // digits build a number that is added to the top list at the next ',' or ']'; ']' closes the
 // top list and adds it to the list beneath it. The outermost list is never popped, so it is
 // the one left to return.
+//
+// Companion file: NestedInteger, in this package, is LeetCode's interface implemented so that
+// this parser can build and print its result.
 
 public final class MiniParser {
 	// Time Complexity: O(n), each character is read once
 	// Space Complexity: O(n), the stack holds one list for each '[' still open
 
 	public NestedInteger deserialize(String s) {
-		if (s.charAt(0) != '[') {
+		if (s.charAt(0) != '[') { // PLAIN: the whole string is one integer
 			return new NestedInteger(Integer.parseInt(s));
 		}
 		int num = 0;
 		boolean negative = false;
 		Deque<NestedInteger> dq = new ArrayDeque<>();
-		for (int i = 0; i < s.length(); i++) {
+		for (int i = 0; i < s.length(); i++) { // WALK: one character at a time
 			char c = s.charAt(i);
 			if (Character.isDigit(c)) {
-				num = num * 10 + (c - '0');
+				num = num * 10 + (c - '0'); // DIGIT: extend the number being read
 			} else if (c == '-') {
-				negative = true;
+				negative = true; // SIGN: the number being read is negative
 			} else if (c == '[') {
-				dq.push(new NestedInteger());
+				dq.push(new NestedInteger()); // OPEN: a new list on top
 			} else if (c == ',' || c == ']') {
-				if (Character.isDigit(s.charAt(i - 1))) { // a number just ended; "[]" adds none
+				if (Character.isDigit(s.charAt(i - 1))) { // ADD: a number just ended; "[]" adds none
 					num = negative ? -num : num;
 					dq.peek().add(new NestedInteger(num));
 				}
-				num = 0;
+				num = 0; // RESET: ready for the next number
 				negative = false;
-				if (c == ']' && dq.size() > 1) { // the outermost list stays, to be returned
+				if (c == ']' && dq.size() > 1) { // CLOSE: the outermost list stays, to be returned
 					NestedInteger top = dq.pop();
 					dq.peek().add(top);
 				}
 			}
 		}
-		return dq.peek();
+		return dq.peek(); // RETURN: the outermost list
 	}
 
 	public static void main(String[] args) {

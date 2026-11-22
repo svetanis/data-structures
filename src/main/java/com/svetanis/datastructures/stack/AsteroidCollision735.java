@@ -1,9 +1,8 @@
 package com.svetanis.datastructures.stack;
 
 import java.util.ArrayDeque;
+import java.util.Arrays;
 import java.util.Deque;
-
-import com.svetanis.java.base.utils.Print;
 
 // 735. Asteroid Collision
 //
@@ -22,40 +21,40 @@ public final class AsteroidCollision735 {
 
 	public static int[] collision(int[] asteroids) {
 		Deque<Integer> dq = new ArrayDeque<>();
-		for (int asteroid : asteroids) {
+		for (int asteroid : asteroids) { // WALK: left to right, one asteroid at a time
 			if (asteroid > 0) {
-				dq.push(asteroid);
+				dq.push(asteroid); // JOIN: a right-mover cannot hit anything already on the stack
 			} else {
-				while (!dq.isEmpty() && dq.peek() > 0 && dq.peek() < -asteroid) {
-					dq.pop(); // a smaller right-mover is destroyed
+				while (!dq.isEmpty() && dq.peek() > 0 && dq.peek() < -asteroid) { // FIGHT: a smaller right-mover on top
+					dq.pop(); // FIGHT: a smaller right-mover is destroyed
 				}
 				if (!dq.isEmpty() && dq.peek() == -asteroid) {
-					dq.pop(); // equal sizes: both are destroyed
+					dq.pop(); // EQUAL: equal sizes: both are destroyed
 				} else if (dq.isEmpty() || dq.peek() < 0) {
-					dq.push(asteroid); // nothing moving right is left to hit it
+					dq.push(asteroid); // JOIN: nothing moving right is left to hit it
 				}
 			}
 		}
-		return leftToRight(dq);
+		return leftToRight(dq); // READ: the survivors, left to right
 	}
 
 	// the top of the stack is the rightmost survivor, so the array is filled from its end
 	private static int[] leftToRight(Deque<Integer> dq) {
 		int[] result = new int[dq.size()];
 		for (int i = result.length - 1; i >= 0; i--) {
-			result[i] = dq.pop();
+			result[i] = dq.pop(); // READ: the top goes to the rightmost free slot
 		}
 		return result;
 	}
 
 	public static void main(String[] args) {
 		int[] a1 = { 5, 10, -5 };
-		Print.print(collision(a1)); // [5,10]
+		System.out.println(Arrays.toString(collision(a1))); // [5,10]
 
 		int[] a2 = { 8, -8 };
-		Print.print(collision(a2)); // []
+		System.out.println(Arrays.toString(collision(a2))); // []
 
 		int[] a3 = { 10, 2, -5 };
-		Print.print(collision(a3)); // [10]
+		System.out.println(Arrays.toString(collision(a3))); // [10]
 	}
 }

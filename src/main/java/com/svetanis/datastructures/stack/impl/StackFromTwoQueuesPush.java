@@ -1,7 +1,5 @@
 package com.svetanis.datastructures.stack.impl;
 
-import static com.svetanis.java.base.Exceptions.illegalState;
-
 import java.util.ArrayDeque;
 import java.util.Deque;
 
@@ -16,6 +14,11 @@ import java.util.Deque;
 // 'main' is kept in stack order, newest value at the front. push pays for that: the new value
 // goes into the empty 'aux' first, every value from 'main' is queued behind it in its old
 // order, and the two queues swap names. pop and top then only read the front of 'main'.
+//
+// Siblings, a stack built from another structure:
+//   StackFromTwoQueuesPop  pop pays instead: push O(1), pop and top O(n)
+//   StackFromSingleQueue   the same push-pays order with one queue, rotated in place
+//   StackFromHeap          a heap ranked by push order, push and pop O(log n)
 
 public final class StackFromTwoQueuesPush {
 	// Time Complexity: push O(n), every value held moves to aux; pop, top, isEmpty O(1)
@@ -26,8 +29,8 @@ public final class StackFromTwoQueuesPush {
 		this.aux = new ArrayDeque<>();
 	}
 
-	private Deque<Integer> main;
-	private Deque<Integer> aux;
+	private Deque<Integer> main; // ORDER: stack order, newest at the front
+	private Deque<Integer> aux; // EMPTY: between calls, the queue to rebuild into
 
 	public boolean isEmpty() {
 		return main.isEmpty();
@@ -35,7 +38,7 @@ public final class StackFromTwoQueuesPush {
 
 	public void push(int value) {
 		// add element to aux queue
-		aux.offer(value);
+		aux.offer(value); // FRONT: first into the empty aux
 		// move all elements from
 		// main queue to aux queue
 		// behind the new value, in their old order
@@ -46,7 +49,7 @@ public final class StackFromTwoQueuesPush {
 
 	private void move() {
 		while (!main.isEmpty()) {
-			aux.offer(main.poll());
+			aux.offer(main.poll()); // BEHIND: an older value queues after the new one
 		}
 	}
 
@@ -58,17 +61,17 @@ public final class StackFromTwoQueuesPush {
 
 	public int pop() {
 		if (main.isEmpty()) {
-			throw illegalState("stack underflow");
+			throw new IllegalStateException("stack underflow");
 		} else {
-			return main.poll();
+			return main.poll(); // POP: the front is the newest
 		}
 	}
 
 	public int top() {
 		if (main.isEmpty()) {
-			throw illegalState("stack underflow");
+			throw new IllegalStateException("stack underflow");
 		} else {
-			return main.peek();
+			return main.peek(); // TOP: read the front
 		}
 	}
 

@@ -21,14 +21,14 @@ public final class BuildArrayWithStackOperations {
 	public static List<String> buildArray(int n, int[] a) {
 		int current = 0;
 		List<String> operations = new ArrayList<>();
-		for (int target : a) {
-			while (++current < target) {
+		for (int target : a) { // WALK: the targets, in increasing order
+			while (++current < target) { // SKIP: every number offered before this target
 				operations.add("Push");
-				operations.add("Pop"); // not in a: taken straight back off
+				operations.add("Pop"); // SKIP: not in a: taken straight back off
 			}
-			operations.add("Push");
+			operations.add("Push"); // KEEP: the target itself stays on the stack
 		}
-		return operations;
+		return operations; // RETURN: the operations, in order
 	}
 
 	public static void main(String[] args) {

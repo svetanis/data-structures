@@ -23,59 +23,59 @@ public final class CountAtoms {
 
 	public static String countAtoms(String s) {
 		Deque<Map<String, Integer>> dq = new ArrayDeque<>();
-		dq.push(new TreeMap<>()); // the whole formula; TreeMap keeps element names sorted
-		for (int i = 0; i < s.length();) {
+		dq.push(new TreeMap<>()); // BOTTOM: the whole formula; TreeMap keeps element names sorted
+		for (int i = 0; i < s.length();) { // WALK: each helper returns the index after what it read
 			if (s.charAt(i) == '(') {
-				dq.push(new TreeMap<>());
+				dq.push(new TreeMap<>()); // OPEN: a new group's counts go on top
 				i++;
 			} else if (s.charAt(i) == ')') {
-				i = subFormula(s, i, dq);
+				i = subFormula(s, i, dq); // CLOSE: fold the group into the one around it
 			} else {
-				i = doFormula(s, i, dq);
+				i = doFormula(s, i, dq); // ELEMENT: one name and its count
 			}
 		}
-		return concat(dq.peek());
+		return concat(dq.peek()); // RETURN: the bottom map, written out
 	}
 
 	private static int doFormula(String s, int index, Deque<Map<String, Integer>> dq) {
 		int start = index;
-		index++;
+		index++; // NAME: an uppercase letter starts it
 		while (index < s.length() && Character.isLowerCase(s.charAt(index))) {
-			index++;
+			index++; // NAME: then any lowercase letters
 		}
 		String element = s.substring(start, index);
 		start = index;
 		while (index < s.length() && Character.isDigit(s.charAt(index))) {
-			index++;
+			index++; // COUNT: the digits after the name
 		}
-		int count = start < index ? Integer.parseInt(s.substring(start, index)) : 1; // no digits: 1
+		int count = start < index ? Integer.parseInt(s.substring(start, index)) : 1; // COUNT: no digits: 1
 		int prev = dq.peek().getOrDefault(element, 0);
-		dq.peek().put(element, prev + count);
+		dq.peek().put(element, prev + count); // ADD: into the innermost open group
 		return index;
 	}
 
 	private static int subFormula(String s, int index, Deque<Map<String, Integer>> dq) {
-		Map<String, Integer> top = dq.pop();
+		Map<String, Integer> top = dq.pop(); // CLOSE: the group that ')' ends
 		index++;
 		int start = index;
 		while (index < s.length() && Character.isDigit(s.charAt(index))) {
-			index++;
+			index++; // COUNT: the digits after ')'
 		}
 		int count = start < index ? Integer.parseInt(s.substring(start, index)) : 1;
 		for (String element : top.keySet()) {
-			int freq = top.get(element) * count; // the whole group repeats 'count' times
+			int freq = top.get(element) * count; // MULTIPLY: the whole group repeats 'count' times
 			int prev = dq.peek().getOrDefault(element, 0);
-			dq.peek().put(element, prev + freq);
+			dq.peek().put(element, prev + freq); // ADD: into the enclosing group
 		}
 		return index;
 	}
 
 	private static String concat(Map<String, Integer> map) {
 		StringBuilder sb = new StringBuilder();
-		for (String s : map.keySet()) {
+		for (String s : map.keySet()) { // WALK: names in sorted order
 			sb.append(s);
 			int count = map.get(s);
-			if (count > 1) {
+			if (count > 1) { // OMIT: a count of 1 is not written
 				sb.append(count);
 			}
 		}

@@ -17,25 +17,25 @@ public final class IsValidWord {
 	// Space Complexity: O(n) for the stack and the char array
 
 	public static boolean valid(String s) {
-		if (s.length() % 3 != 0) { // every insertion adds three letters
+		if (s.length() % 3 != 0) { // LENGTH: every insertion adds three letters
 			return false;
 		}
 		Deque<Character> dq = new ArrayDeque<>();
-		for (char c : s.toCharArray()) {
+		for (char c : s.toCharArray()) { // WALK: left to right
 			if (c == 'c') {
 				int size = dq.size();
-				if (size < 2) {
+				if (size < 2) { // SHORT: no unused 'a' and 'b' for this 'c' to finish
 					return false;
 				}
-				if (dq.pop() != 'b' || dq.pop() != 'a') { // this 'c' closes the latest 'a', 'b'
+				if (dq.pop() != 'b' || dq.pop() != 'a') { // MATCH: this 'c' closes the latest 'a', 'b'
 					return false;
 				}
 			} else {
-				dq.push(c);
+				dq.push(c); // PUSH: an 'a' or 'b' waits for its 'c'
 			}
 
 		}
-		return dq.isEmpty();
+		return dq.isEmpty(); // RETURN: valid when no letter is left unused
 	}
 
 	public static void main(String[] args) {

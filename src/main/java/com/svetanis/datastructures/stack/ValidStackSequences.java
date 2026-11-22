@@ -20,14 +20,14 @@ public final class ValidStackSequences {
 	public static boolean validateStackSequences(int[] pushed, int[] popped) {
 		Deque<Integer> dq = new ArrayDeque<>();
 		int index = 0;
-		for (int val : pushed) {
-			dq.push(val);
-			while (!dq.isEmpty() && dq.peek() == popped[index]) { // pop now, before it is buried
+		for (int val : pushed) { // WALK: replay the pushes in order
+			dq.push(val); // PUSH: the next value of pushed
+			while (!dq.isEmpty() && dq.peek() == popped[index]) { // POP: pop now, before it is buried
 				dq.pop();
-				index += 1;
+				index += 1; // MATCH: the next value of popped is now wanted
 			}
 		}
-		return index == popped.length; // every value of popped was matched
+		return index == popped.length; // RETURN: every value of popped was matched
 	}
 
 	public static void main(String[] args) {

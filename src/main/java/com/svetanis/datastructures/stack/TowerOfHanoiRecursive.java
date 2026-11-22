@@ -4,6 +4,7 @@ import java.util.ArrayDeque;
 import java.util.Deque;
 
 // Tower of Hanoi: moves n disks from peg 0 to peg 1, using peg 2 as the spare.
+// Not a LeetCode problem.
 //
 // Input: the number of disks n, all starting on peg 0. Each peg is a stack of disk sizes, disk 1
 // the smallest, and only a top disk can move. Nothing is returned; every move is printed.
@@ -17,11 +18,11 @@ public final class TowerOfHanoiRecursive {
   // Time Complexity: O(2^n), moving n disks takes twice the moves for n - 1, plus one
   // Space Complexity: O(n), the n disks on the pegs and n levels of recursion
 
-  private static final int N = 3; // the number of pegs, not disks
+  private static final int N = 3; // PEGS: the number of pegs, not disks
 
   public static void moveTower(int n) {
     Deque<Integer>[] pegs = init(n);
-    transfer(n, pegs, 0, 1, 2);
+    transfer(n, pegs, 0, 1, 2); // MOVE: all n disks from peg 0 to peg 1, peg 2 spare
   }
 
   private static Deque<Integer>[] init(int n) {
@@ -29,27 +30,27 @@ public final class TowerOfHanoiRecursive {
     Deque<Integer>[] pegs = (Deque<Integer>[]) new Deque[N];
 
     for (int i = 0; i < N; ++i) {
-      pegs[i] = new ArrayDeque<>();
+      pegs[i] = new ArrayDeque<>(); // EMPTY: every peg starts empty
     }
 
     for (int i = n; i >= 1; --i) {
-      pegs[0].push(i);
+      pegs[0].push(i); // STACK: largest first, so disk 1 ends on top
     }
     return pegs;
   }
 
   private static void transfer(int n, Deque<Integer>[] pegs, int from, int to, int aux) {
     
-    if (n <= 0) {
+    if (n <= 0) { // STOP: no disks to move
       return;
     }
 
-    transfer(n - 1, pegs, from, aux, to); // clear the smaller disks onto the spare peg
+    transfer(n - 1, pegs, from, aux, to); // CLEAR: clear the smaller disks onto the spare peg
 
-    pegs[to].push(pegs[from].pop()); // the largest of the n disks
-    System.out.println("Move from peg " + from + " to peg " + to);
+    pegs[to].push(pegs[from].pop()); // MOVE: the largest of the n disks
+    System.out.println("Move from peg " + from + " to peg " + to); // PRINT: record the move
 
-    transfer(n - 1, pegs, aux, to, from);
+    transfer(n - 1, pegs, aux, to, from); // COVER: the smaller disks back on top of it
   }
 
   public static void main(String[] args) {

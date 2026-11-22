@@ -19,30 +19,30 @@ public final class BaseballGame {
 
 	public static int game(String[] operations) {
 		Deque<Integer> dq = new ArrayDeque<>();
-		for (String operation : operations) {
+		for (String operation : operations) { // WALK: one operation at a time
 			switch (operation) {
 			case "+":
-				int top = dq.pop();
+				int top = dq.pop(); // UNCOVER: lift the last score to read the one beneath
 				int prev = dq.peek();
-				dq.push(top); // put back: "+" does not remove the last score
-				dq.push(top + prev);
+				dq.push(top); // RESTORE: put back: "+" does not remove the last score
+				dq.push(top + prev); // RECORD: the sum of the last two
 				break;
 			case "D":
-				dq.push(dq.peek() * 2);
+				dq.push(dq.peek() * 2); // RECORD: double the last score
 				break;
 			case "C":
-				dq.pop();
+				dq.pop(); // CANCEL: the last score is removed
 				break;
 			default:
-				dq.push(Integer.parseInt(operation));
+				dq.push(Integer.parseInt(operation)); // RECORD: a plain score
 				break;
 			}
 		}
 		int sum = 0;
 		while (!dq.isEmpty()) {
-			sum += dq.pop();
+			sum += dq.pop(); // ADD: every score still recorded
 		}
-		return sum;
+		return sum; // RETURN: the total
 	}
 
 	public static void main(String[] args) {
